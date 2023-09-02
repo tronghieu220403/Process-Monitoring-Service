@@ -21,27 +21,12 @@
 namespace pm
 {
 	class Process {
-	private:
-		int pid_;
+	protected:
+		int pid_ = 0;
 		#ifdef _WIN32
 			std::wstring name_;
 		#else
 			std::string name_;
-		#endif
-		ProcessInfo p_info_;
-
-		#ifdef _WIN32
-			HANDLE process_handle_;
-		#else
-
-		#endif
-
-		bool SetHandle(int pid);
-		bool SetHandle(const std::string_view& name);
-		#ifdef _WIN32
-			bool SetHandle(const std::wstring_view& name);
-		#else
-
 		#endif
 
 	public:
@@ -55,17 +40,11 @@ namespace pm
 		#endif
 
 		int GetPid() const;
-		bool IsExists();
-
-		bool TryFindHandle();
-
-		ProcessInfo GetProcessInfo();
 
 		static int FindProcessIdByName(const std::string_view& name);
 		#ifdef _WIN32
 			static int FindProcessIdByName(const std::wstring_view& name);
 		#endif
-		~Process();
 	};
 }
 

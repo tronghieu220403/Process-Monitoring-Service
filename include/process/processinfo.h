@@ -31,7 +31,7 @@ namespace pm
     private:
         int pid_;
         time_t time_;
-        long long memory_usage_;
+        double memory_usage_;
         ProcessCpuStats cpu_usage_;
         ProcessDiskStats disk_usage_;
         ProcessNetworkStats network_usage_;
@@ -53,7 +53,7 @@ namespace pm
         int GetPid();
         time_t GetTime();
         float GetCpuUsage();
-        long long GetMemoryUsage();
+        double GetMemoryUsage();
         float GetDiskUsage();
         float GetNetworkUsage();
 

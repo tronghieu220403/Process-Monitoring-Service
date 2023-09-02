@@ -59,7 +59,7 @@ float ProcessInfo::GetCpuUsage()
     return cpu_usage_.GetCurrentUsage();
 };
 
-long long ProcessInfo::GetMemoryUsage()
+double ProcessInfo::GetMemoryUsage()
 {
     #ifdef _WIN32
         PROCESS_MEMORY_COUNTERS_EX pmc;
@@ -70,7 +70,8 @@ long long ProcessInfo::GetMemoryUsage()
         }
 
         GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-        return pmc.WorkingSetSize;
+
+        return double(pmc.WorkingSetSize) / 1024;
     #else
         
     #endif
