@@ -1,0 +1,95 @@
+#include <process/processcpu.h>
+
+namespace pm
+{
+ProcessCpuStats::ProcessCpuStats()
+{
+
+};
+
+ProcessCpuStats::ProcessCpuStats(HANDLE p_handle)
+{
+    #ifdef _WIN32
+        if (GetProcessId(p_handle) == NULL)
+        {
+            return;
+        }
+        process_handle_ = p_handle;
+
+        FILETIME ftime;
+        FILETIME fsys;
+        FILETIME fuser;
+
+        /*
+        SYSTEM_INFO sysInfo;
+
+        GetSystemInfo(&sysInfo);
+        numProcessors = sysInfo.dwNumberOfProcessors;
+        */
+        GetSystemTimeAsFileTime(&ftime);
+        memcpy(&last_cpu_, &ftime, sizeof(FILETIME));
+
+        GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
+        memcpy(&last_sys_cpu_, &fsys, sizeof(FILETIME));
+        memcpy(&last_user_cpu_, &fuser, sizeof(FILETIME));
+    #else
+
+    #endif
+
+};
+
+float ProcessCpuStats::GetCurrentUsage()
+{
+    double percent;
+
+    #ifdef _WIN32
+        if (GetProcessId(process_handle_) == NULL)
+        {
+            return 0.0;
+        }
+        FILETIME ftime, fsys, fuser;
+        ULARGE_INTEGER now, sys, user;
+
+        GetSystemTimeAsFileTime(&ftime);
+        memcpy(&now, &ftime, sizeof(FILETIME));
+
+        GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
+        memcpy(&sys, &fsys, sizeof(FILETIME));
+        memcpy(&user, &fuser, sizeof(FILETIME));
+        percent = (sys.QuadPart - last_sys_cpu_.QuadPart) + (user.QuadPart - last_user_cpu_.QuadPart);
+        if (now.QuadPart - last_cpu_.QuadPart != 0)
+        {
+            percent /= (now.QuadPart - last_cpu_.QuadPart);
+            percent /= num_processors_;
+        }
+        else
+        {
+            percent = 0;
+        }
+        last_cpu_ = now;
+        last_user_cpu_ = user;
+        last_sys_cpu_ = sys;
+    #else
+
+    #endif
+
+    last_usage_percent_ = (float)(percent * 100);
+    return last_usage_percent_;
+};
+
+float ProcessCpuStats::GetLastUsage()
+{
+    #ifdef _WIN32
+        if (GetProcessId(process_handle_) == NULL)
+        {
+            return 0.0;
+        }
+    #else
+
+    #endif
+
+    return last_usage_percent_;
+}
+
+
+}

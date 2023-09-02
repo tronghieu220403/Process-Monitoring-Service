@@ -1,0 +1,67 @@
+#ifndef PROCESSMONITORING_PROCESS_PROCESSINFO_H_
+#define PROCESSMONITORING_PROCESS_PROCESSINFO_H_
+
+#define UNICODE
+#define _UNICODE
+
+#include <string.h>
+#if defined(_WIN32)
+	#include <WS2tcpip.h>
+	#include <TlHelp32.h>
+	#include "windows.h"
+    #include "psapi.h"
+
+#else
+	#include <sys/wait.h>
+	#include <dirent.h>
+#endif
+
+#include <string>
+#include <fstream>
+
+#include <process/processcpu.h>
+#include <process/processdisk.h>
+#include <process/processnetwork.h>
+
+namespace pm
+{
+
+    class ProcessInfo
+    {
+    private:
+        int pid_;
+        time_t time_;
+        long long memory_usage_;
+        ProcessCpuStats cpu_usage_;
+        ProcessDiskStats disk_usage_;
+        ProcessNetworkStats network_usage_;
+
+        #ifdef _WIN32
+            HANDLE process_handle_;
+        #else
+
+        #endif
+
+    public:
+
+        ProcessInfo();
+        #ifdef _WIN32
+            explicit ProcessInfo(HANDLE process_handle_);
+        #else
+
+        #endif
+        int GetPid();
+        time_t GetTime();
+        float GetCpuUsage();
+        long long GetMemoryUsage();
+        float GetDiskUsage();
+        float GetNetworkUsage();
+
+
+        std::wstring ToString();
+
+        ~ProcessInfo();
+    };
+}
+
+#endif
