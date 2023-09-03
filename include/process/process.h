@@ -39,7 +39,7 @@ namespace pm
 			explicit Process(const std::wstring_view& wname);
 		#endif
 
-		int GetPid() const;
+		virtual int GetPid() const;
 
 		static int FindProcessIdByName(const std::string_view& name);
 		#ifdef _WIN32

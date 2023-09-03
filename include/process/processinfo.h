@@ -5,6 +5,7 @@
 #define _UNICODE
 
 #include <string.h>
+
 #if defined(_WIN32)
 	#include <WS2tcpip.h>
 	#include <TlHelp32.h>

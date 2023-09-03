@@ -38,8 +38,8 @@ namespace pm
 
 		bool IsExists();
         
-        int GetPid() const;
-        
+        int GetPid() const override;
+
 		ProcessInfo GetProcessInfo();
 
 		bool TryFindHandle();
