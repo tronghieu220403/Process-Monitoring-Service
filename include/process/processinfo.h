@@ -43,6 +43,12 @@ namespace pm
 
         #endif
 
+        time_t UpdateTime();
+        float UpdateCpuUsage();
+        double UpdateMemoryUsage();
+        float UpdateDiskUsage();
+        float UpdateNetworkUsage();
+
     public:
 
         ProcessInfo();
@@ -52,12 +58,14 @@ namespace pm
 
         #endif
         int GetPid();
+                
         time_t GetTime();
         float GetCpuUsage();
         double GetMemoryUsage();
         float GetDiskUsage();
         float GetNetworkUsage();
 
+        void UpdateAttributes();
 
         std::wstring ToString();
 

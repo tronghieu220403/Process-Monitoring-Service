@@ -63,6 +63,7 @@
         "ranges": "cpp",
         "span": "cpp",
         "vector": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "sstream": "cpp"
     }
 }

@@ -35,7 +35,7 @@ ProcessInfo::~ProcessInfo()
 
 }
 
-time_t ProcessInfo::GetTime()
+time_t ProcessInfo::UpdateTime()
 {
     ctime(&time_);
     return time_;
@@ -46,7 +46,7 @@ int ProcessInfo::GetPid()
     return pid_;
 };
 
-float ProcessInfo::GetCpuUsage()
+float ProcessInfo::UpdateCpuUsage()
 {
     #ifdef _WIN32
         if (GetProcessId(process_handle_) == NULL)
@@ -59,7 +59,7 @@ float ProcessInfo::GetCpuUsage()
     return cpu_usage_.GetCurrentUsage();
 };
 
-double ProcessInfo::GetMemoryUsage()
+double ProcessInfo::UpdateMemoryUsage()
 {
     #ifdef _WIN32
         PROCESS_MEMORY_COUNTERS_EX pmc;
@@ -70,27 +70,57 @@ double ProcessInfo::GetMemoryUsage()
         }
 
         GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-
-        return double(pmc.WorkingSetSize) / 1024;
+        memory_usage_ = double(pmc.WorkingSetSize) / 1024;
+        return memory_usage_;
     #else
         
     #endif
 };
 
-float ProcessInfo::GetDiskUsage()
+float ProcessInfo::UpdateDiskUsage()
 {
     return disk_usage_.GetCurrentSpeed();
 };
 
-float ProcessInfo::GetNetworkUsage()
+float ProcessInfo::UpdateNetworkUsage()
 {
     return network_usage_.GetCurrentSpeed();
 };
 
-std::wstring ProcessInfo::ToString()
+void ProcessInfo::UpdateAttributes()
 {
+    UpdateTime();
+    UpdateCpuUsage();
+    UpdateMemoryUsage();
+    UpdateDiskUsage();
+    UpdateNetworkUsage();
+}
 
-};
+time_t ProcessInfo::GetTime()
+{
+    return time_;
+}
+
+float ProcessInfo::GetCpuUsage()
+{
+    return cpu_usage_.GetLastUsage();
+}
+
+double ProcessInfo::GetMemoryUsage()
+{
+    return memory_usage_;
+}
+
+float ProcessInfo::GetDiskUsage()
+{
+    return disk_usage_.GetLastSpeed();
+
+}
+
+float ProcessInfo::GetNetworkUsage()
+{
+    return network_usage_.GetLastSpeed();
+}
 
 }
 

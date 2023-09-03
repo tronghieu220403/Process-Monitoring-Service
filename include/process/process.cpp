@@ -21,6 +21,11 @@ namespace pm
 	};
 #endif
 
+	std::wstring Process::GetName() const
+	{
+		return name_;
+	}
+
 	int Process::GetPid() const
 	{
 		return FindProcessIdByName(name_);
