@@ -1,5 +1,5 @@
-#ifndef PROCESSMONITORING_PROCESS_PROCESSCONTROL_H_
-#define PROCESSMONITORING_PROCESS_PROCESSCONTROL_H_
+#ifndef PROCESSMONITORING_PROCESS_PROCESSCONTROLLER_H_
+#define PROCESSMONITORING_PROCESS_PROCESSCONTROLLER_H_
 
 #define UNICODE
 #define _UNICODE
@@ -8,7 +8,7 @@
 
 namespace pm
 {
-    class ProcessControl: public Process
+    class ProcessController: public Process
     {
     protected:
 
@@ -18,22 +18,22 @@ namespace pm
 		bool SetHandle(const std::string_view& name);
 		#ifdef _WIN32
 			bool SetHandle(const std::wstring_view& name);
-		#else
+		#elif __linux__
 
 		#endif
 
 		#ifdef _WIN32
 			HANDLE process_handle_;
-		#else
+		#elif __linux__
 
 		#endif
 
     public:
-        ProcessControl();
-		explicit ProcessControl(const std::string_view& name);
+        ProcessController();
+		explicit ProcessController(const std::string_view& name);
 
         #ifdef _WIN32
-			explicit ProcessControl(const std::wstring_view& wname);
+			explicit ProcessController(const std::wstring_view& wname);
 		#endif
 
 		bool IsExists();
@@ -44,7 +44,7 @@ namespace pm
 
 		bool TryFindHandle();
 
-        ~ProcessControl();
+        void Close();
     };
 }
 

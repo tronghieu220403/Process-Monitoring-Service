@@ -20,12 +20,12 @@ namespace pm
 
     bool Logger::SetLoggingFolder(std::string folder_path)
     {
-        // Do something
+        return SetLoggingFolder(std::wstring(folder_path.begin(), folder_path.end()));
     }
 
     bool Logger::SetLoggingFolder(std::wstring folder_path)
     {
-        // Do something
+        // Create folder if it is not exist
     }
 
     void Logger::SetMessage(std::string_view& message) 
@@ -38,10 +38,15 @@ namespace pm
         message_ = message;
     }
 
+    std::wstring Logger::GetMessage()
+    {
+        return message_;
+    }
+
     bool Logger::WriteLog() const
     {
         /*
-            Log file name should be logs_yy_mm_dd.log
+            Log file name should be pm_logs_yy_mm_dd.log
         */
         time_t theTime = time(NULL);
         struct tm *aTime = localtime(&theTime);
@@ -50,9 +55,17 @@ namespace pm
         int year = aTime->tm_year + 1900; // Year is # years since 1900
 
         std::stringstream ss;
-        ss >> "logs_" >> year >> "_" >> month >> "_" >> day >> ".log";
+        ss >> "pm_logs_" >> year >> "_" >> month >> "_" >> day >> ".log";
 
-        std::wstring file_name = folder_path_ + std::wstring(ss.str().begin(), ss.str().end());
+        std::wstring file_name;
+        if (folder_path_.size() != 0)
+        {
+            file_name = folder_path_ + std::wstring(ss.str().begin(), ss.str().end());
+        }
+        else
+        {
+            file_name = std::wstring(ss.str().begin(), ss.str().end());
+        }
 
         std::ofstream ofs(file_name, std::ios_base::app);
         ofs.write((char *)& message_[0], wcslen(&message_[0]) * 2);

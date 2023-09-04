@@ -3,7 +3,7 @@
 
 #ifdef _WIN32
 #include "windows.h"
-#else
+#elif __linux__
 
 #endif
 

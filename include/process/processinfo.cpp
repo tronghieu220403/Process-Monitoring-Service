@@ -15,25 +15,16 @@ ProcessInfo::ProcessInfo(): pid_(0),time_(static_cast<long long>(0))
                 process_handle_ = 0;
                 return;
             }
-        #else
+        #elif __linux__
     
         #endif
         cpu_usage_ = ProcessCpuStats(process_handle_);
         disk_usage_ = ProcessDiskStats(process_handle_);
         network_usage_ = ProcessNetworkStats(process_handle_);
     };
-#else
+#elif __linux__
 
 #endif
-ProcessInfo::~ProcessInfo()
-{
-    #ifdef _WIN32
-        CloseHandle(process_handle_);
-    #else
-
-    #endif
-
-}
 
 time_t ProcessInfo::UpdateTime()
 {
@@ -53,7 +44,7 @@ float ProcessInfo::UpdateCpuUsage()
         {
             return 0;
         }
-    #else
+    #elif __linux__
 
     #endif
     return cpu_usage_.GetCurrentUsage();
@@ -72,7 +63,7 @@ double ProcessInfo::UpdateMemoryUsage()
         GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
         memory_usage_ = double(pmc.WorkingSetSize) / 1024;
         return memory_usage_;
-    #else
+    #elif __linux__
         
     #endif
 };

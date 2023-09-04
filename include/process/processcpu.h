@@ -4,7 +4,7 @@
 
 #ifdef _WIN32
 #include "windows.h"
-#else
+#elif __linux__
 
 #endif
 
@@ -21,7 +21,7 @@ namespace pm
         float last_usage_percent_;
         #ifdef _WIN32
             HANDLE process_handle_;
-        #else
+        #elif __linux__
 
         #endif
     public:
@@ -31,7 +31,7 @@ namespace pm
         
         #ifdef _WIN32
             ProcessCpuStats(HANDLE p_handle);
-        #else
+        #elif __linux__
 
         #endif
 

@@ -12,7 +12,7 @@
 	#include "windows.h"
     #include "psapi.h"
 
-#else
+#elif __linux__
 	#include <sys/wait.h>
 	#include <dirent.h>
 #endif
@@ -39,7 +39,7 @@ namespace pm
 
         #ifdef _WIN32
             HANDLE process_handle_;
-        #else
+        #elif __linux__
 
         #endif
 
@@ -54,7 +54,7 @@ namespace pm
         ProcessInfo();
         #ifdef _WIN32
             explicit ProcessInfo(HANDLE process_handle_);
-        #else
+        #elif __linux__
 
         #endif
         int GetPid();
@@ -67,9 +67,6 @@ namespace pm
 
         void UpdateAttributes();
 
-        std::wstring ToString();
-
-        ~ProcessInfo();
     };
 }
 

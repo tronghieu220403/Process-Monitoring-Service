@@ -8,7 +8,7 @@
 #if defined(_WIN32)
 	#include <WS2tcpip.h>
 	#include <TlHelp32.h>
-#else
+#elif __linux__
 	#include <sys/wait.h>
 	#include <dirent.h>
 #endif
@@ -25,7 +25,7 @@ namespace pm
 		int pid_ = 0;
 		#ifdef _WIN32
 			std::wstring name_;
-		#else
+		#elif __linux__
 			std::string name_;
 		#endif
 

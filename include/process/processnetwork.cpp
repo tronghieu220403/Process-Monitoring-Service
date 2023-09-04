@@ -15,7 +15,7 @@ ProcessNetworkStats::ProcessNetworkStats(HANDLE p_handle)
         {
             return;
         }
-    #else
+    #elif __linux__
 
     #endif
     process_handle_ = p_handle;
@@ -29,7 +29,7 @@ float ProcessNetworkStats::GetCurrentSpeed()
         return 0.0;
     }
     last_speed_ = 0.0;
-#else
+#elif __linux__
     last_speed_ = 0.0;
 #endif
     return last_speed_;
@@ -42,7 +42,7 @@ float ProcessNetworkStats::GetLastSpeed()
         {
             return 0.0;
         }
-    #else
+    #elif __linux__
 
     #endif
 

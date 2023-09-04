@@ -32,7 +32,7 @@ ProcessCpuStats::ProcessCpuStats(HANDLE p_handle)
         GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
         memcpy(&last_sys_cpu_, &fsys, sizeof(FILETIME));
         memcpy(&last_user_cpu_, &fuser, sizeof(FILETIME));
-    #else
+    #elif __linux__
 
     #endif
 
@@ -69,7 +69,7 @@ float ProcessCpuStats::GetCurrentUsage()
         last_cpu_ = now;
         last_user_cpu_ = user;
         last_sys_cpu_ = sys;
-    #else
+    #elif __linux__
 
     #endif
 
@@ -84,7 +84,7 @@ float ProcessCpuStats::GetLastUsage()
         {
             return 0.0;
         }
-    #else
+    #elif __linux__
 
     #endif
 

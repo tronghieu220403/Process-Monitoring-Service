@@ -5,7 +5,7 @@
 #define _UNICODE
 
 #include <logs/logger.h>
-#include <process/processcontrol.h>
+#include <process/processcontroller.h>
 
 namespace pm
 {
@@ -20,16 +20,16 @@ namespace pm
     class ProcessLogger: public Logger
     {
     private:
-        ProcessControl process_;
+        ProcessController process_controller_;
     public:
 
         using Logger::SetMessage;
 
         ProcessLogger() = default;
         
-        explicit ProcessLogger(ProcessControl p);
+        explicit ProcessLogger(ProcessController& p);
         
-        void SetProcessInfo(ProcessControl p);
+        void SetProcessInfo(ProcessController& p);
 
         void SetMessage(ProcessLoggerType type);
 

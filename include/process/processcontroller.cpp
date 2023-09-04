@@ -1,17 +1,18 @@
 #define UNICODE
 #define _UNICODE
 
-#include "process/processcontrol.h"
+#include "process/processcontroller.h"
+
 namespace pm
 {
 
-	ProcessControl::ProcessControl()
+	ProcessController::ProcessController()
     {
 
     };
 
 
-	ProcessControl::ProcessControl(const std::string_view& name) 
+	ProcessController::ProcessController(const std::string_view& name) 
 	{
         pid_ = FindProcessIdByName(name);
 		name_ = std::wstring(name.begin(), name.end());
@@ -19,7 +20,7 @@ namespace pm
 	};
 
 #ifdef _WIN32
-	ProcessControl::ProcessControl(const std::wstring_view& name)
+	ProcessController::ProcessController(const std::wstring_view& name)
 	{
         pid_ = FindProcessIdByName(name);
 		name_ = static_cast<std::wstring_view>(name_);
@@ -27,7 +28,7 @@ namespace pm
 	};
 #endif
 
-	bool ProcessControl::SetHandle(int pid)
+	bool ProcessController::SetHandle(int pid)
 	{
 		#ifdef _WIN32
 			process_handle_ = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid_);
@@ -37,12 +38,12 @@ namespace pm
 			}
 			p_info_ = ProcessInfo(process_handle_);
 			return true;
-		#else
+		#elif __linux__
 
 		#endif
 	}
 
-	bool ProcessControl::SetHandle(const std::string_view& name){
+	bool ProcessController::SetHandle(const std::string_view& name){
 		pid_ = FindProcessIdByName(name);
 		if (pid_ == 0)
 		{
@@ -52,7 +53,7 @@ namespace pm
 	};
 
 #ifdef _WIN32
-	bool ProcessControl::SetHandle(const std::wstring_view& name)
+	bool ProcessController::SetHandle(const std::wstring_view& name)
 	{
 		pid_ = FindProcessIdByName(name);
 		if (pid_ == 0)
@@ -63,7 +64,7 @@ namespace pm
 	}
 #endif
 
-	bool ProcessControl::IsExists()
+	bool ProcessController::IsExists()
 	{
 		#ifdef _WIN32
 			if (GetProcessId(process_handle_) == pid_ && pid_ == 0)
@@ -71,21 +72,21 @@ namespace pm
 				return true;
 			}
 			return false;
-		#else
+		#elif __linux__
 
 		#endif
 	}
 
-	int ProcessControl::GetPid() const
+	int ProcessController::GetPid() const
 	{
         #ifdef _WIN32
             return GetProcessId(process_handle_);
-        #else
+        #elif __linux__
 		    return FindProcessIdByName(name_);
         #endif
 	}
 
-	ProcessInfo ProcessControl::GetProcessInfo()
+	ProcessInfo ProcessController::GetProcessInfo()
 	{
 		if (IsExists())
 		{
@@ -94,7 +95,7 @@ namespace pm
 		return ProcessInfo();
 	}
 
-    bool ProcessControl::TryFindHandle()
+    bool ProcessController::TryFindHandle()
     {
         #ifdef _WIN32
             if (IsExists())
@@ -105,17 +106,26 @@ namespace pm
             {
                 return SetHandle(name_);
             }
-        #else
+        #elif __linux__
 
         #endif
     };
 
-	ProcessControl::~ProcessControl()
+	void ProcessController::Close()
 	{
 		#ifdef _WIN32
+		if (process_handle_ != NULL)
+		{
 			CloseHandle(process_handle_);
-		#else
+			process_handle_ = NULL;
+		}
+		#elif __linux__
 
 		#endif
+	}
+
+	ProcessController::~ProcessController()
+	{
+		Close();
 	}
 }

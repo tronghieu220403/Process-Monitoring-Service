@@ -18,7 +18,7 @@ ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
         process_handle_ = p_handle;
         GetProcessIoCounters(process_handle_, &last_io_counter_);
         GetSystemTimeAsFileTime(&last_time_);
-    #else
+    #elif __linux__
 
     #endif
 };
@@ -45,7 +45,7 @@ float ProcessDiskStats::GetCurrentSpeed()
         last_time_ = now_time;
         last_io_counter_ = now_io_counter;
 
-    #else
+    #elif __linux__
 
     #endif
 
@@ -60,7 +60,7 @@ float ProcessDiskStats::GetLastSpeed()
         {
             return 0.0;
         }
-    #else
+    #elif __linux__
 
     #endif
 

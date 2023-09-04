@@ -34,6 +34,8 @@ namespace pm
         virtual bool SetLoggingFolder(std::string folder_path) final;
         virtual bool SetLoggingFolder(std::wstring folder_path) final;
 
+        std::wstring GetMessage();
+
         virtual std::wstring_view ToWString() const;
 
         virtual bool WriteLog() const;

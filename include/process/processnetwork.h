@@ -10,7 +10,7 @@
     #include <Windows.h>
     #include <WinSock2.h>
     #include <iphlpapi.h>
-#else
+#elif __linux__
 
 #endif
 

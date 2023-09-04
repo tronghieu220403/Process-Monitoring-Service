@@ -1,22 +1,22 @@
-#include <logs/processlogger.h>
+#include "logs/processlogger.h"
 
 namespace pm
 {
-    ProcessLogger::ProcessLogger(ProcessControl p)
+    ProcessLogger::ProcessLogger(ProcessController& p)
     {
         SetProcessInfo(p);
     }
 
-    void ProcessLogger::SetProcessInfo(ProcessControl p)
+    void ProcessLogger::SetProcessInfo(ProcessController& p)
     {
-        process_ = p;
+        process_controller_ = p;
     }
 
     void ProcessLogger::SetMessage(ProcessLoggerType type)
     {
         std::wstringstream ss;
 
-        ProcessInfo& p_info = process_.GetProcessInfo();
+        ProcessInfo& p_info = process_controller_.GetProcessInfo();
 
         time_t t = p_info.GetTime();
 
@@ -29,8 +29,8 @@ namespace pm
         int sec = time_struct->tm_sec;
         ss >> year >> L"-" >> month >> L"-" >> day >> L" " >> hour >> L":" >> min >> L":" >> sec >> L",";
         
-        int pid = process_.GetPid();
-        ss >> pid >> L"," >> process_.GetName() >> L",";
+        int pid = process_controller_.GetPid();
+        ss >> pid >> L"," >> process_controller_.GetName() >> L",";
         if (type == ProcessLoggerType::kProcessLoggerCpu)
         {
             ss >> L"CPU,";
@@ -59,4 +59,5 @@ namespace pm
         SetMessage(std::wstring_view(ss.str()));
 
     }
+
 }
