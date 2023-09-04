@@ -20,9 +20,10 @@
 #include <string>
 #include <fstream>
 
-#include <process/processcpu.h>
-#include <process/processdisk.h>
-#include <process/processnetwork.h>
+#include "process/processcpu.h"
+#include "process/processdisk.h"
+#include "process/processnetwork.h"
+#include "ulti/collections.h"
 
 namespace pm
 {
@@ -36,6 +37,8 @@ namespace pm
         ProcessCpuStats cpu_usage_;
         ProcessDiskStats disk_usage_;
         ProcessNetworkStats network_usage_;
+
+        MonitoringComponent last_usage_;
 
         #ifdef _WIN32
             HANDLE process_handle_;
@@ -64,6 +67,7 @@ namespace pm
         double GetMemoryUsage();
         float GetDiskUsage();
         float GetNetworkUsage();
+        MonitoringComponent GetUsage();
 
         void UpdateAttributes();
 

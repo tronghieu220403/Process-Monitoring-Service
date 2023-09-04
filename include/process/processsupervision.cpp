@@ -27,25 +27,33 @@ namespace pm
         process_logger_ = ProcessLogger(process_controller_);
     }
 
-    void ProcessSupervision::SetMaxUsage(float max_cpu_usage)
+
+    void ProcessSupervision::SetMaxUsage(MonitoringComponent max_usage)
     {
-        max_cpu_usage_ = max_cpu_usage;
+        max_usage_ = max_usage;
     }
 
-    void ProcessSupervision::SetMaxMemsage(double max_mem_usage)
+    void ProcessSupervision::SetMaxCpuUsage(float max_cpu_usage)
     {
-        max_mem_usage_ = max_mem_usage;
+        max_usage_.cpu_usage = max_cpu_usage;
+    }
+
+    void ProcessSupervision::SetMaxMemUsage(double max_mem_usage)
+    {
+        max_usage_.mem_usage = max_mem_usage;
     }
 
     void ProcessSupervision::SetMaxDiskUsage(float max_disk_usage)
     {
-        max_disk_usage_ = max_disk_usage;
+        max_usage_.disk_usage = max_disk_usage;
     }
 
     void ProcessSupervision::SetMaxNetworkUsage(float max_network_usage)
     {
-        max_network_usage_ = max_network_usage;
+        max_usage_.network_usage = max_network_usage;
     }
+
+
 
     ProcessController ProcessSupervision::GetProcessController()
     {
@@ -71,19 +79,19 @@ namespace pm
     void ProcessSupervision::CheckProcessStats()
     {
         ProcessInfo& p_info = process_controller_.GetProcessInfo();
-        if (p_info.GetCpuUsage() > max_cpu_usage_)
+        if (p_info.GetCpuUsage() > max_usage_.cpu_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerCpu);
         }
-        if (p_info.GetDiskUsage() > max_disk_usage_)
-        {
-            Alert(ProcessLoggerType::kProcessLoggerDisk);
-        }
-        if (p_info.GetMemoryUsage() > max_mem_usage_)
+        if (p_info.GetMemoryUsage() > max_usage_.mem_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerMem);
         }
-        if (p_info.GetNetworkUsage() > max_network_usage_)
+        if (p_info.GetDiskUsage() > max_usage_.disk_usage)
+        {
+            Alert(ProcessLoggerType::kProcessLoggerDisk);
+        }
+        if (p_info.GetNetworkUsage() > max_usage_.network_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerNet);
         }

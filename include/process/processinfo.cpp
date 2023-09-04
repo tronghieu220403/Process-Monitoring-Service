@@ -81,10 +81,10 @@ float ProcessInfo::UpdateNetworkUsage()
 void ProcessInfo::UpdateAttributes()
 {
     UpdateTime();
-    UpdateCpuUsage();
-    UpdateMemoryUsage();
-    UpdateDiskUsage();
-    UpdateNetworkUsage();
+    last_usage_.cpu_usage = UpdateCpuUsage();
+    last_usage_.mem_usage = UpdateMemoryUsage();
+    last_usage_.disk_usage = UpdateDiskUsage();
+    last_usage_.network_usage = UpdateNetworkUsage();
 }
 
 time_t ProcessInfo::GetTime()
@@ -94,23 +94,28 @@ time_t ProcessInfo::GetTime()
 
 float ProcessInfo::GetCpuUsage()
 {
-    return cpu_usage_.GetLastUsage();
+    return last_usage_.cpu_usage;
 }
 
 double ProcessInfo::GetMemoryUsage()
 {
-    return memory_usage_;
+    return last_usage_.mem_usage;
 }
 
 float ProcessInfo::GetDiskUsage()
 {
-    return disk_usage_.GetLastSpeed();
+    return last_usage_.disk_usage;
 
 }
 
 float ProcessInfo::GetNetworkUsage()
 {
-    return network_usage_.GetLastSpeed();
+    return last_usage_.network_usage;
+}
+
+MonitoringComponent ProcessInfo::GetUsage()
+{
+    return last_usage_;
 }
 
 }

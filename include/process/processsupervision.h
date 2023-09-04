@@ -4,19 +4,16 @@
 #define UNICODE
 #define _UNICODE
 
-#include<process/processcontroller.h>
-#include<logs/processlogger.h>
+#include "process/processcontroller.h"
+#include "logs/processlogger.h"
+#include "ulti/collections.h"
 
 namespace pm
 {
     class ProcessSupervision
     {
     protected:
-        float max_cpu_usage_;
-        double max_mem_usage_;
-        float max_disk_usage_;
-        float max_network_usage_;
-
+        MonitoringComponent max_usage_;
         ProcessController process_controller_;
         ProcessLogger process_logger_;
 
@@ -30,8 +27,9 @@ namespace pm
 
         void SetProcessController(ProcessController process_control);
 
-        void SetMaxUsage(float max_cpu_usage);
-        void SetMaxMemsage(double max_mem_usage);
+        void SetMaxUsage(MonitoringComponent max_usage);
+        void SetMaxCpuUsage(float max_cpu_usage);
+        void SetMaxMemUsage(double max_mem_usage);
         void SetMaxDiskUsage(float max_disk_usage);
         void SetMaxNetworkUsage(float max_network_usage);
 

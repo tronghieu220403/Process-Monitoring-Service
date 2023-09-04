@@ -64,6 +64,13 @@
         "span": "cpp",
         "vector": "cpp",
         "xtree": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "chrono": "cpp",
+        "coroutine": "cpp",
+        "forward_list": "cpp",
+        "iomanip": "cpp",
+        "list": "cpp",
+        "unordered_map": "cpp",
+        "xhash": "cpp"
     }
 }

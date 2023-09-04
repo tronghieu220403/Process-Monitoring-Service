@@ -4,6 +4,10 @@ namespace pm
 {
 ProcessCpuStats::ProcessCpuStats()
 {
+    SYSTEM_INFO sysInfo;
+
+    GetSystemInfo(&sysInfo);
+    num_processors_ = sysInfo.dwNumberOfProcessors;
 
 };
 
@@ -20,12 +24,11 @@ ProcessCpuStats::ProcessCpuStats(HANDLE p_handle)
         FILETIME fsys;
         FILETIME fuser;
 
-        /*
         SYSTEM_INFO sysInfo;
 
         GetSystemInfo(&sysInfo);
-        numProcessors = sysInfo.dwNumberOfProcessors;
-        */
+        num_processors_ = sysInfo.dwNumberOfProcessors;
+
         GetSystemTimeAsFileTime(&ftime);
         memcpy(&last_cpu_, &ftime, sizeof(FILETIME));
 

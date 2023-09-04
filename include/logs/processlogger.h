@@ -4,18 +4,12 @@
 #define UNICODE
 #define _UNICODE
 
-#include <logs/logger.h>
-#include <process/processcontroller.h>
+#include "logs/logger.h"
+#include "process/processcontroller.h"
+#include "ulti./collections.h"
 
 namespace pm
 {
-    enum ProcessLoggerType
-    {
-        kProcessLoggerCpu,
-        kProcessLoggerMem,
-        kProcessLoggerDisk,
-        kProcessLoggerNet
-    };
 
     class ProcessLogger: public Logger
     {

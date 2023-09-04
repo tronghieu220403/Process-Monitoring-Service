@@ -13,7 +13,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <processinfo.h>
+#include "process/processinfo.h"
 
 namespace pm
 {
