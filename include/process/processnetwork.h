@@ -22,13 +22,13 @@ namespace pm
         HANDLE process_handle_;
         long long last_data_recv_;
         long long last_data_sent_;
-        float last_speed_;
+        double last_speed_;
     public:
         ProcessNetworkStats();
         ProcessNetworkStats(HANDLE p_handle);
 
-        float GetCurrentSpeed();
-        float GetLastSpeed();
+        double GetCurrentSpeed();
+        double GetLastSpeed();
     };
 
 }

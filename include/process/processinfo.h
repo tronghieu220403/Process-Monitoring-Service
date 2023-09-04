@@ -47,10 +47,10 @@ namespace pm
         #endif
 
         time_t UpdateTime();
-        float UpdateCpuUsage();
+        double UpdateCpuUsage();
         double UpdateMemoryUsage();
-        float UpdateDiskUsage();
-        float UpdateNetworkUsage();
+        double UpdateDiskUsage();
+        double UpdateNetworkUsage();
 
     public:
 
@@ -63,10 +63,10 @@ namespace pm
         int GetPid();
                 
         time_t GetTime();
-        float GetCpuUsage();
+        double GetCpuUsage();
         double GetMemoryUsage();
-        float GetDiskUsage();
-        float GetNetworkUsage();
+        double GetDiskUsage();
+        double GetNetworkUsage();
         MonitoringComponent GetUsage();
 
         void UpdateAttributes();

@@ -23,7 +23,7 @@ ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
     #endif
 };
 
-float ProcessDiskStats::GetCurrentSpeed()
+double ProcessDiskStats::GetCurrentSpeed()
 {
     unsigned long long speed;
 
@@ -49,11 +49,11 @@ float ProcessDiskStats::GetCurrentSpeed()
 
     #endif
 
-    last_speed_ = float(speed)/100;
+    last_speed_ = double(speed)/100;
     return last_speed_;
 };
 
-float ProcessDiskStats::GetLastSpeed()
+double ProcessDiskStats::GetLastSpeed()
 {
     #ifdef _WIN32
         if (GetProcessId(process_handle_) == NULL)

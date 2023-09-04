@@ -37,7 +37,7 @@ int ProcessInfo::GetPid()
     return pid_;
 };
 
-float ProcessInfo::UpdateCpuUsage()
+double ProcessInfo::UpdateCpuUsage()
 {
     #ifdef _WIN32
         if (GetProcessId(process_handle_) == NULL)
@@ -68,12 +68,12 @@ double ProcessInfo::UpdateMemoryUsage()
     #endif
 };
 
-float ProcessInfo::UpdateDiskUsage()
+double ProcessInfo::UpdateDiskUsage()
 {
     return disk_usage_.GetCurrentSpeed();
 };
 
-float ProcessInfo::UpdateNetworkUsage()
+double ProcessInfo::UpdateNetworkUsage()
 {
     return network_usage_.GetCurrentSpeed();
 };
@@ -92,7 +92,7 @@ time_t ProcessInfo::GetTime()
     return time_;
 }
 
-float ProcessInfo::GetCpuUsage()
+double ProcessInfo::GetCpuUsage()
 {
     return last_usage_.cpu_usage;
 }
@@ -102,13 +102,13 @@ double ProcessInfo::GetMemoryUsage()
     return last_usage_.mem_usage;
 }
 
-float ProcessInfo::GetDiskUsage()
+double ProcessInfo::GetDiskUsage()
 {
     return last_usage_.disk_usage;
 
 }
 
-float ProcessInfo::GetNetworkUsage()
+double ProcessInfo::GetNetworkUsage()
 {
     return last_usage_.network_usage;
 }

@@ -18,7 +18,7 @@ namespace pm
         ULARGE_INTEGER last_sys_cpu_; 
         ULARGE_INTEGER last_user_cpu_;
 
-        float last_usage_percent_;
+        double last_usage_percent_;
         #ifdef _WIN32
             HANDLE process_handle_;
         #elif __linux__
@@ -35,8 +35,8 @@ namespace pm
 
         #endif
 
-        float GetCurrentUsage();
-        float GetLastUsage();
+        double GetCurrentUsage();
+        double GetLastUsage();
     };
 }
 

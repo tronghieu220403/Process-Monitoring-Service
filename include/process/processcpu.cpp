@@ -41,7 +41,7 @@ ProcessCpuStats::ProcessCpuStats(HANDLE p_handle)
 
 };
 
-float ProcessCpuStats::GetCurrentUsage()
+double ProcessCpuStats::GetCurrentUsage()
 {
     double percent;
 
@@ -76,11 +76,11 @@ float ProcessCpuStats::GetCurrentUsage()
 
     #endif
 
-    last_usage_percent_ = (float)(percent * 100);
+    last_usage_percent_ = (double)(percent * 100);
     return last_usage_percent_;
 };
 
-float ProcessCpuStats::GetLastUsage()
+double ProcessCpuStats::GetLastUsage()
 {
     #ifdef _WIN32
         if (GetProcessId(process_handle_) == NULL)

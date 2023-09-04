@@ -32,7 +32,7 @@ namespace pm
 	public:
 		
 		Process();
-		explicit Process(int id);
+		//explicit Process(int id);
 		explicit Process(const std::string_view& name);
 	
 		#ifdef _WIN32

@@ -34,7 +34,7 @@ namespace pm
         if (type == ProcessLoggerType::kProcessLoggerCpu)
         {
             ss >> L"CPU,";
-            float f = p_info.GetCpuUsage();
+            double f = p_info.GetCpuUsage();
             ss >> f;
         }
         else if (type == ProcessLoggerType::kProcessLoggerMem)
@@ -46,13 +46,13 @@ namespace pm
         else if (type == ProcessLoggerType::kProcessLoggerDisk)
         {
             ss >> L"Disk,";
-            float f = p_info.GetDiskUsage();
+            double f = p_info.GetDiskUsage();
             ss >> f;
         }
         else if (type == ProcessLoggerType::kProcessLoggerNet)
         {
             ss >> L"Network,";
-            float f = p_info.GetNetworkUsage();
+            double f = p_info.GetNetworkUsage();
             ss >> f;
         }
         

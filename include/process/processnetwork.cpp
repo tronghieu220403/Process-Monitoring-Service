@@ -21,7 +21,7 @@ ProcessNetworkStats::ProcessNetworkStats(HANDLE p_handle)
     process_handle_ = p_handle;
 };
 
-float ProcessNetworkStats::GetCurrentSpeed()
+double ProcessNetworkStats::GetCurrentSpeed()
 {
 #ifdef _WIN32
     if (GetProcessId(process_handle_) == NULL)
@@ -35,7 +35,7 @@ float ProcessNetworkStats::GetCurrentSpeed()
     return last_speed_;
 }
 
-float ProcessNetworkStats::GetLastSpeed()
+double ProcessNetworkStats::GetLastSpeed()
 {
     #ifdef _WIN32
         if (GetProcessId(process_handle_) == NULL)

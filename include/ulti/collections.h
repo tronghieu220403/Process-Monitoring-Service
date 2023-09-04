@@ -8,10 +8,10 @@ namespace pm
 {
     struct MonitoringComponent
     {
-        float cpu_usage;
+        double cpu_usage;
         double mem_usage;
-        float disk_usage;
-        float network_usage;
+        double disk_usage;
+        double network_usage;
     };
 
     enum ProcessLoggerType

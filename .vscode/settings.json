@@ -71,6 +71,8 @@
         "iomanip": "cpp",
         "list": "cpp",
         "unordered_map": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "LOCSRVER.C": "cpp",
+        "clientNP.C": "cpp"
     }
 }

@@ -7,7 +7,7 @@ namespace pm
 
 	Process::Process(): pid_(0) {};
 
-	Process::Process(int id): pid_(id) {};
+	//Process::Process(int id): pid_(id) {};
 
 	Process::Process(const std::string_view& name): pid_(FindProcessIdByName(name)) 
 	{

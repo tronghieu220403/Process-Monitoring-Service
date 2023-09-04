@@ -16,15 +16,15 @@ namespace pm
         IO_COUNTERS last_io_counter_;
         FILETIME last_time_;
         HANDLE process_handle_;
-        float last_speed_;
+        double last_speed_;
     public:
         static int num_processors_;
 
         ProcessDiskStats();
         ProcessDiskStats(HANDLE p_handle);
 
-        float GetCurrentSpeed();
-        float GetLastSpeed();
+        double GetCurrentSpeed();
+        double GetLastSpeed();
 
     };
 }

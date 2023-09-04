@@ -38,6 +38,7 @@
             "${workspaceFolder}\\include\\socket\\tcpsocket.cpp",
             */
             "-lws2_32",
+            
             "-o", 
             "${workspaceFolder}\\release\\x64\\Windows\\${fileBasenameNoExtension}.exe"
           ]
