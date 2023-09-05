@@ -67,6 +67,9 @@ namespace pm
             file_name = std::wstring(ss.str().begin(), ss.str().end());
         }
 
+        /* 
+        Should be replaced by OS native file IO API 
+        */
         std::ofstream ofs(file_name, std::ios_base::app);
         ofs.write((char *)& message_[0], wcslen(&message_[0]) * 2);
         ofs.close();
