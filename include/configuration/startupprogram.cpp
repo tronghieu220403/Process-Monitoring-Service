@@ -1,4 +1,4 @@
-#include "configuration/startupprogram.h"
+#include "include/configuration/startupprogram.h"
 
 namespace pm
 {

@@ -4,8 +4,8 @@
 #define UNICODE
 #define _UNICODE
 
-#include "process/process.h"
-#include "process/processinfo.h"
+#include "include/process/process.h"
+#include "include/process/processinfo.h"
 
 namespace pm
 {
@@ -30,7 +30,8 @@ namespace pm
 		#endif
 
     public:
-        ProcessController();
+
+        ProcessController() = default;
 		explicit ProcessController(const std::string_view& name);
 
         #ifdef _WIN32

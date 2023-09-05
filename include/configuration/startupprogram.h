@@ -26,8 +26,8 @@ namespace pm
     public:
 
     StartUpProgram() = default;
-    StartUpProgram(std::wstring exe_full_path);
-    StartUpProgram(std::string exe_full_path);
+    explicit StartUpProgram(std::wstring exe_full_path);
+    explicit StartUpProgram(std::string exe_full_path);
 
     void SetProgram(std::wstring exe_full_path);
     void SetProgram(std::string exe_full_path);

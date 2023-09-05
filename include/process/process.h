@@ -42,6 +42,7 @@ namespace pm
 		#elif __linux__
 			std::string GetName() const;
 		#endif
+		
 		virtual int GetPid() const;
 
 		static int FindProcessIdByName(const std::string_view& name);

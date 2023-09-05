@@ -4,9 +4,9 @@
 #define UNICODE
 #define _UNICODE
 
-#include "process/processcontroller.h"
-#include "logs/processlogger.h"
-#include "ulti/collections.h"
+#include "include/process/processcontroller.h"
+#include "include/logs/processlogger.h"
+#include "include/ulti/collections.h"
 
 namespace pm
 {

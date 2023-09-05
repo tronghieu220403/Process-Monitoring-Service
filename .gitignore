@@ -78,3 +78,9 @@ x64/Debug/vc143.pdb
 *.vsidx
 .vs/ProcessMonitoring/v17/.suo
 *.vsidx
+*.tlog
+*.vcxproj
+*.filters
+*.user
+*.vcxproj
+*.cd

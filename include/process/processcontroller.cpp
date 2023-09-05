@@ -1,16 +1,10 @@
 #define UNICODE
 #define _UNICODE
 
-#include "process/processcontroller.h"
+#include "include/process/processcontroller.h"
 
 namespace pm
 {
-
-	ProcessController::ProcessController()
-    {
-
-    };
-
 
 	ProcessController::ProcessController(const std::string_view& name) 
 	{

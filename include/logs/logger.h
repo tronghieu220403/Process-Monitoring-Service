@@ -13,7 +13,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "process/processinfo.h"
+#include "include/process/processinfo.h"
 
 namespace pm
 {
@@ -28,17 +28,19 @@ namespace pm
         
         explicit Logger(std::string_view& message);
         
-        virtual void SetMessage(std::string_view& message) final;
-        virtual void SetMessage(std::wstring_view& message) final;
+        void SetMessage(std::string_view& message);
+        void SetMessage(std::wstring_view& message);
 
-        virtual bool SetLoggingFolder(std::string folder_path) final;
-        virtual bool SetLoggingFolder(std::wstring folder_path) final;
+        virtual bool SetLoggingFolder(std::string folder_path);
+        virtual bool SetLoggingFolder(std::wstring folder_path);
 
         std::wstring GetMessage();
 
-        virtual std::wstring_view ToWString() const;
+        bool WriteLog() const;
 
-        virtual bool WriteLog() const;
+        bool operator==(const Logger& other) const = default;
+
+        virtual ~Logger() = default;
 
     };
         

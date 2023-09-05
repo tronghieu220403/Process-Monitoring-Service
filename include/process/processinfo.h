@@ -20,10 +20,10 @@
 #include <string>
 #include <fstream>
 
-#include "process/processcpu.h"
-#include "process/processdisk.h"
-#include "process/processnetwork.h"
-#include "ulti/collections.h"
+#include "include/process/processcpu.h"
+#include "include/process/processdisk.h"
+#include "include/process/processnetwork.h"
+#include "include/ulti/collections.h"
 
 namespace pm
 {

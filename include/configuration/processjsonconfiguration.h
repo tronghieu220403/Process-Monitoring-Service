@@ -32,7 +32,7 @@ namespace pm
     ProcessJsonConfiguration() = default;
 
     bool SetContent(std::wstring content);
-    bool SetContentFromFile(std::wstring file_name);
+    //bool SetContentFromFile(std::wstring file_name);
 
     std::vector< std::pair< std::wstring, MonitoringComponent > > GetData();
     

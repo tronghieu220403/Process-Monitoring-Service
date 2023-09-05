@@ -1,4 +1,4 @@
-#include "process/processsupervision.h"
+#include "include/process/processsupervision.h"
 
 namespace pm
 {
@@ -72,13 +72,13 @@ namespace pm
         {
             process_controller_.TryFindHandle();
         }
-        ProcessInfo& p_info = process_controller_.GetProcessInfo();
+        ProcessInfo p_info = process_controller_.GetProcessInfo();
         p_info.UpdateAttributes();
     }
 
     void ProcessSupervision::CheckProcessStats()
     {
-        ProcessInfo& p_info = process_controller_.GetProcessInfo();
+        ProcessInfo p_info = process_controller_.GetProcessInfo();
         if (p_info.GetCpuUsage() > max_usage_.cpu_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerCpu);

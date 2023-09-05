@@ -1,4 +1,4 @@
-#include "logs/processlogger.h"
+#include "include/logs/processlogger.h"
 
 namespace pm
 {
@@ -16,7 +16,7 @@ namespace pm
     {
         std::wstringstream ss;
 
-        ProcessInfo& p_info = process_controller_.GetProcessInfo();
+        ProcessInfo p_info = process_controller_.GetProcessInfo();
 
         time_t t = p_info.GetTime();
 

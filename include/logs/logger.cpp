@@ -3,29 +3,32 @@
 namespace pm
 {
 
+    Logger::Logger(const std::wstring& message_, const std::wstring& folder_path_)
+        : message_(message_), folder_path_(folder_path_)
+    {
+
+    };
+
     Logger::Logger(std::wstring_view& message)
     {
         message_ = message;
-    }
+    };
 
     Logger::Logger(std::string_view& message)
     {
         message_ = std::wstring(message.begin(), message.end());
-    }
-
-    std::wstring_view Logger::ToWString() const
-    {
-        return message_;
-    }
+    };
 
     bool Logger::SetLoggingFolder(std::string folder_path)
     {
-        return SetLoggingFolder(std::wstring(folder_path.begin(), folder_path.end()));
+        //return SetLoggingFolder(std::wstring(folder_path.begin(), folder_path.end()));
+        return true;
     }
 
     bool Logger::SetLoggingFolder(std::wstring folder_path)
     {
         // Create folder if it is not exist
+        return true;
     }
 
     void Logger::SetMessage(std::string_view& message) 

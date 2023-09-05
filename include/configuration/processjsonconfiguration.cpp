@@ -1,4 +1,4 @@
-#include "configuration/processjsonconfiguration.h"
+#include "include/configuration/processjsonconfiguration.h"
 
 namespace pm
 {
