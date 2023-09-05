@@ -68,15 +68,11 @@ x64/Debug/vc143.pdb
 .vs/ProcessMonitoring/v17/.suo
 *.db
 *.ipch
-.vs/ProcessMonitoring/v17/Browse.VC.db
-.vs/ProcessMonitoring/v17/.suo
-.vs/ProcessMonitoring/FileContentIndex/2b3fc7fa-7249-41c9-a874-13e49e41fe85.vsidx
-.vs/ProcessMonitoring/v17/ipch/AutoPCH/ebd6d46305a3fab/PROCESSMONITORING.ipch
 *.user
 *.ipch
 *.db
 *.vsidx
-.vs/ProcessMonitoring/v17/.suo
+*.suo
 *.vsidx
 *.tlog
 *.vcxproj
