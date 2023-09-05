@@ -2,7 +2,7 @@
 #define PROCESSMONITORING_PROCESS_PROCESSDISK_H_
 
 #ifdef _WIN32
-#include "windows.h"
+#include <Windows.h>
 #elif __linux__
 
 #endif

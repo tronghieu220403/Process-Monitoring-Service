@@ -9,8 +9,8 @@
 #if defined(_WIN32)
 	#include <WS2tcpip.h>
 	#include <TlHelp32.h>
-	#include "windows.h"
-    #include "psapi.h"
+	#include <Windows.h>
+    #include <psapi.h>
 
 #elif __linux__
 	#include <sys/wait.h>
