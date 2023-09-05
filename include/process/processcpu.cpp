@@ -4,13 +4,17 @@ namespace pm
 {
 ProcessCpuStats::ProcessCpuStats()
 {
+    #ifdef _WIN32
     SYSTEM_INFO sysInfo;
 
     GetSystemInfo(&sysInfo);
     num_processors_ = sysInfo.dwNumberOfProcessors;
+    #elif __linux__
 
+    #endif
 };
 
+#ifdef _WIN32
 ProcessCpuStats::ProcessCpuStats(HANDLE p_handle)
 {
     #ifdef _WIN32
@@ -40,6 +44,7 @@ ProcessCpuStats::ProcessCpuStats(HANDLE p_handle)
     #endif
 
 };
+#endif
 
 double ProcessCpuStats::GetCurrentUsage()
 {
