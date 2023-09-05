@@ -16,8 +16,6 @@
 #include <string>
 #include <fstream>
 
-#include <process/processinfo.h>
-
 namespace pm
 {
 	class Process {
@@ -39,7 +37,11 @@ namespace pm
 			explicit Process(const std::wstring_view& wname);
 		#endif
 
-		std::wstring GetName() const;
+		#ifdef _WIN32
+			std::wstring GetName() const;
+		#elif __linux__
+			std::string GetName() const;
+		#endif
 		virtual int GetPid() const;
 
 		static int FindProcessIdByName(const std::string_view& name);

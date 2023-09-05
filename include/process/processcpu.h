@@ -14,12 +14,13 @@ namespace pm
     {
     
     private:
-        ULARGE_INTEGER last_cpu_;
-        ULARGE_INTEGER last_sys_cpu_; 
-        ULARGE_INTEGER last_user_cpu_;
 
         double last_usage_percent_;
         #ifdef _WIN32
+            ULARGE_INTEGER last_cpu_;
+            ULARGE_INTEGER last_sys_cpu_; 
+            ULARGE_INTEGER last_user_cpu_;
+
             HANDLE process_handle_;
         #elif __linux__
 
