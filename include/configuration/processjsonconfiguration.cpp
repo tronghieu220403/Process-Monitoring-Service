@@ -2,6 +2,11 @@
 
 namespace pm
 {
+    ProcessJsonConfiguration::ProcessJsonConfiguration()
+    {
+        data.clear();
+    }
+    
     bool ProcessJsonConfiguration::SetContent(std::wstring content)
     {
         data.clear();

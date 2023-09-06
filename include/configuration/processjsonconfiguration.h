@@ -29,13 +29,13 @@ namespace pm
         std::vector< std::pair< std::wstring, MonitoringComponent > > data;
     public:
 
-    ProcessJsonConfiguration() = default;
+    ProcessJsonConfiguration();
 
     bool SetContent(std::wstring content);
     //bool SetContentFromFile(std::wstring file_name);
 
     std::vector< std::pair< std::wstring, MonitoringComponent > > GetData();
-    
+        
     };
 }
 
