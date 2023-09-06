@@ -3,14 +3,16 @@
 #ifndef PROCESSMONITORING_CONFIGURATION_PROCESSJSONCONFIGURATION_H_
 #define PROCESSMONITORING_CONFIGURATION_PROCESSJSONCONFIGURATION_H_
 
+#ifndef _VISUAL_STUDIO_WORKSPACE
 #define UNICODE
 #define _UNICODE
+#endif
 
 #include <string.h>
 
 #ifdef _WIN32
-#include <winrt/windows.data.json.h>
 #include <winrt/windows.foundation.collections.h>
+#include <winrt/windows.data.json.h>
 #define json_char TCHAR
 #elif __linux__
 
@@ -20,13 +22,11 @@
 #include <map>
 #include <vector>
 
-
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
 #else
 #include "include/ulti/collections.h"
 #endif
-
 
 
 namespace pm
@@ -43,7 +43,7 @@ namespace pm
     bool SetContent(std::string content);
     //bool SetContentFromFile(std::wstring file_name);
 
-    std::vector< std::pair< std::wstring, MonitoringComponent > > GetData() const;
+    std::vector< std::pair< std::wstring, MonitoringComponent > > GetData();
         
     };
 }

@@ -60,7 +60,7 @@ namespace pm
         return true;
     }
 
-    std::vector< std::pair< std::wstring, MonitoringComponent > > ProcessJsonConfiguration::GetData() const
+    std::vector< std::pair< std::wstring, MonitoringComponent > > ProcessJsonConfiguration::GetData()
     {
         return data;
     }

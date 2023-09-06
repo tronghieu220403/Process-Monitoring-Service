@@ -5,10 +5,15 @@
 
 #include <string.h>
 
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
 #ifdef _WIN32
-#include <Windows.h>
 #include <WS2tcpip.h>
 #include <strsafe.h>
+#include <Windows.h>
 #elif __linux__
 
 #endif
@@ -24,9 +29,9 @@ namespace pm
     public:
 
     StartUpProgram() = default;
-    explicit StartUpProgram(const std::string exe_full_path);
+    explicit StartUpProgram(const std::string& exe_full_path);
 
-    void SetProgram(std::string exe_full_path);
+    void SetProgram(const std::string_view& exe_full_path);
     void SetThisProgram();
 
     bool Register();

@@ -3,6 +3,10 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSCPU_H_
 #define PROCESSMONITORING_PROCESS_PROCESSCPU_H_
 
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
 
 #ifdef _WIN32
 #include <Windows.h>

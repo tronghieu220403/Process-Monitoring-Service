@@ -9,30 +9,33 @@
 namespace pm
 {
 
-ProcessInfo::ProcessInfo(const ProcessInfo& pi) = default;
+    ProcessInfo::ProcessInfo(const ProcessInfo& pi) = default;
 
-ProcessInfo& ProcessInfo::operator=(const ProcessInfo& pi) = default;
+    ProcessInfo& ProcessInfo::operator=(const ProcessInfo& pi) = default;
 
-ProcessInfo::ProcessInfo(const ProcessInfo&& pi) noexcept
-{
-    this->pid_ = pi.pid_;
-    this->time_ = pi.time_;
-    this->memory_usage_ = std::move(pi.memory_usage_);
-    this->cpu_usage_ = std::move(pi.cpu_usage_);
-    this->disk_usage_ = std::move(pi.disk_usage_);
-    this->network_usage_ = std::move(pi.network_usage_);
-    this->last_usage_ = std::move(pi.last_usage_);
-}
+    ProcessInfo::ProcessInfo(const ProcessInfo&& pi) noexcept: \
+    pid_(pi.pid_), time_(pi.time_), memory_usage_(pi.memory_usage_)
+    {
+        this->cpu_usage_ = std::move(pi.cpu_usage_);
+        this->disk_usage_ = std::move(pi.disk_usage_);
+        this->network_usage_ = std::move(pi.network_usage_);
+        this->last_usage_ = std::move(pi.last_usage_);
+    }
 
 
 #ifdef _WIN32
-    ProcessInfo::ProcessInfo(HANDLE process_handle_)
+    ProcessInfo::ProcessInfo(HANDLE process_handle)
     {
         #ifdef _WIN32
-            pid_ = GetProcessId(process_handle_);
+            pid_ = GetProcessId(process_handle);
             if (pid_ == NULL)
             {
-                process_handle_ = 0;
+                process_handle_ = nullptr;
+                return;
+            }
+            else
+            {
+                process_handle_ = process_handle;
                 return;
             }
         #elif __linux__
@@ -46,97 +49,97 @@ ProcessInfo::ProcessInfo(const ProcessInfo&& pi) noexcept
 
 #endif
 
-time_t ProcessInfo::UpdateTime()
-{
-    ctime(&time_);
-    return time_;
-}
+    time_t ProcessInfo::UpdateTime()
+    {
+        ctime(&time_);
+        return time_;
+    }
 
-int ProcessInfo::GetPid()
-{
-    return pid_;
-};
+    int ProcessInfo::GetPid() const
+    {
+        return pid_;
+    };
 
-double ProcessInfo::UpdateCpuUsage()
-{
-    #ifdef _WIN32
-        if (GetProcessId(process_handle_) == NULL)
-        {
-            return 0;
-        }
-    #elif __linux__
+    double ProcessInfo::UpdateCpuUsage()
+    {
+        #ifdef _WIN32
+            if (GetProcessId(process_handle_) == NULL)
+            {
+                return 0;
+            }
+        #elif __linux__
 
-    #endif
-    return cpu_usage_.GetCurrentUsage();
-};
+        #endif
+        return cpu_usage_.GetCurrentUsage();
+    };
 
-double ProcessInfo::UpdateMemoryUsage()
-{
-    #ifdef _WIN32
-        PROCESS_MEMORY_COUNTERS_EX pmc;
+    double ProcessInfo::UpdateMemoryUsage()
+    {
+        #ifdef _WIN32
+            PROCESS_MEMORY_COUNTERS_EX pmc{};
 
-        if (GetProcessId(process_handle_) == NULL)
-        {
-            return 0;
-        }
+            if (GetProcessId(process_handle_) == NULL)
+            {
+                return 0;
+            }
 
-        GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-        memory_usage_ = double(pmc.WorkingSetSize) / 1024;
-        return memory_usage_;
-    #elif __linux__
+            GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+            memory_usage_ = double(pmc.WorkingSetSize) / 1024;
+            return memory_usage_;
+        #elif __linux__
         
-    #endif
-};
+        #endif
+    };
 
-double ProcessInfo::UpdateDiskUsage()
-{
-    return disk_usage_.GetCurrentSpeed();
-};
+    double ProcessInfo::UpdateDiskUsage()
+    {
+        return disk_usage_.GetCurrentSpeed();
+    };
 
-double ProcessInfo::UpdateNetworkUsage()
-{
-    return network_usage_.GetCurrentSpeed();
-};
+    double ProcessInfo::UpdateNetworkUsage()
+    {
+        return network_usage_.GetCurrentSpeed();
+    };
 
-void ProcessInfo::UpdateAttributes()
-{
-    UpdateTime();
-    last_usage_.cpu_usage = UpdateCpuUsage();
-    last_usage_.mem_usage = UpdateMemoryUsage();
-    last_usage_.disk_usage = UpdateDiskUsage();
-    last_usage_.network_usage = UpdateNetworkUsage();
-}
+    void ProcessInfo::UpdateAttributes()
+    {
+        UpdateTime();
+        last_usage_.cpu_usage = UpdateCpuUsage();
+        last_usage_.mem_usage = UpdateMemoryUsage();
+        last_usage_.disk_usage = UpdateDiskUsage();
+        last_usage_.network_usage = UpdateNetworkUsage();
+    }
 
-time_t ProcessInfo::GetTime()
-{
-    return time_;
-}
+    time_t ProcessInfo::GetTime() const
+    {
+        return time_;
+    }
 
-double ProcessInfo::GetCpuUsage()
-{
-    return last_usage_.cpu_usage;
-}
+    double ProcessInfo::GetCpuUsage() const
+    {
+        return last_usage_.cpu_usage;
+    }
 
-double ProcessInfo::GetMemoryUsage()
-{
-    return last_usage_.mem_usage;
-}
+    double ProcessInfo::GetMemoryUsage() const
+    {
+        return last_usage_.mem_usage;
+    }
 
-double ProcessInfo::GetDiskUsage()
-{
-    return last_usage_.disk_usage;
+    double ProcessInfo::GetDiskUsage() const
+    {
+        return last_usage_.disk_usage;
 
-}
+    }
 
-double ProcessInfo::GetNetworkUsage()
-{
-    return last_usage_.network_usage;
-}
+    double ProcessInfo::GetNetworkUsage() const
+    {
+        return last_usage_.network_usage;
+    }
 
-MonitoringComponent ProcessInfo::GetUsage()
-{
-    return last_usage_;
-}
+    MonitoringComponent ProcessInfo::GetUsage() const
+    {
+        return last_usage_;
+    }
 
 }
 

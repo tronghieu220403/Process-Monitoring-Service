@@ -3,6 +3,12 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSCONTROLLER_H_
 #define PROCESSMONITORING_PROCESS_PROCESSCONTROLLER_H_
 
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
+
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
 #include "E:/Code/Github/Process-Monitoring/include/process/process.h"
@@ -47,6 +53,8 @@ namespace pm
 		bool TryFindHandle();
 
         void Close();
+
+		~ProcessController();
     };
 }
 

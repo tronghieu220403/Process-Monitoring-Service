@@ -38,13 +38,13 @@ namespace pm
         return folder_path_;
     }
 
-    bool Logger::CreateLogFolder(const std::string& folder_path)
+    bool Logger::CreateLogFolder(const std::string_view& folder_path) const
     {
         // do sth
         return true;
     }
 
-    bool Logger::WriteLog() const
+    void Logger::WriteLog() const
     {
         /*
             Log file name should be pm_logs_yy_mm_dd.log
@@ -59,15 +59,7 @@ namespace pm
         ss << "pm_logs_" << year << "_" << month << "_" << day << ".log";
 
         std::string file_name;
-        if (folder_path_.size() != 0)
-        {
-            file_name = folder_path_ +
-                ss.str();
-        }
-        else
-        {
-            file_name = ss.str();
-        }
+        file_name = folder_path_ + ss.str();
 
         /* 
         Should be replaced by OS native file IO API 
@@ -75,6 +67,7 @@ namespace pm
         std::ofstream ofs(file_name, std::ios_base::app);
         ofs.write(&message_[0], strlen(&message_[0]));
         ofs.close();
+
     }
 
 }

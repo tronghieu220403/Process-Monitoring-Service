@@ -3,6 +3,14 @@
 #ifndef PROCESSMONITORING_LOGGER_LOGGER_H_
 #define PROCESSMONITORING_LOGGER_LOGGER_H_
 
+#define _CRT_SECURE_NO_DEPRECATE
+
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
+
 #include <string.h>
 #include <time.h>
 
@@ -37,8 +45,8 @@ namespace pm
         std::string GetMessage() const;
         std::string GetFolderPath() const;
 
-        bool CreateLogFolder(const std::string& folder_path);
-        bool WriteLog() const;
+        bool CreateLogFolder(const std::string_view& folder_path) const;
+        void WriteLog() const;
 
         virtual ~Logger() = default;
 

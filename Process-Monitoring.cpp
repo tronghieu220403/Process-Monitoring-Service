@@ -3,19 +3,15 @@
 #ifndef PROCESSMONITORING_PROCESSMONITORING
 #define PROCESSMONITORING_PROCESSMONITORING
 
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "include/ulti/everything.h"
+#else
+#include "include/process/processinfo.h"
+#endif
+
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "iphlpapi.lib")
 
-#include <iostream>
-#include <vector>
-#include <sstream>
-
-/*
-#ifdef _WIN32
-#include <Windows.h>
-#include <iphlpapi.h>
-#endif
-*/
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
 

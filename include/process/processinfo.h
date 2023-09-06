@@ -3,6 +3,14 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 #define PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 
+#define _CRT_SECURE_NO_DEPRECATE
+
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
+
 #include <string.h>
 
 #if defined(_WIN32)
@@ -73,14 +81,14 @@ namespace pm
 
         ProcessInfo& operator=(const ProcessInfo& pi);
 
-        int GetPid();
+        int GetPid() const;
                 
-        time_t GetTime();
-        double GetCpuUsage();
-        double GetMemoryUsage();
-        double GetDiskUsage();
-        double GetNetworkUsage();
-        MonitoringComponent GetUsage();
+        time_t GetTime() const;
+        double GetCpuUsage() const;
+        double GetMemoryUsage() const;
+        double GetDiskUsage() const;
+        double GetNetworkUsage() const;
+        MonitoringComponent GetUsage() const;
 
         void UpdateAttributes();
 

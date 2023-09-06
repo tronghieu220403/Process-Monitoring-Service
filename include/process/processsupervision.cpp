@@ -11,48 +11,32 @@
 namespace pm
 {
 
-    ProcessSupervision::ProcessSupervision()
-    {
-        max_usage_ = MonitoringComponent();
-        process_controller_ = ProcessController();
-        process_logger_ = ProcessLogger();
-    }
+    ProcessSupervision::ProcessSupervision() = default;
 
-    ProcessSupervision::ProcessSupervision(std::string name)
+    ProcessSupervision::ProcessSupervision(const std::string& name) :
+        process_controller_(ProcessController(name))
     {
-        process_controller_ = ProcessController(name);
         process_logger_ = ProcessLogger(process_controller_);
     }
 
-    ProcessSupervision::ProcessSupervision(ProcessSupervision& ps)
-    {
-        max_usage_ = ps.max_usage_;
-        process_controller_ = ps.process_controller_;
-        process_logger_ = ps.process_logger_;
-    }
+    ProcessSupervision::ProcessSupervision(const ProcessSupervision& ps) = default;
 
-    ProcessSupervision& ProcessSupervision::operator=(const ProcessSupervision& ps)
-    {
-        this->max_usage_ = ps.max_usage_;
-        this->process_controller_ = ps.process_controller_;
-        this->process_logger_ = ps.process_logger_;
-        return *this;
-    }
+    ProcessSupervision& ProcessSupervision::operator=(const ProcessSupervision& ps) = default;
 
 
-    ProcessSupervision::ProcessSupervision(ProcessController& pc)
+    ProcessSupervision::ProcessSupervision(const ProcessController& pc):
+        process_controller_(pc)
     {
-        process_controller_ = pc;
         process_logger_ = ProcessLogger(process_controller_);
     }
 
-    void ProcessSupervision::SetProcessController(ProcessController process_controller)
+    void ProcessSupervision::SetProcessController(const ProcessController& process_controller)
     {
         process_controller_ = process_controller;
         process_logger_ = ProcessLogger(process_controller_);
     }
 
-    void ProcessSupervision::SetMaxUsage(MonitoringComponent max_usage)
+    void ProcessSupervision::SetMaxUsage(const MonitoringComponent& max_usage)
     {
         max_usage_ = max_usage;
     }
@@ -84,7 +68,7 @@ namespace pm
 
     ProcessLogger ProcessSupervision::GetProcessLogger()
     {
-        return process_logger_;
+        return std::move(process_logger_);
     }
 
 
@@ -119,7 +103,7 @@ namespace pm
         }
     }
 
-    bool ProcessSupervision::Alert(ProcessLoggerType type)
+    void ProcessSupervision::Alert(ProcessLoggerType type)
     {
         process_logger_.SetMessage(type);
         process_logger_.WriteLog();        

@@ -88,8 +88,12 @@ namespace pm
             {
                 return 0.0;
             }
-            FILETIME ftime, fsys, fuser;
-            ULARGE_INTEGER now, sys, user;
+            FILETIME ftime;
+            FILETIME fsys;
+            FILETIME fuser;
+            ULARGE_INTEGER now;
+            ULARGE_INTEGER sys;
+            ULARGE_INTEGER user;
 
             GetSystemTimeAsFileTime(&ftime);
             memcpy(&now, &ftime, sizeof(FILETIME));
@@ -97,10 +101,10 @@ namespace pm
             GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
             memcpy(&sys, &fsys, sizeof(FILETIME));
             memcpy(&user, &fuser, sizeof(FILETIME));
-            percent = (sys.QuadPart - last_sys_cpu_.QuadPart) + (user.QuadPart - last_user_cpu_.QuadPart);
+            percent = static_cast<double>((sys.QuadPart - last_sys_cpu_.QuadPart) + (user.QuadPart - last_user_cpu_.QuadPart));
             if (now.QuadPart - last_cpu_.QuadPart != 0)
             {
-                percent /= (now.QuadPart - last_cpu_.QuadPart);
+                percent /= static_cast<double>(now.QuadPart - last_cpu_.QuadPart);
                 percent /= num_processors_;
             }
             else
@@ -114,7 +118,7 @@ namespace pm
 
         #endif
 
-        last_usage_percent_ = (double)(percent * 100);
+        last_usage_percent_ = percent * 100;
         return last_usage_percent_;
     };
 

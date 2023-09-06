@@ -2,7 +2,13 @@
 
 #ifndef PROCESSMONITORING_FILE_FILE_H_
 #define PROCESSMONITORING_FILE_FILE_H_
- 
+
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
+
 #include <string.h>
 
 #ifdef _WIN32

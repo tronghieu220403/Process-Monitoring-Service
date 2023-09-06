@@ -3,6 +3,12 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSDISK_H_
 #define PROCESSMONITORING_PROCESS_PROCESSDISK_H_
 
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
+
 #ifdef _WIN32
 #include <Windows.h>
 #elif __linux__
@@ -29,7 +35,7 @@ namespace pm
 
         ProcessDiskStats();
 
-        ProcessDiskStats(HANDLE p_handle);
+        explicit ProcessDiskStats(HANDLE p_handle);
 
         ProcessDiskStats(const ProcessDiskStats& pds);
         ProcessDiskStats(const ProcessDiskStats&& pds) = delete;

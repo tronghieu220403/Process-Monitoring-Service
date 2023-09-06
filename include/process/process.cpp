@@ -7,18 +7,11 @@
 namespace pm
 {
 
-	Process::Process(){};
+	Process::Process() = default;
 
 	Process::Process(const std::string_view& name): pid_(FindProcessIdByName(name)), name_(name)
 	{
 	};
-
-	Process& Process::operator=(const Process& p)
-	{
-		this->pid_ = p.pid_;
-		this->name_ = p.name_;
-		return *this;
-	}
 
 	std::string Process::GetName() const
 	{
@@ -35,7 +28,7 @@ namespace pm
 	int Process::FindProcessIdByName(const std::wstring_view& name)
 	{
 		int pid = 0;
-		PROCESSENTRY32 entry;
+		PROCESSENTRY32 entry{};
 		entry.dwSize = sizeof(PROCESSENTRY32);
 		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		if (Process32FirstW(snapshot, &entry) == TRUE)

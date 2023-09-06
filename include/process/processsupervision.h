@@ -3,14 +3,23 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSSUPERVISION_H_
 #define PROCESSMONITORING_PROCESS_PROCESSSUPERVISION_H_
 
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
+#include "E:/Code/Github/Process-Monitoring/include/process/processcontroller.h"
+#include "E:/Code/Github/Process-Monitoring/include/logs/processlogger.h"
+#include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
+#else
+#include "include/process/processinfo.h"
 #include "include/process/processcontroller.h"
 #include "include/logs/processlogger.h"
 #include "include/ulti/collections.h"
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
-#else
-#include "include/process/processinfo.h"
 #endif
 
 
@@ -26,17 +35,17 @@ namespace pm
     public:
         ProcessSupervision();
         
-        ProcessSupervision(std::string name);
+        explicit ProcessSupervision(const std::string& name);
 
-        explicit ProcessSupervision(ProcessSupervision& ps);
+        explicit ProcessSupervision(const ProcessSupervision& ps);
 
-        explicit ProcessSupervision(ProcessController& pc);
+        explicit ProcessSupervision(const ProcessController& pc);
 
         ProcessSupervision& operator=(const ProcessSupervision& ps);
 
-        void SetProcessController(ProcessController process_control);
+        void SetProcessController(const ProcessController& process_controller);
 
-        void SetMaxUsage(MonitoringComponent max_usage);
+        void SetMaxUsage(const MonitoringComponent& max_usage);
         void SetMaxCpuUsage(float max_cpu_usage);
         void SetMaxMemUsage(double max_mem_usage);
         void SetMaxDiskUsage(float max_disk_usage);
@@ -47,7 +56,7 @@ namespace pm
 
         void UpdateProcessStats();
         void CheckProcessStats();
-        bool Alert(ProcessLoggerType type);
+        void Alert(ProcessLoggerType type);
     };
 }
 

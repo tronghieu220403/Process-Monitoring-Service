@@ -3,6 +3,12 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESS_H_
 #define PROCESSMONITORING_PROCESS_PROCESS_H_
 
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
+
 #include <string.h>
 
 #if defined(_WIN32)
@@ -29,8 +35,6 @@ namespace pm
 		Process();
 
 		explicit Process(const std::string_view& name);
-	
-		Process& operator=(const Process& p);
 
 		std::string GetName() const;
 		
