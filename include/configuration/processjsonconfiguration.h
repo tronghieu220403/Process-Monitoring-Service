@@ -38,10 +38,10 @@ namespace pm
 
     ProcessJsonConfiguration();
 
-    bool SetContent(std::wstring content);
+    bool SetContent(std::string content);
     //bool SetContentFromFile(std::wstring file_name);
 
-    std::vector< std::pair< std::wstring, MonitoringComponent > > GetData();
+    std::vector< std::pair< std::wstring, MonitoringComponent > > GetData() const;
         
     };
 }

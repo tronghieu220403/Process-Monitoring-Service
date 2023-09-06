@@ -13,15 +13,16 @@ namespace pm
         data.clear();
     }
     
-    bool ProcessJsonConfiguration::SetContent(std::wstring content)
+    bool ProcessJsonConfiguration::SetContent(std::string content)
     {
         data.clear();
         using namespace winrt;
         using namespace winrt::Windows::Data::Json;
 
-        JsonArray arr = JsonArray();
+        auto arr = JsonArray();
 
-        if (JsonArray::TryParse(content, arr) != true)
+
+        if (std::wstring wcontent(content.begin(), content.end()); JsonArray::TryParse(wcontent, arr) != true)
         {
             return false;
         }
@@ -47,19 +48,19 @@ namespace pm
             if (process.ValueType() == JsonValueType::String && cpu.ValueType() == JsonValueType::Number && memory.ValueType() == JsonValueType::Number && disk.ValueType() == JsonValueType::Number && network.ValueType() == JsonValueType::Number)
             {
                 std::wstring p_name(process.GetString());
-                MonitoringComponent max_usage;
+                MonitoringComponent max_usage{};
                 max_usage.cpu_usage = cpu.GetNumber();
                 max_usage.mem_usage = cpu.GetNumber();
                 max_usage.disk_usage = cpu.GetNumber();
                 max_usage.network_usage = cpu.GetNumber();
 
-                data.push_back(make_pair(p_name, max_usage));
+                data.emplace_back(p_name, max_usage);
             }
         }
         return true;
     }
 
-    std::vector< std::pair< std::wstring, MonitoringComponent > > ProcessJsonConfiguration::GetData()
+    std::vector< std::pair< std::wstring, MonitoringComponent > > ProcessJsonConfiguration::GetData() const
     {
         return data;
     }
