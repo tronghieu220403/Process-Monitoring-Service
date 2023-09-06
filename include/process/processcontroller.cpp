@@ -10,21 +10,20 @@ namespace pm
 
 	ProcessController::ProcessController(const std::string_view& name) 
 	{
-		this.p_info_ = ProcessInfo();
+		p_info_ = ProcessInfo();
         SetHandle(name);
 	}
 
 	ProcessController::ProcessController(ProcessController& pc)
 	{
-		this.name_ = pc.name;
-		this.p_info_ = pc.p_info_;
-		this.ProcessController(pc.name);
+		p_info_ = pc.p_info_;
+        SetHandle(pc.name_);
 	}
 
 	ProcessController& ProcessController::operator=(const ProcessController& pc)
 	{
 		this->p_info_ = pc.p_info_;
-		this->SetHandle(pc.name);
+		this->SetHandle(pc.name_);
 		return *this;
 	}
 
@@ -44,7 +43,7 @@ namespace pm
 	}
 
 	bool ProcessController::SetHandle(const std::string_view& name){
-		this.name_ = static_cast<std::string>(name);
+		name_ = static_cast<std::string>(name);
 		pid_ = FindProcessIdByName(name);
 		if (pid_ == 0)
 		{

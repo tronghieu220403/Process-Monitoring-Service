@@ -13,9 +13,9 @@ namespace pm
 
     ProcessSupervision::ProcessSupervision()
     {
-        this.max_usage_ = MonitoringComponent();
-        this.process_controller_ = ProcessController();
-        this.process_logger_ = ProcessLogger();
+        max_usage_ = MonitoringComponent();
+        process_controller_ = ProcessController();
+        process_logger_ = ProcessLogger();
     }
 
     ProcessSupervision::ProcessSupervision(std::string name)
@@ -26,14 +26,14 @@ namespace pm
 
     ProcessSupervision::ProcessSupervision(ProcessSupervision& ps)
     {
-        this.max_usage_ = ps.max_usage;
-        this.process_controller_ = ps.process_controller_;
-        this.process_logger_ = ps.process_logger_;
+        max_usage_ = ps.max_usage_;
+        process_controller_ = ps.process_controller_;
+        process_logger_ = ps.process_logger_;
     }
 
     ProcessSupervision& ProcessSupervision::operator=(const ProcessSupervision& ps)
     {
-        this->max_usage_ = ps.max_usage;
+        this->max_usage_ = ps.max_usage_;
         this->process_controller_ = ps.process_controller_;
         this->process_logger_ = ps.process_logger_;
         return *this;

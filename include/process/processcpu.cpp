@@ -33,12 +33,12 @@ namespace pm
 
     ProcessCpuStats::ProcessCpuStats(ProcessCpuStats& pcs)
     {
-        this.last_usage_percent_ = pcs.last_usage_percent_;
+        last_usage_percent_ = pcs.last_usage_percent_;
         #ifdef _WIN32
-            this.last_cpu_ = pcs.last_cpu_;
-            this.last_sys_cpu_ = pcs.last_sys_cpu_;
-            this.last_user_cpu_ = pcs.last_user_cpu_;
-            this.process_handle_ = pcs.process_handle_;
+            last_cpu_ = pcs.last_cpu_;
+            last_sys_cpu_ = pcs.last_sys_cpu_;
+            last_user_cpu_ = pcs.last_user_cpu_;
+            process_handle_ = pcs.process_handle_;
         #elif __linux__
 
         #endif

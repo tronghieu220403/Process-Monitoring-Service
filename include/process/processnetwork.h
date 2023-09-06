@@ -29,8 +29,14 @@ namespace pm
         
     public:
         ProcessNetworkStats();
-        explicit ProcessNetworkStats(HANDLE p_handle);
+        
+        #ifdef _WIN32
+            explicit ProcessNetworkStats(HANDLE p_handle);
+            ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_)
+                : process_handle_(process_handle_), last_data_recv_(last_data_recv_), last_data_sent_(last_data_sent_), last_speed_(last_speed_){};
+        #elif __linux__
 
+        #endif
         ProcessNetworkStats(ProcessNetworkStats& pns);
         ProcessNetworkStats(ProcessNetworkStats&& pns) = delete;
 
@@ -38,8 +44,8 @@ namespace pm
 
         double GetCurrentSpeed();
         double GetLastSpeed();
-        ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_)
-            : process_handle_(process_handle_), last_data_recv_(last_data_recv_), last_data_sent_(last_data_sent_), last_speed_(last_speed_);
+        
+        
     };
 
 }
