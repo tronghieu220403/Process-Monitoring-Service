@@ -8,15 +8,13 @@
 namespace pm
 {
 
-	ProcessController::ProcessController(const std::string_view& name) 
+	ProcessController::ProcessController(const std::string_view& name)
 	{
-		p_info_ = ProcessInfo();
         SetHandle(name);
 	}
 
-	ProcessController::ProcessController(ProcessController& pc)
+	ProcessController::ProcessController(const ProcessController& pc):p_info_(pc.p_info_)
 	{
-		p_info_ = pc.p_info_;
         SetHandle(pc.name_);
 	}
 
@@ -30,8 +28,8 @@ namespace pm
 	bool ProcessController::SetHandle(int pid)
 	{
 		#ifdef _WIN32
-			process_handle_ = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid_);
-			if (process_handle_ == NULL)
+			process_handle_ = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
+			if (process_handle_ == nullptr)
 			{
 				return false;
 			}
@@ -78,7 +76,7 @@ namespace pm
 	{
 		if (IsExists())
 		{
-			return p_info_;
+			return std::move(p_info_);
 		}
 		return ProcessInfo();
 	}
@@ -102,10 +100,10 @@ namespace pm
 	void ProcessController::Close()
 	{
 		#ifdef _WIN32
-		if (process_handle_ != NULL)
+		if (process_handle_ != nullptr)
 		{
 			CloseHandle(process_handle_);
-			process_handle_ = NULL;
+			process_handle_ = nullptr;
 		}
 		#elif __linux__
 

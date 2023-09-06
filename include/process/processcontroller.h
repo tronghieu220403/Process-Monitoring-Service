@@ -31,8 +31,8 @@ namespace pm
 
         ProcessController() = default;
 		explicit ProcessController(const std::string_view& name);
-		ProcessController(ProcessController& pc);
-		explicit ProcessController(ProcessController&& pc) = delete;
+		ProcessController(const ProcessController& pc);
+		explicit ProcessController(const ProcessController&& pc) = delete;
 
         ProcessController& operator=(const ProcessController& pc);
 

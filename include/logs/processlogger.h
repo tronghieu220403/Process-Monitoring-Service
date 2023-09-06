@@ -29,14 +29,16 @@ namespace pm
         using Logger::SetMessage;
 
         ProcessLogger();
-        ProcessLogger(ProcessController& pc);
+        explicit ProcessLogger(const ProcessController& pc);
 
         ProcessLogger& operator=(const ProcessLogger& pl);
 
-        void SetProcessController(ProcessController& pc);
+        void SetProcessController(const ProcessController& pc);
 
         void SetMessage(ProcessLoggerType type);
 
+        bool operator==(const ProcessLogger& other) = delete;
+        ~ProcessLogger() final = default;
     };
 }
 

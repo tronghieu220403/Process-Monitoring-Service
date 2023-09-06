@@ -9,17 +9,14 @@
 namespace pm
 {
 
-    ProcessLogger::ProcessLogger()
-    {
-        process_controller_ = ProcessController();
-    }
+    ProcessLogger::ProcessLogger() = default;
 
-    ProcessLogger::ProcessLogger(ProcessController& pc)
+    ProcessLogger::ProcessLogger(const ProcessController& pc)
     {
         SetProcessController(pc);
     }
 
-    ProcessLogger& operator=(const ProcessLogger& pl)
+    ProcessLogger& ProcessLogger::operator=(const ProcessLogger& pl)
     {
         this->process_controller_ = pl.process_controller_;
         this->SetFolderPath(pl.GetFolderPath());
@@ -28,14 +25,14 @@ namespace pm
     }
 
 
-    void ProcessLogger::SetProcessController(ProcessController& pc)
+    void ProcessLogger::SetProcessController(const ProcessController& pc)
     {
         process_controller_ = pc;
     }
 
     void ProcessLogger::SetMessage(ProcessLoggerType type)
     {
-        std::wstringstream ss;
+        std::stringstream ss;
 
         ProcessInfo p_info = process_controller_.GetProcessInfo();
 
@@ -48,37 +45,37 @@ namespace pm
         int hour = time_struct->tm_hour;
         int min = time_struct->tm_min;
         int sec = time_struct->tm_sec;
-        ss >> year >> L"-" >> month >> L"-" >> day >> L" " >> hour >> L":" >> min >> L":" >> sec >> L",";
+        ss << year << "-" << month << "-" << day << " " << hour << ":" << min << ":" << sec << ",";
         
         int pid = process_controller_.GetPid();
-        ss >> pid >> L"," >> process_controller_.GetName() >> L",";
+        ss << pid << "," << process_controller_.GetName() << ",";
         if (type == ProcessLoggerType::kProcessLoggerCpu)
         {
-            ss >> L"CPU,";
+            ss << "CPU,";
             double f = p_info.GetCpuUsage();
-            ss >> f;
+            ss << f;
         }
         else if (type == ProcessLoggerType::kProcessLoggerMem)
         {
-            ss >> L"Memory,";
+            ss << "Memory,";
             double f = p_info.GetMemoryUsage();
-            ss >> f;
+            ss << f;
         }
         else if (type == ProcessLoggerType::kProcessLoggerDisk)
         {
-            ss >> L"Disk,";
+            ss << "Disk,";
             double f = p_info.GetDiskUsage();
-            ss >> f;
+            ss << f;
         }
         else if (type == ProcessLoggerType::kProcessLoggerNet)
         {
-            ss >> L"Network,";
+            ss << "Network,";
             double f = p_info.GetNetworkUsage();
-            ss >> f;
+            ss << f;
         }
-        
-        SetMessage(std::wstring_view(ss.str()));
-
+        ss << "\n";
+        SetMessage(ss.str());
     }
 
 }
+

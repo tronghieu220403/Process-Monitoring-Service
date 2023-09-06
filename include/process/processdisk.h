@@ -21,7 +21,7 @@ namespace pm
 
         #endif
         
-        double last_speed_;
+        double last_speed_ = 0;
     public:
         static int num_processors_;
 
@@ -29,8 +29,8 @@ namespace pm
 
         ProcessDiskStats(HANDLE p_handle);
 
-        ProcessDiskStats(ProcessDiskStats& pds);
-        ProcessDiskStats(ProcessDiskStats&& pds) = delete;
+        ProcessDiskStats(const ProcessDiskStats& pds);
+        ProcessDiskStats(const ProcessDiskStats&& pds) = delete;
 
         ProcessDiskStats& operator=(const ProcessDiskStats& pds);
 

@@ -67,7 +67,7 @@ namespace pm
         #endif
 
         ProcessInfo(const ProcessInfo& pi);         // copy constructor
-        explicit ProcessInfo(const ProcessInfo&& pi) = delete;        // move constructor
+        explicit ProcessInfo(const ProcessInfo&& pi);        // move constructor
 
         ProcessInfo& operator=(const ProcessInfo& pi);
 

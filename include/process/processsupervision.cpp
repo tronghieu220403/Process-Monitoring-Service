@@ -79,7 +79,7 @@ namespace pm
 
     ProcessController ProcessSupervision::GetProcessController()
     {
-        return process_controller_;
+        return std::move(process_controller_);
     }
 
     ProcessLogger ProcessSupervision::GetProcessLogger()

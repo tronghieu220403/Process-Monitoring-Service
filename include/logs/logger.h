@@ -27,15 +27,15 @@ namespace pm
         
         Logger(const std::string& message, const std::string& folder_path);
                 
-        explicit Logger(std::string_view& message);
+        explicit Logger(const std::string& message);
         
-        void SetMessage(std::string_view& message);
-        void SetFolderPath(std::string_view& folder_path);
+        void SetMessage(const std::string_view& message);
+        void SetFolderPath(const std::string_view& folder_path);
 
-        std::string GetMessage();
-        std::string GetFolderPath();
+        std::string GetMessage() const;
+        std::string GetFolderPath() const;
 
-        bool CreateLogFolder(std::string folder_path);
+        bool CreateLogFolder(const std::string& folder_path);
         bool WriteLog() const;
 
         virtual ~Logger() = default;

@@ -31,18 +31,7 @@ namespace pm
         #endif
     };
 
-    ProcessCpuStats::ProcessCpuStats(ProcessCpuStats& pcs)
-    {
-        last_usage_percent_ = pcs.last_usage_percent_;
-        #ifdef _WIN32
-            last_cpu_ = pcs.last_cpu_;
-            last_sys_cpu_ = pcs.last_sys_cpu_;
-            last_user_cpu_ = pcs.last_user_cpu_;
-            process_handle_ = pcs.process_handle_;
-        #elif __linux__
-
-        #endif
-    }
+    ProcessCpuStats::ProcessCpuStats(const ProcessCpuStats& pcs) = default;
 
     ProcessCpuStats& ProcessCpuStats::operator=(const ProcessCpuStats& pcs)
     {

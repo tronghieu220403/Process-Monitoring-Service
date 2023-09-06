@@ -9,7 +9,6 @@ namespace pm
 
 ProcessDiskStats::ProcessDiskStats()
 {
-    last_speed_ = 0;
     #ifdef _WIN32
         ZeroMemory(&last_io_counter_, sizeof(IO_COUNTERS));
         ZeroMemory(&last_time_, sizeof(FILETIME));
@@ -20,37 +19,18 @@ ProcessDiskStats::ProcessDiskStats()
 
 };
 
-ProcessDiskStats::ProcessDiskStats(ProcessDiskStats& pds)
-{
-    #ifdef _WIN32
-        last_io_counter_ = pds.last_io_counter_;
-        last_time_ = pds.last_time_;
-        process_handle_ = pds.process_handle_;
-        last_speed_ = pds.last_speed_;
-    #elif __linux__
+ProcessDiskStats::ProcessDiskStats(const ProcessDiskStats& pds) = default;
 
-    #endif
-
-};
-
-ProcessDiskStats& ProcessDiskStats::operator=(const ProcessDiskStats& pds)
-{
-    #ifdef _WIN32
-        this->last_io_counter_ = pds.last_io_counter_;
-        this->last_time_ = pds.last_time_;
-        this->process_handle_ = pds.process_handle_;
-        this->last_speed_ = pds.last_speed_;
-    #elif __linux__
-
-    #endif
-
-    return *this;
-}
+ProcessDiskStats& ProcessDiskStats::operator=(const ProcessDiskStats& pds) = default;
 
 
 ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
 {
     #ifdef _WIN32
+        ZeroMemory(&last_io_counter_, sizeof(IO_COUNTERS));
+        ZeroMemory(&last_time_, sizeof(FILETIME));
+        ZeroMemory(&process_handle_, sizeof(HANDLE));
+
         if (GetProcessId(p_handle) == NULL)
         {
             return;

@@ -37,8 +37,8 @@ namespace pm
         #elif __linux__
 
         #endif
-        ProcessNetworkStats(ProcessNetworkStats& pns);
-        ProcessNetworkStats(ProcessNetworkStats&& pns) = delete;
+        ProcessNetworkStats(const ProcessNetworkStats& pns);
+        ProcessNetworkStats(const ProcessNetworkStats&& pns) = delete;
 
         ProcessNetworkStats& operator=(const ProcessNetworkStats& pns);
 
