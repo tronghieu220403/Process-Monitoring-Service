@@ -4,7 +4,20 @@ namespace pm
 {
 
 ProcessInfo::ProcessInfo(): pid_(0),time_(static_cast<long long>(0))
-{};
+{
+
+};
+
+ProcessInfo::ProcessInfo(const ProcessInfo& pi)
+{
+
+}
+
+ProcessInfo::ProcessInfo(const ProcessInfo&& pi)
+{
+    
+}
+
 #ifdef _WIN32
     ProcessInfo::ProcessInfo(HANDLE process_handle_)
     {

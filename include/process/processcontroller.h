@@ -17,11 +17,6 @@ namespace pm
 
         bool SetHandle(int pid);
 		bool SetHandle(const std::string_view& name);
-		#ifdef _WIN32
-			bool SetHandle(const std::wstring_view& name);
-		#elif __linux__
-
-		#endif
 
 		#ifdef _WIN32
 			HANDLE process_handle_;
@@ -33,10 +28,9 @@ namespace pm
 
         ProcessController() = default;
 		explicit ProcessController(const std::string_view& name);
+		explicit ProcessController(ProcessController& pc);
+		explicit ProcessController(ProcessController&& pc) = delete;
 
-        #ifdef _WIN32
-			explicit ProcessController(const std::wstring_view& wname);
-		#endif
 
 		bool IsExists();
         

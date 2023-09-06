@@ -60,6 +60,10 @@ namespace pm
         #elif __linux__
 
         #endif
+
+        ProcessInfo(const ProcessInfo& pi);
+        ProcessInfo(const ProcessInfo&& pi);
+
         int GetPid();
                 
         time_t GetTime();

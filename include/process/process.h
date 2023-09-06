@@ -20,28 +20,17 @@ namespace pm
 {
 	class Process {
 	protected:
+	
 		int pid_ = 0;
-		#ifdef _WIN32
-			std::wstring name_;
-		#elif __linux__
-			std::string name_;
-		#endif
+		std::string name_;
 
 	public:
 		
 		Process();
-		//explicit Process(int id);
+
 		explicit Process(const std::string_view& name);
 	
-		#ifdef _WIN32
-			explicit Process(const std::wstring_view& wname);
-		#endif
-
-		#ifdef _WIN32
-			std::wstring GetName() const;
-		#elif __linux__
-			std::string GetName() const;
-		#endif
+		std::string GetName() const;
 		
 		virtual int GetPid() const;
 

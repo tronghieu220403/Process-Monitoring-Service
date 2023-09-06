@@ -8,19 +8,17 @@ namespace pm
 
 	ProcessController::ProcessController(const std::string_view& name) 
 	{
-        pid_ = FindProcessIdByName(name);
-		name_ = std::wstring(name.begin(), name.end());
+        pid_ = Process.FindProcessIdByName(name);
+		this.name_ = static_cast<std::string>(name);
 		SetHandle(pid_);
-	};
+	}
 
-#ifdef _WIN32
-	ProcessController::ProcessController(const std::wstring_view& name)
+	ProcessController::ProcessController(ProcessController& pc)
 	{
-        pid_ = FindProcessIdByName(name);
-		name_ = static_cast<std::wstring_view>(name_);
-		SetHandle(pid_);
-	};
-#endif
+		this.name_ = pc.name;
+		this.p_info_ = pc.p_info_;
+		this.ProcessController(pc.name);
+	}
 
 	bool ProcessController::SetHandle(int pid)
 	{
@@ -46,22 +44,10 @@ namespace pm
 		return SetHandle(pid_);
 	};
 
-#ifdef _WIN32
-	bool ProcessController::SetHandle(const std::wstring_view& name)
-	{
-		pid_ = FindProcessIdByName(name);
-		if (pid_ == 0)
-		{
-			return false;
-		}
-		return SetHandle(pid_);
-	}
-#endif
-
 	bool ProcessController::IsExists()
 	{
 		#ifdef _WIN32
-			if (GetProcessId(process_handle_) == pid_ && pid_ == 0)
+			if (GetProcessId(process_handle_) == pid_ && pid_ != 0)
 			{
 				return true;
 			}

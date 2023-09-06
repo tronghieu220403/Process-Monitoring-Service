@@ -7,36 +7,17 @@ namespace pm
 
 	Process::Process(): pid_(0) {};
 
-	//Process::Process(int id): pid_(id) {};
-
 	Process::Process(const std::string_view& name): pid_(FindProcessIdByName(name)) 
 	{
-		#ifdef __WIN32
-			name_ = std::wstring(name.begin(), name.end());
-		#elif __linux
-			name_ = name;
-		#endif
+		name_ = name;
 	};
 
-#ifdef _WIN32
-	Process::Process(const std::wstring_view& name): pid_(FindProcessIdByName(name))
-	{
-		name_ = static_cast<std::wstring_view>(name_);
-	};
-
-	std::wstring Process::GetName() const
-	{
-		return name_;
-	}
-
-#elif __linux__
+	
 
 	std::string Process::GetName() const
 	{
 		return name_;
 	}
-
-#endif
 
 	int Process::GetPid() const
 	{
@@ -101,7 +82,8 @@ namespace pm
 			closedir(dir);
 
 		#endif
-			return pid;
+
+		return pid;
 	};
 
 }
