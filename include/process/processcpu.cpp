@@ -10,14 +10,12 @@ namespace pm
 {
     ProcessCpuStats::ProcessCpuStats()
     {
-        last_usage_percent_ = 0;
 
         #ifdef _WIN32
 
         ZeroMemory(&last_cpu_, sizeof(ULARGE_INTEGER));
         ZeroMemory(&last_sys_cpu_, sizeof(ULARGE_INTEGER));
         ZeroMemory(&last_user_cpu_, sizeof(ULARGE_INTEGER));
-        process_handle_ = 0;
 
         if (num_processors_ == 0)
         {

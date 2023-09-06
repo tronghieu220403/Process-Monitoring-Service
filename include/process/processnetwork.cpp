@@ -38,7 +38,7 @@ namespace pm
 
 #endif
 
-    ProcessNetworkStats::ProcessNetworkStats(ProcessNetworkStats& pns)
+    ProcessNetworkStats::ProcessNetworkStats(const ProcessNetworkStats& pns)
     {
         #ifdef _WIN32
             process_handle_ = pns.process_handle_;

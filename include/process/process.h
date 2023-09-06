@@ -1,7 +1,10 @@
+#pragma once
+
 #ifndef PROCESSMONITORING_PROCESS_PROCESS_H_
 #define PROCESSMONITORING_PROCESS_PROCESS_H_
 
 #include <string.h>
+
 #if defined(_WIN32)
 	#include <WS2tcpip.h>
 	#include <TlHelp32.h>

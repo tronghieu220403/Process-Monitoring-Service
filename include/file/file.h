@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef PROCESSMONITORING_FILE_FILE_H_
 #define PROCESSMONITORING_FILE_FILE_H_
  

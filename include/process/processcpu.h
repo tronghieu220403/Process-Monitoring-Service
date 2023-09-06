@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef PROCESSMONITORING_PROCESS_PROCESSCPU_H_
 #define PROCESSMONITORING_PROCESS_PROCESSCPU_H_
 
@@ -15,15 +17,15 @@ namespace pm
     
     private:
 
-        double last_usage_percent_;
-        static int num_processors_;
+        double last_usage_percent_ = 0;
+        int num_processors_ = 0;
 
         #ifdef _WIN32
             ULARGE_INTEGER last_cpu_;
             ULARGE_INTEGER last_sys_cpu_; 
             ULARGE_INTEGER last_user_cpu_;
 
-            HANDLE process_handle_;
+            HANDLE process_handle_ = 0;
         #elif __linux__
 
         #endif

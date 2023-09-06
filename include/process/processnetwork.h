@@ -1,3 +1,4 @@
+
 #ifndef PROCESSMONITORING_PROCESS_PROCESSNETWORK_H_
 #define PROCESSMONITORING_PROCESS_PROCESSNETWORK_H_
 
@@ -5,9 +6,6 @@
     #include <Windows.h>
     #include <WinSock2.h>
     #include <iphlpapi.h>
-    #pragma comment(lib, "Ws2_32.lib")
-    #pragma comment(lib, "iphlpapi.lib")
-
 #elif __linux__
 
 #endif
@@ -32,8 +30,7 @@ namespace pm
         
         #ifdef _WIN32
             explicit ProcessNetworkStats(HANDLE p_handle);
-            ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_)
-                : process_handle_(process_handle_), last_data_recv_(last_data_recv_), last_data_sent_(last_data_sent_), last_speed_(last_speed_){};
+            ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_);
         #elif __linux__
 
         #endif

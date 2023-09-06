@@ -7,11 +7,10 @@
 namespace pm
 {
 
-	Process::Process(): pid_(0) {};
+	Process::Process(){};
 
-	Process::Process(const std::string_view& name): pid_(FindProcessIdByName(name)) 
+	Process::Process(const std::string_view& name): pid_(FindProcessIdByName(name)), name_(name)
 	{
-		name_ = name;
 	};
 
 	Process& Process::operator=(const Process& p)
