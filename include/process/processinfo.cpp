@@ -9,16 +9,11 @@
 namespace pm
 {
 
-ProcessInfo::ProcessInfo(): pid_(0),time_(static_cast<long long>(0))
-{
-
-};
-
 ProcessInfo::ProcessInfo(const ProcessInfo& pi) = default;
 
 ProcessInfo& ProcessInfo::operator=(const ProcessInfo& pi) = default;
 
-ProcessInfo::ProcessInfo(const ProcessInfo&& pi)
+ProcessInfo::ProcessInfo(const ProcessInfo&& pi) noexcept
 {
     this->pid_ = pi.pid_;
     this->time_ = pi.time_;

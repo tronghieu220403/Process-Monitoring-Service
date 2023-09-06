@@ -36,12 +36,12 @@ namespace pm
     class ProcessInfo
     {
     private:
-        int pid_;
-        time_t time_;
-        double memory_usage_;
-        ProcessCpuStats cpu_usage_;
-        ProcessDiskStats disk_usage_;
-        ProcessNetworkStats network_usage_;
+        int pid_ = 0;
+        time_t time_ = 0;
+        double memory_usage_ = 0;
+        ProcessCpuStats cpu_usage_{};
+        ProcessDiskStats disk_usage_{};
+        ProcessNetworkStats network_usage_{};
 
         MonitoringComponent last_usage_;
 
@@ -59,7 +59,7 @@ namespace pm
 
     public:
 
-        ProcessInfo();
+        ProcessInfo() = default;
         #ifdef _WIN32
             explicit ProcessInfo(HANDLE process_handle_);
         #elif __linux__
@@ -67,7 +67,7 @@ namespace pm
         #endif
 
         ProcessInfo(const ProcessInfo& pi);         // copy constructor
-        explicit ProcessInfo(const ProcessInfo&& pi);        // move constructor
+        explicit ProcessInfo(const ProcessInfo&& pi) noexcept;        // move constructor
 
         ProcessInfo& operator=(const ProcessInfo& pi);
 
