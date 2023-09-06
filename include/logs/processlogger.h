@@ -29,7 +29,7 @@ namespace pm
         using Logger::SetMessage;
 
         ProcessLogger();
-        explicit ProcessLogger(ProcessController& pc);
+        ProcessLogger(ProcessController& pc);
 
         ProcessLogger& operator=(const ProcessLogger& pl);
 

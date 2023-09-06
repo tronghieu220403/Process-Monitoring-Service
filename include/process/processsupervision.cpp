@@ -77,8 +77,6 @@ namespace pm
         max_usage_.network_usage = max_network_usage;
     }
 
-
-
     ProcessController ProcessSupervision::GetProcessController()
     {
         return process_controller_;

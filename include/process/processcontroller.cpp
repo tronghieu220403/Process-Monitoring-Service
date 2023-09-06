@@ -44,7 +44,7 @@ namespace pm
 
 	bool ProcessController::SetHandle(const std::string_view& name){
 		name_ = static_cast<std::string>(name);
-		pid_ = FindProcessIdByName(name);
+		pid_ = FindProcessIdByName(name_);
 		if (pid_ == 0)
 		{
 			return false;
