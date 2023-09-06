@@ -16,7 +16,7 @@ namespace pm
     void StartUpProgram::SetThisProgram()
     {
         #ifdef _WIN32
-            std::wstring w_exe_full_path = std::wstring(exe_full_path.begin(), exe_full_path.end());
+            std::wstring w_exe_full_path = std::wstring(exe_full_path_.begin(), exe_full_path_.end());
             exe_full_path_.resize(MAX_PATH);
             GetModuleFileNameW(NULL, &w_exe_full_path[0], MAX_PATH);
         #elif __linux__
@@ -24,7 +24,7 @@ namespace pm
         #endif
     }
 
-    void StartUpProgram::SetProgram(std::wstring exe_full_path)
+    void StartUpProgram::SetProgram(std::string exe_full_path)
     {
         exe_full_path_ = exe_full_path;
     }
@@ -33,7 +33,7 @@ namespace pm
     {        
         #ifdef _WIN32
 
-            std::wstring w_exe_full_path = std::wstring(exe_full_path.begin(), exe_full_path.end());
+            std::wstring w_exe_full_path = std::wstring(exe_full_path_.begin(), exe_full_path_.end());
 
             long result = 0;
             bool success = 0;
@@ -66,7 +66,7 @@ namespace pm
     {
         #ifdef _WIN32
 
-            std::wstring w_exe_full_path = std::wstring(exe_full_path.begin(), exe_full_path.end());
+            std::wstring w_exe_full_path = std::wstring(exe_full_path_.begin(), exe_full_path_.end());
 
             HKEY h_key = NULL;
             LONG result = 0;

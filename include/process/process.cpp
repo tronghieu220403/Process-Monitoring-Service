@@ -16,7 +16,7 @@ namespace pm
 
 	Process& Process::operator=(const Process& p)
 	{
-		this->pid_ = p.pid;
+		this->pid_ = p.pid_;
 		this->name_ = p.name_;
 		return *this;
 	}
