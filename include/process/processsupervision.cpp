@@ -18,45 +18,31 @@ namespace pm
         this.process_logger_ = ProcessLogger();
     }
 
-    ProcessSupervision::ProcessSupervision(ProcessSupervision& ps)
-    {
-        this.max_usage_ = (pc.max_usage);
-        this.process_controller_ = (pc.process_controller_);
-        this.process_logger_ = (pc.process_logger_);
-    }
-
-    ProcessSupervision::ProcessSupervision(ProcessSupervision&& ps)
-    {
-        this.max_usage_ = std::move(pc.max_usage);
-        this.process_controller_ = std::move(pc.process_controller_);
-        this.process_logger_ = std::move(pc.process_logger_);
-    }
-
-    ProcessSupervision::ProcessSupervision(ProcessController p_control)
-    {
-        process_controller_(p_control);
-    }
-
-    ProcessSupervision::ProcessSupervision(ProcessController& p_control)
-    {
-        process_controller = std::move(p_control);
-    }
-
-    ProcessSupervision::ProcessSupervision(std::wstring name)
-    {
-        process_controller_ = ProcessController(name); 
-        process_logger_ = ProcessLogger(process_controller_);
-    }
-
     ProcessSupervision::ProcessSupervision(std::string name)
     {
         process_controller_ = ProcessController(name);
         process_logger_ = ProcessLogger(process_controller_);
     }
 
-    ProcessSupervision::ProcessSupervision(ProcessController process_controller)
+    ProcessSupervision::ProcessSupervision(ProcessSupervision& ps)
     {
-        process_controller_ = process_controller;
+        this.max_usage_ = ps.max_usage;
+        this.process_controller_ = ps.process_controller_;
+        this.process_logger_ = ps.process_logger_;
+    }
+
+    ProcessSupervision& ProcessSupervision::operator=(const ProcessSupervision& ps)
+    {
+        this->max_usage_ = ps.max_usage;
+        this->process_controller_ = ps.process_controller_;
+        this->process_logger_ = ps.process_logger_;
+        return *this;
+    }
+
+
+    ProcessSupervision::ProcessSupervision(ProcessController& pc)
+    {
+        process_controller_ = pc;
         process_logger_ = ProcessLogger(process_controller_);
     }
 
@@ -65,7 +51,6 @@ namespace pm
         process_controller_ = process_controller;
         process_logger_ = ProcessLogger(process_controller_);
     }
-
 
     void ProcessSupervision::SetMaxUsage(MonitoringComponent max_usage)
     {

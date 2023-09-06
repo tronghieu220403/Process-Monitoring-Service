@@ -67,7 +67,9 @@ namespace pm
         #endif
 
         ProcessInfo(const ProcessInfo& pi);         // copy constructor
-        ProcessInfo(const ProcessInfo&& pi);        // move constructor
+        ProcessInfo(const ProcessInfo&& pi) = delete;        // move constructor
+
+        ProcessInfo& operator=(const ProcessInfo& pi);
 
         int GetPid();
                 

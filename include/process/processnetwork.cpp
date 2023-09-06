@@ -36,20 +36,20 @@ ProcessNetworkStats::ProcessNetworkStats(ProcessNetworkStats& pns)
 
 };
 
-ProcessNetworkStats::ProcessNetworkStats(ProcessNetworkStats&& pns)
+ProcessNetworkStats& ProcessNetworkStats::operator=(const ProcessNetworkStats& pns)
 {
     #ifdef _WIN32
-        process_handle_ = pns.process_handle_;
+        this->process_handle_ = pns.process_handle_;
     #elif __linux__
 
     #endif
 
-    last_data_recv_ = pns.last_data_recv_;
-    last_data_sent_ = pns.last_data_sent_;
-    last_speed_ = pns.last_speed_;
+    this->last_data_recv_ = pns.last_data_recv_;
+    this->last_data_sent_ = pns.last_data_sent_;
+    this->last_speed_ = pns.last_speed_;
 
-};
-
+    return *this;
+}
 
 ProcessNetworkStats::ProcessNetworkStats(HANDLE p_handle)
 {

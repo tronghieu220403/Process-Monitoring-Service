@@ -34,6 +34,7 @@ namespace pm
 		explicit ProcessController(ProcessController& pc);
 		explicit ProcessController(ProcessController&& pc) = delete;
 
+        ProcessController& operator=(const ProcessController& pc);
 
 		bool IsExists();
         

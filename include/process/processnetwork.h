@@ -32,7 +32,9 @@ namespace pm
         explicit ProcessNetworkStats(HANDLE p_handle);
 
         ProcessNetworkStats(ProcessNetworkStats& pns);
-        ProcessNetworkStats(ProcessNetworkStats&& pns) noexcept;
+        ProcessNetworkStats(ProcessNetworkStats&& pns) = delete;
+
+        ProcessNetworkStats& operator=(const ProcessNetworkStats& pns);
 
         double GetCurrentSpeed();
         double GetLastSpeed();

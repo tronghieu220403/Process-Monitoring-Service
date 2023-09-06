@@ -14,7 +14,12 @@ namespace pm
 		name_ = name;
 	};
 
-	
+	Process& Process::operator=(const Process& p)
+	{
+		this->pid_ = p.pid;
+		this->name_ = p.name_;
+		return *this;
+	}
 
 	std::string Process::GetName() const
 	{

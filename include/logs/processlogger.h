@@ -28,11 +28,12 @@ namespace pm
 
         using Logger::SetMessage;
 
-        ProcessLogger() = default;
-        
-        explicit ProcessLogger(ProcessController& p);
-        
-        void SetProcessInfo(ProcessController& p);
+        ProcessLogger();
+        explicit ProcessLogger(ProcessController& pc);
+
+        ProcessLogger& operator=(const ProcessLogger& pl);
+
+        void SetProcessController(ProcessController& pc);
 
         void SetMessage(ProcessLoggerType type);
 

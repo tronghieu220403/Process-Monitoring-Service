@@ -25,16 +25,17 @@ namespace pm
     public:
         Logger() = default;
         
-        Logger(const std::string& message_, const std::string& folder_path_);
+        Logger(const std::string& message, const std::string& folder_path);
                 
         explicit Logger(std::string_view& message);
         
         void SetMessage(std::string_view& message);
-
-        virtual bool SetLoggingFolder(std::string folder_path);
+        void SetFolderPath(std::string_view& folder_path);
 
         std::string GetMessage();
+        std::string GetFolderPath();
 
+        bool CreateLogFolder(std::string folder_path);
         bool WriteLog() const;
 
         virtual ~Logger() = default;

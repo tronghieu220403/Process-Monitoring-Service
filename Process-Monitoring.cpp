@@ -13,14 +13,12 @@
 //#include "include/process/processsupervision.h"
 
 #else
+
 //#include "include/process/processsupervision.h"
+
 #endif
 int main()
 {
-    std::stringstream ss;
-    ss << "a";
-
-    std::cout << ss.str() << std::endl;
-
+    
 }
 

@@ -27,6 +27,8 @@ namespace pm
 
 		explicit Process(const std::string_view& name);
 	
+		Process& operator=(const Process& p)
+
 		std::string GetName() const;
 		
 		virtual int GetPid() const;

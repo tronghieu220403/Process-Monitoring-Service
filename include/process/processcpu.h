@@ -31,7 +31,11 @@ namespace pm
 
         ProcessCpuStats();
         ProcessCpuStats(ProcessCpuStats& pcs);
-        ProcessCpuStats(ProcessCpuStats&& pcs);
+        ProcessCpuStats(ProcessCpuStats&& pcs) = delete;
+
+        ProcessCpuStats& operator=(const ProcessCpuStats& pcs);
+
+
         #ifdef _WIN32
             ProcessCpuStats(HANDLE p_handle);
         #elif __linux__

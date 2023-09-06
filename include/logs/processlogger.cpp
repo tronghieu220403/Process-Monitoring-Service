@@ -8,14 +8,29 @@
 
 namespace pm
 {
-    ProcessLogger::ProcessLogger(ProcessController& p)
+
+    ProcessLogger::ProcessLogger()
     {
-        SetProcessInfo(p);
+        process_controller_ = ProcessController();
     }
 
-    void ProcessLogger::SetProcessInfo(ProcessController& p)
+    ProcessLogger::ProcessLogger(ProcessController& pc)
     {
-        process_controller_ = p;
+        SetProcessController(pc);
+    }
+
+    ProcessLogger& operator=(const ProcessLogger& pl)
+    {
+        this->process_controller_ = pl.process_controller_;
+        this->SetFolderPath(pl.GetFolderPath());
+        this->SetMessage(pl.GetMessage());
+        return *this;
+    }
+
+
+    void ProcessLogger::SetProcessController(ProcessController& pc)
+    {
+        process_controller_ = pc;
     }
 
     void ProcessLogger::SetMessage(ProcessLoggerType type)

@@ -24,13 +24,13 @@ namespace pm
     public:
         ProcessSupervision();
         
-
-        ProcessSupervision(std::wstring name);
         ProcessSupervision(std::string name);
 
-        explicit ProcessSupervision(ProcessController p_control);
-        explicit ProcessSupervision(ProcessController& p_control);
+        explicit ProcessSupervision(ProcessSupervision& ps);
 
+        explicit ProcessSupervision(ProcessController& pc);
+
+        ProcessSupervision& operator=(const ProcessSupervision& ps);
 
         void SetProcessController(ProcessController process_control);
 

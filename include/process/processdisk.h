@@ -30,7 +30,9 @@ namespace pm
         ProcessDiskStats(HANDLE p_handle);
 
         ProcessDiskStats(ProcessDiskStats& pds);
-        ProcessDiskStats(ProcessDiskStats&& pds);
+        ProcessDiskStats(ProcessDiskStats&& pds) = delete;
+
+        ProcessDiskStats& operator=(const ProcessDiskStats& pds);
 
 
         double GetCurrentSpeed();
