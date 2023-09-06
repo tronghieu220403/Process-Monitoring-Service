@@ -16,6 +16,8 @@ namespace pm
     private:
 
         double last_usage_percent_;
+        static int num_processors_;
+
         #ifdef _WIN32
             ULARGE_INTEGER last_cpu_;
             ULARGE_INTEGER last_sys_cpu_; 
@@ -26,10 +28,10 @@ namespace pm
 
         #endif
     public:
-        static int num_processors_;
 
         ProcessCpuStats();
-        
+        ProcessCpuStats(ProcessCpuStats& pcs);
+        ProcessCpuStats(ProcessCpuStats&& pcs);
         #ifdef _WIN32
             ProcessCpuStats(HANDLE p_handle);
         #elif __linux__

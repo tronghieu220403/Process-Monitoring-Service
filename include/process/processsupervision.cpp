@@ -3,6 +3,37 @@
 namespace pm
 {
 
+    ProcessSupervision::ProcessSupervision()
+    {
+        this.max_usage_ = MonitoringComponent();
+        this.process_controller_ = ProcessController();
+        this.process_logger_ = ProcessLogger();
+    }
+
+    ProcessSupervision::ProcessSupervision(ProcessSupervision& ps)
+    {
+        this.max_usage_ = (pc.max_usage);
+        this.process_controller_ = (pc.process_controller_);
+        this.process_logger_ = (pc.process_logger_);
+    }
+
+    ProcessSupervision::ProcessSupervision(ProcessSupervision&& ps)
+    {
+        this.max_usage_ = std::move(pc.max_usage);
+        this.process_controller_ = std::move(pc.process_controller_);
+        this.process_logger_ = std::move(pc.process_logger_);
+    }
+
+    ProcessSupervision::ProcessSupervision(ProcessController p_control)
+    {
+        process_controller_(p_control);
+    }
+
+    ProcessSupervision::ProcessSupervision(ProcessController& p_control)
+    {
+        process_controller = std::move(p_control);
+    }
+
     ProcessSupervision::ProcessSupervision(std::wstring name)
     {
         process_controller_ = ProcessController(name); 

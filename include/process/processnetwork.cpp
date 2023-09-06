@@ -5,8 +5,45 @@ namespace pm
 
 ProcessNetworkStats::ProcessNetworkStats()
 {
+    #ifdef _WIN32
+        process_handle_ = 0;
+    #elif __linux__
+
+    #endif
+
+    long long last_data_recv_ = 0;
+    long long last_data_sent_ = 0;
+    double last_speed_ = 0;
+};
+
+ProcessNetworkStats::ProcessNetworkStats(ProcessNetworkStats& pns)
+{
+    #ifdef _WIN32
+        this.process_handle_ = pns.process_handle_;
+    #elif __linux__
+
+    #endif
+
+    this.last_data_recv_ = pns.last_data_recv_;
+    this.last_data_sent_ = pns.last_data_sent_;
+    this.last_speed_ = pns.last_speed_;
 
 };
+
+ProcessNetworkStats::ProcessNetworkStats(ProcessNetworkStats&& pns)
+{
+    #ifdef _WIN32
+        this.process_handle_ = pns.process_handle_;
+    #elif __linux__
+
+    #endif
+
+    this.last_data_recv_ = pns.last_data_recv_;
+    this.last_data_sent_ = pns.last_data_sent_;
+    this.last_speed_ = pns.last_speed_;
+
+};
+
 
 ProcessNetworkStats::ProcessNetworkStats(HANDLE p_handle)
 {

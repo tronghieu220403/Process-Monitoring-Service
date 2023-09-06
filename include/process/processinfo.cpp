@@ -10,12 +10,34 @@ ProcessInfo::ProcessInfo(): pid_(0),time_(static_cast<long long>(0))
 
 ProcessInfo::ProcessInfo(const ProcessInfo& pi)
 {
+    this.pid_ = pi.pid_;
+    this.time_ = pi.time_;
+    this.memory_usage_ = pi.memory_usage_;
+    this.cpu_usage_ = pi.cpu_usage_;
+    this.disk_usage_ = pi.disk_usage_;
+    this.network_usage_ = pi.network_usage_;
+    this.last_usage_ = pi.last_usage_;
+    #ifdef _WIN32
+        this.process_handle_ = pi.process_handle_;
+    #elif __linux__
 
+    #endif
 }
 
 ProcessInfo::ProcessInfo(const ProcessInfo&& pi)
 {
-    
+    this.pid_ = pi.pid_;
+    this.time_ = pi.time_;
+    this.memory_usage_ = std::move(pi.memory_usage_);
+    this.cpu_usage_ = std::move(pi.cpu_usage_);
+    this.disk_usage_ = std::move(pi.disk_usage_);
+    this.network_usage_ = std::move(pi.network_usage_);
+    this.last_usage_ = std::move(pi.last_usage_);
+    #ifdef _WIN32
+        this.process_handle_ = pi.process_handle_;
+    #elif __linux__
+
+    #endif
 }
 
 #ifdef _WIN32

@@ -18,12 +18,15 @@ namespace pm
         ProcessLogger process_logger_;
 
     public:
-        ProcessSupervision() = default;
+        ProcessSupervision();
         
+
         ProcessSupervision(std::wstring name);
         ProcessSupervision(std::string name);
 
-        ProcessSupervision(ProcessController p_control);
+        explicit ProcessSupervision(ProcessController p_control);
+        explicit ProcessSupervision(ProcessController& p_control);
+
 
         void SetProcessController(ProcessController process_control);
 

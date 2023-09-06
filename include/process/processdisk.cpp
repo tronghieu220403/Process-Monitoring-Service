@@ -2,8 +2,43 @@
 
 namespace pm
 {
+
 ProcessDiskStats::ProcessDiskStats()
 {
+    last_speed_ = 0;
+    #ifdef _WIN32
+        ZeroMemory(&last_io_counter_, sizeof(IO_COUNTERS));
+        ZeroMemory(&last_time_, sizeof(FILETIME));
+        ZeroMemory(&process_handle_, sizeof(HANDLE));
+    #elif __linux__
+
+    #endif
+
+};
+
+ProcessDiskStats::ProcessDiskStats(ProcessDiskStats& pds)
+{
+    #ifdef _WIN32
+        this.last_io_counter_ = pds.last_io_counter_;
+        this.last_time_ = pds.last_time_;
+        this.process_handle_ = pds.process_handle_;
+        this.last_speed_ = pds.last_speed_;
+    #elif __linux__
+
+    #endif
+
+};
+
+ProcessDiskStats::ProcessDiskStats(ProcessDiskStats&& pds)
+{
+    #ifdef _WIN32
+        this.last_io_counter_ = std::move(pds.last_io_counter_);
+        this.last_time_ = std::move(pds.last_time_);
+        this.process_handle_ = std::move(pds.process_handle_);
+        this.last_speed_ = pds.last_speed_;
+    #elif __linux__
+
+    #endif
 
 };
 

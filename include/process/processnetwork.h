@@ -19,13 +19,22 @@ namespace pm
     class ProcessNetworkStats
     {
     private:
-        HANDLE process_handle_;
+        #ifdef _WIN32
+            HANDLE process_handle_;
+        #elif __linux__
+
+        #endif
+
         long long last_data_recv_;
         long long last_data_sent_;
         double last_speed_;
+        
     public:
         ProcessNetworkStats();
         ProcessNetworkStats(HANDLE p_handle);
+
+        ProcessNetworkStats(ProcessNetworkStats& pns);
+        ProcessNetworkStats(ProcessNetworkStats&& pns);
 
         double GetCurrentSpeed();
         double GetLastSpeed();
