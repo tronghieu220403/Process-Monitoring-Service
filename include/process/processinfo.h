@@ -1,16 +1,13 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 #define PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 
-#define UNICODE
-#define _UNICODE
-
 #include <string.h>
 
 #if defined(_WIN32)
 	#include <WS2tcpip.h>
 	#include <TlHelp32.h>
 	#include <Windows.h>
-    #include <psapi.h>
+    #include <Psapi.h>
 
 #elif __linux__
 	#include <sys/wait.h>
@@ -20,10 +17,18 @@
 #include <string>
 #include <fstream>
 
-#include "include/process/processcpu.h"
-#include "include/process/processdisk.h"
-#include "include/process/processnetwork.h"
-#include "include/ulti/collections.h"
+#ifdef _VISUAL_STUDIO_WORKSPACE
+    #include "E:/Code/Github/Process-Monitoring/include/process/processcpu.h"
+    #include "E:/Code/Github/Process-Monitoring/include/process/processdisk.h"
+    #include "E:/Code/Github/Process-Monitoring/include/process/processnetwork.h"
+    #include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
+#else
+    #include "include/process/processcpu.h"
+    #include "include/process/processdisk.h"
+    #include "include/process/processnetwork.h"
+    #include "include/ulti/collections.h"
+#endif
+
 
 namespace pm
 {

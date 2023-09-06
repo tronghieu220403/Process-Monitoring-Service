@@ -1,12 +1,21 @@
 #ifndef PROCESSMONITORING_LOGGER_PROCESSLOGGER_H_
 #define PROCESSMONITORING_LOGGER_PROCESSLOGGER_H_
 
-#define UNICODE
-#define _UNICODE
 
-#include "include/logs/logger.h"
-#include "include/process/processcontroller.h"
-#include "include/ulti./collections.h"
+#ifdef _VISUAL_STUDIO_WORKSPACE
+
+    #include "E:/Code/Github/Process-Monitoring/include/logs/logger.h"
+    #include "E:/Code/Github/Process-Monitoring/include/process/processcontroller.h"
+    #include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
+
+#else
+
+    #include "include/logs/logger.h"
+    #include "include/process/processcontroller.h"
+    #include "include/ulti/collections.h"
+
+#endif
+
 
 namespace pm
 {

@@ -8,7 +8,7 @@
 
 #ifdef _WIN32
 #include <winrt/windows.data.json.h>
-#include <winrt/Windows.Foundation.Collections.h>
+#include <winrt/windows.foundation.collections.h>
 #define json_char TCHAR
 #elif __linux__
 
@@ -18,7 +18,14 @@
 #include <map>
 #include <vector>
 
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
+#else
 #include "include/ulti/collections.h"
+#endif
+
+
 
 namespace pm
 {

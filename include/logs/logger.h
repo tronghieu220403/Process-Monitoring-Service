@@ -1,9 +1,6 @@
 #ifndef PROCESSMONITORING_LOGGER_LOGGER_H_
 #define PROCESSMONITORING_LOGGER_LOGGER_H_
 
-#define UNICODE
-#define _UNICODE
-
 #include <string.h>
 #include <time.h>
 
@@ -13,32 +10,33 @@
 #include <fstream>
 #include <sstream>
 
-#include "include/process/processinfo.h"
+#ifdef _VISUAL_STUDIO_WORKSPACE
+    #include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
+#else
+    #include "include/process/processinfo.h"
+#endif
 
 namespace pm
 {
     class Logger
     {
     private:
-        std::wstring message_;
-        std::wstring folder_path_;
+        std::string message_;
+        std::string folder_path_;
     public:
         Logger() = default;
-        explicit Logger(std::wstring_view& message);
         
+        Logger(const std::string& message_, const std::string& folder_path_);
+                
         explicit Logger(std::string_view& message);
         
         void SetMessage(std::string_view& message);
-        void SetMessage(std::wstring_view& message);
 
         virtual bool SetLoggingFolder(std::string folder_path);
-        virtual bool SetLoggingFolder(std::wstring folder_path);
 
-        std::wstring GetMessage();
+        std::string GetMessage();
 
         bool WriteLog() const;
-
-        bool operator==(const Logger& other) const = default;
 
         virtual ~Logger() = default;
 

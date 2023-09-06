@@ -1,4 +1,8 @@
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "processdisk.h"
+#else
 #include "include/process/processdisk.h"
+#endif
 
 namespace pm
 {

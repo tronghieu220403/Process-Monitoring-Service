@@ -1,4 +1,10 @@
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "file.h"
+#else
 #include "include/file/file.h"
+#endif
+
 
 // how to ?
 namespace pm
@@ -7,8 +13,8 @@ namespace pm
 bool File::Set(std::wstring file_name)
 {
     #ifdef _WIN32
-        HANDLE file = CreateFile(&file_name[0], GENERIC_READ, 0, NULL, OPEN_EXISTING,
-                                FILE_ATTRIBUTE_NORMAL, NULL);
+        HANDLE file = CreateFile(&file_name[0], GENERIC_READ, 0, nullptr, OPEN_EXISTING,
+                                FILE_ATTRIBUTE_NORMAL, nullptr);
         if (file == INVALID_HANDLE_VALUE) {
             return false;
         }
@@ -23,8 +29,12 @@ bool File::Set(std::wstring file_name)
         buffer.resize(file_size.QuadPart / sizeof(wchar_t));
         file_size_ = file_size.QuadPart;
 
-        DWORD bytes_read;
-        if (!ReadFileEx(file, &buffer[0], file_size_, nullptr, NULL)) {
+        LPOVERLAPPED lpOverlapped;
+        LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine;
+        ZeroMemory(&lpOverlapped, sizeof(lpOverlapped));
+        ZeroMemory(&lpCompletionRoutine, sizeof(lpCompletionRoutine));
+
+        if (!ReadFileEx(file, &buffer[0], static_cast<DWORD>(file_size_), lpOverlapped, lpCompletionRoutine)) {
             CloseHandle(file);
             return L"";
         }

@@ -21,13 +21,14 @@ namespace pm
     class StartUpProgram
     {
     private:
+
         std::wstring exe_full_path_;
 
     public:
 
     StartUpProgram() = default;
-    explicit StartUpProgram(std::wstring exe_full_path);
-    explicit StartUpProgram(std::string exe_full_path);
+    explicit StartUpProgram(const std::wstring exe_full_path);
+    explicit StartUpProgram(const std::string exe_full_path);
 
     void SetProgram(std::wstring exe_full_path);
     void SetProgram(std::string exe_full_path);

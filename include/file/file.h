@@ -1,8 +1,5 @@
 #ifndef PROCESSMONITORING_FILE_FILE_H_
 #define PROCESSMONITORING_FILE_FILE_H_
-
-#define UNICODE
-#define _UNICODE
  
 #include <string.h>
 

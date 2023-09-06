@@ -1,8 +1,5 @@
 #ifndef PROCESSMONITORING_ULTI_COLLECTIONS_H_
 #define PROCESSMONITORING_ULTI_COLLECTIONS_H_
-
-#define UNICODE
-#define _UNICODE
  
 namespace pm
 {
@@ -14,7 +11,7 @@ namespace pm
         double network_usage;
     };
 
-    enum ProcessLoggerType
+    enum class ProcessLoggerType
     {
         kProcessLoggerCpu,
         kProcessLoggerMem,

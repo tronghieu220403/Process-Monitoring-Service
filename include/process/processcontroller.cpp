@@ -1,7 +1,9 @@
-#define UNICODE
-#define _UNICODE
 
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "processcontroller.h"
+#else
 #include "include/process/processcontroller.h"
+#endif
 
 namespace pm
 {

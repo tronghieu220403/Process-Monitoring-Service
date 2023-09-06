@@ -1,11 +1,14 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSCONTROLLER_H_
 #define PROCESSMONITORING_PROCESS_PROCESSCONTROLLER_H_
 
-#define UNICODE
-#define _UNICODE
-
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
+#include "E:/Code/Github/Process-Monitoring/include/process/process.h"
+#else
 #include "include/process/process.h"
 #include "include/process/processinfo.h"
+#endif
+
 
 namespace pm
 {

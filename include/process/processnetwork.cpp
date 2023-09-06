@@ -1,4 +1,10 @@
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "processnetwork.h"
+#else
 #include "include/process/processnetwork.h"
+#endif
+
 
 namespace pm
 {
@@ -19,28 +25,28 @@ ProcessNetworkStats::ProcessNetworkStats()
 ProcessNetworkStats::ProcessNetworkStats(ProcessNetworkStats& pns)
 {
     #ifdef _WIN32
-        this.process_handle_ = pns.process_handle_;
+        process_handle_ = pns.process_handle_;
     #elif __linux__
 
     #endif
 
-    this.last_data_recv_ = pns.last_data_recv_;
-    this.last_data_sent_ = pns.last_data_sent_;
-    this.last_speed_ = pns.last_speed_;
+    last_data_recv_ = pns.last_data_recv_;
+    last_data_sent_ = pns.last_data_sent_;
+    last_speed_ = pns.last_speed_;
 
 };
 
 ProcessNetworkStats::ProcessNetworkStats(ProcessNetworkStats&& pns)
 {
     #ifdef _WIN32
-        this.process_handle_ = pns.process_handle_;
+        process_handle_ = pns.process_handle_;
     #elif __linux__
 
     #endif
 
-    this.last_data_recv_ = pns.last_data_recv_;
-    this.last_data_sent_ = pns.last_data_sent_;
-    this.last_speed_ = pns.last_speed_;
+    last_data_recv_ = pns.last_data_recv_;
+    last_data_sent_ = pns.last_data_sent_;
+    last_speed_ = pns.last_speed_;
 
 };
 
@@ -86,4 +92,9 @@ double ProcessNetworkStats::GetLastSpeed()
     return last_speed_;
 }
 
+}
+
+pm::ProcessNetworkStats::ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_)
+    : process_handle_(process_handle_), last_data_recv_(last_data_recv_), last_data_sent_(last_data_sent_), last_speed_(last_speed_)
+{
 }

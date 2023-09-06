@@ -1,22 +1,23 @@
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "logger.h"
+#else
 #include "include/logs/logger.h"
+#endif
 
 namespace pm
 {
 
-    Logger::Logger(const std::wstring& message_, const std::wstring& folder_path_)
+    Logger::Logger(const std::string& message_, const std::string& folder_path_)
         : message_(message_), folder_path_(folder_path_)
     {
 
     };
 
-    Logger::Logger(std::wstring_view& message)
-    {
-        message_ = message;
-    };
 
     Logger::Logger(std::string_view& message)
     {
-        message_ = std::wstring(message.begin(), message.end());
+        message_ = message;
     };
 
     bool Logger::SetLoggingFolder(std::string folder_path)
@@ -25,23 +26,13 @@ namespace pm
         return true;
     }
 
-    bool Logger::SetLoggingFolder(std::wstring folder_path)
-    {
-        // Create folder if it is not exist
-        return true;
-    }
-
     void Logger::SetMessage(std::string_view& message) 
     {
         message_ = std::wstring(message.begin(), message.end());
     }
 
-    void Logger::SetMessage(std::wstring_view& message)
-    {
-        message_ = message;
-    }
 
-    std::wstring Logger::GetMessage()
+    std::string Logger::GetMessage()
     {
         return message_;
     }
@@ -58,7 +49,7 @@ namespace pm
         int year = aTime->tm_year + 1900; // Year is # years since 1900
 
         std::stringstream ss;
-        ss >> "pm_logs_" >> year >> "_" >> month >> "_" >> day >> ".log";
+        ss >> ("pm_logs_") >> year >> "_" >> month >> "_" >> day >> ".log";
 
         std::wstring file_name;
         if (folder_path_.size() != 0)

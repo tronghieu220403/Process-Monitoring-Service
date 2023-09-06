@@ -1,8 +1,14 @@
-#include "include/configuration/startupprogram.h"
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+    #include "startupprogram.h"
+#else
+    #include "include/configuration/startupprogram.h"
+#endif
+
 
 namespace pm
 {
-    StartUpProgram::StartUpProgram(std::wstring exe_full_path)
+    StartUpProgram::StartUpProgram(const std::wstring exe_full_path)
     {
         exe_full_path_ = exe_full_path;
     }

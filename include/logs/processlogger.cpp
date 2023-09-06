@@ -1,4 +1,10 @@
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "processlogger.h"
+#else
 #include "include/logs/processlogger.h"
+#endif
+
 
 namespace pm
 {

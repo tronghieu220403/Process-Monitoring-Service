@@ -1,15 +1,13 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSNETWORK_H_
 #define PROCESSMONITORING_PROCESS_PROCESSNETWORK_H_
 
-#define UNICODE
-#define _UNICODE
-
 #ifdef _WIN32
-    #pragma comment(lib, "Ws2_32.lib")
-    #pragma comment(lib, "iphlpapi.lib")
     #include <Windows.h>
     #include <WinSock2.h>
     #include <iphlpapi.h>
+    #pragma comment(lib, "Ws2_32.lib")
+    #pragma comment(lib, "iphlpapi.lib")
+
 #elif __linux__
 
 #endif
@@ -31,13 +29,15 @@ namespace pm
         
     public:
         ProcessNetworkStats();
-        ProcessNetworkStats(HANDLE p_handle);
+        explicit ProcessNetworkStats(HANDLE p_handle);
 
         ProcessNetworkStats(ProcessNetworkStats& pns);
-        ProcessNetworkStats(ProcessNetworkStats&& pns);
+        ProcessNetworkStats(ProcessNetworkStats&& pns) noexcept;
 
         double GetCurrentSpeed();
         double GetLastSpeed();
+        ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_)
+            : process_handle_(process_handle_), last_data_recv_(last_data_recv_), last_data_sent_(last_data_sent_), last_speed_(last_speed_);
     };
 
 }

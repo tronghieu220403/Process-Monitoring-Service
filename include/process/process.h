@@ -1,9 +1,6 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESS_H_
 #define PROCESSMONITORING_PROCESS_PROCESS_H_
 
-#define UNICODE
-#define _UNICODE
-
 #include <string.h>
 #if defined(_WIN32)
 	#include <WS2tcpip.h>
