@@ -78,7 +78,8 @@ namespace pm
 		{
 			return p_info_;
 		}
-		return ProcessInfo();
+		ProcessInfo fake_info = ProcessInfo();
+		return fake_info;
 	}
 
     bool ProcessController::TryFindHandle()
