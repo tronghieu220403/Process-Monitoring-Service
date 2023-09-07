@@ -8,12 +8,12 @@
             "args": [
                 "-std=c++20",
                 "-I",
-                "${workspaceFolder}/include",
+                "${workspaceFolder}",
                 "-g",
                 "${workspaceFolder}/include/*/*.cpp",
-                "${workspaceFolder}/src/${fileBasenameNoExtension}.cpp",
+                "${workspaceFolder}/${fileBasenameNoExtension}.cpp",
                 "-o",
-                "${workspaceFolder}/release/x64/Linux/${fileBasenameNoExtension}"
+                "${workspaceFolder}/${fileBasenameNoExtension}"
             ],
             "windows": {
                 "args": [

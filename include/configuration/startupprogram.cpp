@@ -29,13 +29,13 @@ namespace pm
     }
 
     bool StartUpProgram::Register()
-    {        
+    {
+        bool success = false;
         #ifdef _WIN32
 
             auto w_exe_full_path = std::wstring(exe_full_path_.begin(), exe_full_path_.end());
 
             long result = 0;
-            bool success = false;
             
             HKEY h_key = nullptr;
             result = RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, nullptr, 0, (KEY_WRITE | KEY_READ), nullptr, &h_key, nullptr);
@@ -59,18 +59,18 @@ namespace pm
         #elif __linux__
 
         #endif
-
+        return success;
     }
 
     bool StartUpProgram::IsRegistered()
     {
+        bool success = true;
         #ifdef _WIN32
 
             auto w_exe_full_path = std::wstring(exe_full_path_.begin(), exe_full_path_.end());
 
             HKEY h_key = nullptr;
             LONG result = 0;
-            BOOL success = TRUE;
             DWORD dw_reg_type = REG_SZ;
             std::wstring path_to_exe;
             DWORD dw_size = sizeof(path_to_exe);
@@ -97,10 +97,10 @@ namespace pm
                 h_key = nullptr;
             }
 
-            return success;
         #elif __linux__
 
         #endif
+        return success;
 
     }
 

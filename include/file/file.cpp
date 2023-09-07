@@ -42,6 +42,7 @@ bool File::Set(std::wstring file_name)
         CloseHandle(file);
 
     #elif __linux__
+        return false;
 
     #endif
 }

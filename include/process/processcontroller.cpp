@@ -27,17 +27,24 @@ namespace pm
 
 	bool ProcessController::SetHandle(int pid)
 	{
+		bool success = true;
 		#ifdef _WIN32
 			process_handle_ = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
 			if (process_handle_ == nullptr)
 			{
-				return false;
+				success = false;
 			}
-			p_info_ = ProcessInfo(process_handle_);
-			return true;
+			else 
+			{
+				p_info_ = ProcessInfo(process_handle_);
+				success = true;
+			}
 		#elif __linux__
 
 		#endif
+		
+		return success;
+
 	}
 
 	bool ProcessController::SetHandle(const std::string_view& name){
@@ -59,7 +66,7 @@ namespace pm
 			}
 			return false;
 		#elif __linux__
-
+			return false;
 		#endif
 	}
 
@@ -74,12 +81,7 @@ namespace pm
 
 	ProcessInfo& ProcessController::GetProcessInfo()
 	{
-		if (IsExists())
-		{
-			return p_info_;
-		}
-		ProcessInfo fake_info = ProcessInfo();
-		return fake_info;
+		return p_info_;
 	}
 
     bool ProcessController::TryFindHandle()
@@ -94,6 +96,7 @@ namespace pm
                 return SetHandle(name_);
             }
         #elif __linux__
+			return false;
 
         #endif
     };
