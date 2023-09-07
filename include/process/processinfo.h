@@ -18,7 +18,6 @@
 	#include <TlHelp32.h>
 	#include <Windows.h>
     #include <Psapi.h>
-
 #elif __linux__
 	#include <sys/wait.h>
 	#include <dirent.h>

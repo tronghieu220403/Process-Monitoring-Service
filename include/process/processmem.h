@@ -13,6 +13,7 @@
 #include <string>
 
 #ifdef _WIN32
+	#include <WS2tcpip.h>
 	#include <TlHelp32.h>
 	#include <Windows.h>
     #include <Psapi.h>
