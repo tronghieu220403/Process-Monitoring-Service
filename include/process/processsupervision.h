@@ -31,8 +31,8 @@ namespace pm
     {
     private:
         MonitoringComponent max_usage_;
-        ProcessController process_controller_;
-        ProcessLogger process_logger_;
+        std::shared_ptr<ProcessController> process_controller_;
+        std::shared_ptr<ProcessLogger> process_logger_;
 
     public:
         ProcessSupervision();
@@ -49,8 +49,8 @@ namespace pm
         void SetMaxDiskUsage(float max_disk_usage);
         void SetMaxNetworkUsage(float max_network_usage);
 
-        ProcessController& GetProcessController();
-        ProcessLogger& GetProcessLogger();
+        std::shared_ptr<ProcessController>& GetProcessController();
+        std::shared_ptr<ProcessLogger>& GetProcessLogger();
         MonitoringComponent GetMonitoringComponent() const;
 
         void UpdateProcessStats();

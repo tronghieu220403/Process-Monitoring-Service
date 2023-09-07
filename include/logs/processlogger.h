@@ -35,17 +35,17 @@ namespace pm
     class ProcessLogger: public Logger
     {
     private:
-        ProcessController process_controller_;
+        std::shared_ptr<ProcessController> process_controller_;
     public:
 
         using Logger::SetMessage;
 
         ProcessLogger();
-        explicit ProcessLogger(const ProcessController& pc);
+        explicit ProcessLogger(const std::shared_ptr<ProcessController>& pc);
 
         ProcessLogger& operator=(const ProcessLogger& pl);
 
-        void SetProcessController(const ProcessController& pc);
+        void SetProcessController(const std::shared_ptr<ProcessController>& pc);
 
         void SetMessage(ProcessLoggerType type);
 

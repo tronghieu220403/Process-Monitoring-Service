@@ -14,22 +14,23 @@ namespace pm
     ProcessSupervision::ProcessSupervision() = default;
 
     ProcessSupervision::ProcessSupervision(const std::string& name) :
-        process_controller_(ProcessController(name))
+        process_controller_(std::make_shared<ProcessController>(name))
     {
-        process_logger_ = ProcessLogger(process_controller_);
+        process_logger_ = std::make_shared<ProcessLogger>(process_controller_);
     }
 
 
     ProcessSupervision::ProcessSupervision(const ProcessController& pc):
-        process_controller_(pc)
+        process_controller_(std::make_shared<ProcessController>(pc))
     {
-        process_logger_ = ProcessLogger(process_controller_);
+        process_logger_ = std::make_shared<ProcessLogger>(process_controller_);
     }
 
     void ProcessSupervision::SetProcessController(const ProcessController& process_controller)
     {
-        process_controller_ = process_controller;
-        process_logger_ = ProcessLogger(process_controller_);
+        process_controller_ = std::make_shared<ProcessController>(process_controller);
+
+        process_logger_ = std::make_shared<ProcessLogger>(process_controller_);
     }
 
     void ProcessSupervision::SetMaxUsage(const MonitoringComponent& max_usage)
@@ -57,12 +58,12 @@ namespace pm
         max_usage_.network_usage = max_network_usage;
     }
 
-    ProcessController& ProcessSupervision::GetProcessController()
+    std::shared_ptr<ProcessController>& ProcessSupervision::GetProcessController()
     {
         return process_controller_;
     }
 
-    ProcessLogger& ProcessSupervision::GetProcessLogger()
+    std::shared_ptr<ProcessLogger>& ProcessSupervision::GetProcessLogger()
     {
         return process_logger_;
     }
@@ -75,16 +76,16 @@ namespace pm
 
     void ProcessSupervision::UpdateProcessStats()
     {
-        if (process_controller_.IsExists() == false)
+        if (process_controller_->IsExists() == false)
         {
-            process_controller_.TryFindHandle();
+            process_controller_->TryFindHandle();
         }
-        process_controller_.GetProcessInfo().UpdateAttributes();
+        process_controller_->GetProcessInfo().UpdateAttributes();
     }
 
     void ProcessSupervision::CheckProcessStats()
     {
-        ProcessInfo const& p_info = process_controller_.GetProcessInfo();
+        ProcessInfo const& p_info = process_controller_->GetProcessInfo();
         if (p_info.GetCpuUsage() > max_usage_.cpu_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerCpu);
@@ -105,8 +106,8 @@ namespace pm
 
     void ProcessSupervision::Alert(ProcessLoggerType type)
     {
-        process_logger_.SetMessage(type);
-        process_logger_.WriteLog();        
+        process_logger_->SetMessage(type);
+        process_logger_->WriteLog();        
     }
 
 }
