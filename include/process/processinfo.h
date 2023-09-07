@@ -1,6 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #pragma once
-#endif
 
 #ifndef PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 #define PROCESSMONITORING_PROCESS_PROCESSINFO_H_
@@ -30,17 +28,18 @@
 #include <fstream>
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
+    #include "E:/Code/Github/Process-Monitoring/include/process/processmem.h"
     #include "E:/Code/Github/Process-Monitoring/include/process/processcpu.h"
     #include "E:/Code/Github/Process-Monitoring/include/process/processdisk.h"
     #include "E:/Code/Github/Process-Monitoring/include/process/processnetwork.h"
     #include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
 #else
+    #include "include/process/processmem.h"
     #include "include/process/processcpu.h"
     #include "include/process/processdisk.h"
     #include "include/process/processnetwork.h"
     #include "include/ulti/collections.h"
 #endif
-
 
 namespace pm
 {
@@ -50,7 +49,7 @@ namespace pm
     private:
         int pid_ = 0;
         time_t time_ = 0;
-        double memory_usage_ = 0;
+        ProcessMemoryStats memory_usage_{};
         ProcessCpuStats cpu_usage_{};
         ProcessDiskStats disk_usage_{};
         ProcessNetworkStats network_usage_{};

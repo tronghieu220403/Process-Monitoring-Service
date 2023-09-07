@@ -22,11 +22,12 @@ namespace pm
             else
             {
                 process_handle_ = process_handle;
-                return;
             }
         #elif __linux__
     
         #endif
+
+        memory_usage_ = ProcessMemoryStats(process_handle_);
         cpu_usage_ = ProcessCpuStats(process_handle_);
         disk_usage_ = ProcessDiskStats(process_handle_);
         network_usage_ = ProcessNetworkStats(process_handle_);
@@ -56,34 +57,49 @@ namespace pm
         #elif __linux__
 
         #endif
+        
         return cpu_usage_.GetCurrentUsage();
     };
 
     double ProcessInfo::UpdateMemoryUsage()
     {
         #ifdef _WIN32
-            PROCESS_MEMORY_COUNTERS_EX pmc{};
-
             if (GetProcessId(process_handle_) == NULL)
             {
                 return 0;
             }
-
-            GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-            memory_usage_ = double(pmc.WorkingSetSize) / 1024;
-            return memory_usage_;
         #elif __linux__
-        	return false;
+
         #endif
+
+        return memory_usage_.GetCurrentUsage();
     };
 
     double ProcessInfo::UpdateDiskUsage()
     {
+        #ifdef _WIN32
+            if (GetProcessId(process_handle_) == NULL)
+            {
+                return 0;
+            }
+        #elif __linux__
+
+        #endif
+
         return disk_usage_.GetCurrentSpeed();
     };
 
     double ProcessInfo::UpdateNetworkUsage()
     {
+        #ifdef _WIN32
+            if (GetProcessId(process_handle_) == NULL)
+            {
+                return 0;
+            }
+        #elif __linux__
+
+        #endif
+
         return network_usage_.GetCurrentSpeed();
     };
 

@@ -57,7 +57,11 @@ double ProcessDiskStats::GetCurrentSpeed()
         GetProcessIoCounters(process_handle_, &now_io_counter);
         GetSystemTimeAsFileTime(&now_time);
 
-        speed = (now_io_counter.ReadTransferCount + now_io_counter.WriteTransferCount + now_io_counter.OtherTransferCount - last_io_counter_.ReadTransferCount + last_io_counter_.WriteTransferCount + last_io_counter_.OtherTransferCount) * 100 * 10000000 / (now_time.dwLowDateTime - last_time_.dwLowDateTime) / 1024;
+        double time_range_in_sec = static_cast<double>(now_time.dwLowDateTime - last_time_.dwLowDateTime) / 10000000;
+
+        speed = (now_io_counter.ReadTransferCount + now_io_counter.WriteTransferCount + 
+        now_io_counter.OtherTransferCount - 
+        last_io_counter_.ReadTransferCount - last_io_counter_.WriteTransferCount - last_io_counter_.OtherTransferCount) / time_range_in_sec ;
 
         last_time_ = now_time;
         last_io_counter_ = now_io_counter;
@@ -66,7 +70,7 @@ double ProcessDiskStats::GetCurrentSpeed()
 
     #endif
 
-    last_speed_ = double(speed)/100;
+    last_speed_ = double(speed) / (1024 * 1024);
     return last_speed_;
 };
 
