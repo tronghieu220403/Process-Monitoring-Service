@@ -84,7 +84,7 @@ namespace pm
 
     void ProcessSupervision::CheckProcessStats()
     {
-        ProcessInfo p_info = process_controller_.GetProcessInfo();
+        ProcessInfo const& p_info = process_controller_.GetProcessInfo();
         if (p_info.GetCpuUsage() > max_usage_.cpu_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerCpu);

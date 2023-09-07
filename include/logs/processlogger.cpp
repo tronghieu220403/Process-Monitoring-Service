@@ -34,7 +34,7 @@ namespace pm
     {
         std::stringstream ss;
 
-        ProcessInfo p_info = process_controller_.GetProcessInfo();
+        ProcessInfo const& p_info = process_controller_.GetProcessInfo();
 
         time_t t = p_info.GetTime();
 

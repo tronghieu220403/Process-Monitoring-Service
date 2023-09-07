@@ -38,12 +38,6 @@ namespace pm
         return folder_path_;
     }
 
-    bool Logger::CreateLogFolder(const std::string_view& folder_path) const
-    {
-        // do sth
-        return true;
-    }
-
     void Logger::WriteLog() const
     {
         /*

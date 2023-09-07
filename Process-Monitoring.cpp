@@ -19,15 +19,16 @@ int main()
 {
     pm::ProcessSupervision ps("Messenger.exe");
     pm::MonitoringComponent mc;
-    mc.cpu_usage = 1.3;
-    mc.mem_usage = 100.0;
-    mc.disk_usage = 1000.0;
+    mc.cpu_usage = 0;
+    mc.mem_usage = 0;
+    mc.disk_usage = 0;
     mc.network_usage = 1.0;
 
     ps.SetMaxUsage(mc);
 
-    while (true)
+    for (int i = 0; i < 2; i++)
     {
+        Sleep(5000);
         ps.UpdateProcessStats();
         ps.CheckProcessStats();
     }

@@ -50,3 +50,4 @@ x64/*
 *.sln
 .vscode/tasks.json
 Process-Monitoring
+*.log

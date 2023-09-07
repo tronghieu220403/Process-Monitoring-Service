@@ -47,7 +47,6 @@ namespace pm
         std::string GetMessage() const;
         std::string GetFolderPath() const;
 
-        bool CreateLogFolder(const std::string_view& folder_path) const;
         void WriteLog() const;
 
         virtual ~Logger() = default;
