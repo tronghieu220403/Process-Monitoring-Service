@@ -73,7 +73,7 @@ namespace pm
             memory_usage_ = double(pmc.WorkingSetSize) / 1024;
             return memory_usage_;
         #elif __linux__
-        
+        	return false;
         #endif
     };
 
