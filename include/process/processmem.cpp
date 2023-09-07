@@ -22,12 +22,12 @@ namespace pm
         process_handle_ = p_handle;
     };
 
-    ProcessMemoryStats::ProcessMemoryStats(const HANDLE& process_handle_, double last_mem)
-        : process_handle_(process_handle_), last_mem_(last_mem){};
+    ProcessMemoryStats::ProcessMemoryStats(const HANDLE process_handle, double last_mem)
+        : process_handle_(process_handle), last_mem_(last_mem){};
 
 #endif
 
-    double ProcessMemoryStats::GetCurrentSpeed()
+    double ProcessMemoryStats::GetCurrentUsage()
     {
         #ifdef _WIN32
             if (GetProcessId(process_handle_) == NULL)
@@ -50,7 +50,7 @@ namespace pm
             return last_mem_;
     }
 
-    double ProcessMemoryStats::GetLastSpeed()
+    double ProcessMemoryStats::GetLastUsage()
     {
         #ifdef _WIN32
             if (GetProcessId(process_handle_) == NULL)

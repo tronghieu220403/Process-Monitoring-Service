@@ -38,13 +38,13 @@ namespace pm
         
         #ifdef _WIN32
             explicit ProcessMemoryStats(HANDLE p_handle);
-            ProcessMemoryStats::ProcessMemoryStats(const HANDLE& process_handle_, double last_mem);
+            ProcessMemoryStats(const HANDLE process_handle, double last_mem);
         #elif __linux__
 
         #endif
 
         double GetCurrentUsage();
-        double GetCurrentUsage();
+        double GetLastUsage();
         
     };
 
