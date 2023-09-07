@@ -9,20 +9,6 @@
 namespace pm
 {
 
-    ProcessInfo::ProcessInfo(const ProcessInfo& pi) = default;
-
-    ProcessInfo& ProcessInfo::operator=(const ProcessInfo& pi) = default;
-
-    ProcessInfo::ProcessInfo(const ProcessInfo&& pi) noexcept: \
-    pid_(pi.pid_), time_(pi.time_), memory_usage_(pi.memory_usage_)
-    {
-        this->cpu_usage_ = std::move(pi.cpu_usage_);
-        this->disk_usage_ = std::move(pi.disk_usage_);
-        this->network_usage_ = std::move(pi.network_usage_);
-        this->last_usage_ = std::move(pi.last_usage_);
-    }
-
-
 #ifdef _WIN32
     ProcessInfo::ProcessInfo(HANDLE process_handle)
     {

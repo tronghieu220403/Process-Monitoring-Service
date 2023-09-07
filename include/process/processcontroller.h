@@ -48,7 +48,7 @@ namespace pm
         
         int GetPid() const override;
 
-		ProcessInfo GetProcessInfo();
+		ProcessInfo& GetProcessInfo();
 
 		bool TryFindHandle();
 

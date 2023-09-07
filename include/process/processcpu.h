@@ -29,7 +29,7 @@ namespace pm
             ULARGE_INTEGER last_sys_cpu_; 
             ULARGE_INTEGER last_user_cpu_;
 
-            HANDLE process_handle_ = 0;
+            HANDLE process_handle_ = nullptr;
         #elif __linux__
 
         #endif

@@ -27,7 +27,7 @@ namespace pm
 {
     class ProcessSupervision
     {
-    protected:
+    private:
         MonitoringComponent max_usage_;
         ProcessController process_controller_;
         ProcessLogger process_logger_;
@@ -37,11 +37,7 @@ namespace pm
         
         explicit ProcessSupervision(const std::string& name);
 
-        explicit ProcessSupervision(const ProcessSupervision& ps);
-
         explicit ProcessSupervision(const ProcessController& pc);
-
-        ProcessSupervision& operator=(const ProcessSupervision& ps);
 
         void SetProcessController(const ProcessController& process_controller);
 
@@ -51,8 +47,9 @@ namespace pm
         void SetMaxDiskUsage(float max_disk_usage);
         void SetMaxNetworkUsage(float max_network_usage);
 
-        ProcessController GetProcessController();
-        ProcessLogger GetProcessLogger();
+        ProcessController& GetProcessController();
+        ProcessLogger& GetProcessLogger();
+        MonitoringComponent GetMonitoringComponent() const;
 
         void UpdateProcessStats();
         void CheckProcessStats();

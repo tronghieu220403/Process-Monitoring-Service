@@ -9,9 +9,7 @@
 #include "include/process/processinfo.h"
 #endif
 
-#pragma comment(lib, "Ws2_32.lib")
-#pragma comment(lib, "iphlpapi.lib")
-
+#include <iostream> 
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
 

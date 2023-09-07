@@ -5,12 +5,27 @@
 #ifndef _VISUAL_STUDIO_WORKSPACE
 #define UNICODE
 #define _UNICODE
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "iphlpapi.lib")
+
 #endif
 
+#include <string>
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#ifdef _WIN32
+    #include <WinSock2.h>
+    #include <WS2tcpip.h>
+    #include <iphlpapi.h>
+    #include <Windows.h>
+#elif __linux__
+
 #endif
+
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "iphlpapi.lib")
+#endif
+
 
 namespace pm
 {
@@ -18,7 +33,7 @@ namespace pm
     {
     private:
         #ifdef _WIN32
-            HANDLE process_handle_ = 0;
+            HANDLE process_handle_ = nullptr;
         #elif __linux__
 
         #endif
@@ -36,10 +51,6 @@ namespace pm
         #elif __linux__
 
         #endif
-        ProcessNetworkStats(const ProcessNetworkStats& pns);
-        ProcessNetworkStats(const ProcessNetworkStats&& pns) = delete;
-
-        ProcessNetworkStats& operator=(const ProcessNetworkStats& pns);
 
         double GetCurrentSpeed();
         double GetLastSpeed();

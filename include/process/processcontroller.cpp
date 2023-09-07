@@ -72,11 +72,11 @@ namespace pm
         #endif
 	}
 
-	ProcessInfo ProcessController::GetProcessInfo()
+	ProcessInfo& ProcessController::GetProcessInfo()
 	{
 		if (IsExists())
 		{
-			return std::move(p_info_);
+			return p_info_;
 		}
 		return ProcessInfo();
 	}

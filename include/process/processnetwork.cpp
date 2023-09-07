@@ -27,10 +27,6 @@ namespace pm
 
 #endif
 
-    ProcessNetworkStats::ProcessNetworkStats(const ProcessNetworkStats& pns) = default;
-
-    ProcessNetworkStats& ProcessNetworkStats::operator=(const ProcessNetworkStats& pns) = default;
-
     double ProcessNetworkStats::GetCurrentSpeed()
     {
         #ifdef _WIN32

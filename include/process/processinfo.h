@@ -76,11 +76,6 @@ namespace pm
 
         #endif
 
-        ProcessInfo(const ProcessInfo& pi);         // copy constructor
-        explicit ProcessInfo(const ProcessInfo&& pi) noexcept;        // move constructor
-
-        ProcessInfo& operator=(const ProcessInfo& pi);
-
         int GetPid() const;
                 
         time_t GetTime() const;

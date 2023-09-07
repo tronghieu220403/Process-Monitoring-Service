@@ -19,10 +19,6 @@ namespace pm
         process_logger_ = ProcessLogger(process_controller_);
     }
 
-    ProcessSupervision::ProcessSupervision(const ProcessSupervision& ps) = default;
-
-    ProcessSupervision& ProcessSupervision::operator=(const ProcessSupervision& ps) = default;
-
 
     ProcessSupervision::ProcessSupervision(const ProcessController& pc):
         process_controller_(pc)
@@ -61,16 +57,21 @@ namespace pm
         max_usage_.network_usage = max_network_usage;
     }
 
-    ProcessController ProcessSupervision::GetProcessController()
+    ProcessController& ProcessSupervision::GetProcessController()
     {
-        return std::move(process_controller_);
+        return process_controller_;
     }
 
-    ProcessLogger ProcessSupervision::GetProcessLogger()
+    ProcessLogger& ProcessSupervision::GetProcessLogger()
     {
-        return std::move(process_logger_);
+        return process_logger_;
     }
 
+    MonitoringComponent ProcessSupervision::GetMonitoringComponent() const
+    {
+        return max_usage_;
+    }
+    
 
     void ProcessSupervision::UpdateProcessStats()
     {
