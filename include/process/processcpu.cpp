@@ -10,7 +10,6 @@ namespace pm
 {
     ProcessCpuStats::ProcessCpuStats()
     {
-
         #ifdef _WIN32
 
         ZeroMemory(&last_cpu_, sizeof(ULARGE_INTEGER));
@@ -135,6 +134,5 @@ namespace pm
 
         return last_usage_percent_;
     }
-
 
 }

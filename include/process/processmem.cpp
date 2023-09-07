@@ -16,6 +16,7 @@ namespace pm
     {
         if (GetProcessId(p_handle) == NULL)
         {
+            last_mem_ = 0;
             return;
         }
 
@@ -32,14 +33,10 @@ namespace pm
         #ifdef _WIN32
             if (GetProcessId(process_handle_) == NULL)
             {
-                return 0.0;
+                last_mem_ = 0;
+                return last_mem_;
             }
             PROCESS_MEMORY_COUNTERS_EX pmc{};
-
-            if (GetProcessId(process_handle_) == NULL)
-            {
-                return 0;
-            }
 
             GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
             last_mem_ = double(pmc.WorkingSetSize) / 1024;
@@ -55,7 +52,7 @@ namespace pm
         #ifdef _WIN32
             if (GetProcessId(process_handle_) == NULL)
             {
-                return 0.0;
+                last_mem_ = 0;
             }
         #elif __linux__
 

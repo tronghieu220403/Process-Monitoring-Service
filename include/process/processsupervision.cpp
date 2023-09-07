@@ -79,8 +79,7 @@ namespace pm
         {
             process_controller_.TryFindHandle();
         }
-        ProcessInfo p_info = process_controller_.GetProcessInfo();
-        p_info.UpdateAttributes();
+        process_controller_.GetProcessInfo().UpdateAttributes();
     }
 
     void ProcessSupervision::CheckProcessStats()

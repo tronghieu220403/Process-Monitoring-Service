@@ -32,9 +32,8 @@ namespace pm
         #ifdef _WIN32
             if (GetProcessId(process_handle_) == NULL)
             {
-                return 0.0;
+                last_speed_ = 0.0;
             }
-            last_speed_ = 0.0;
         #elif __linux__
             last_speed_ = 0.0;
         #endif
@@ -46,7 +45,7 @@ namespace pm
         #ifdef _WIN32
             if (GetProcessId(process_handle_) == NULL)
             {
-                return 0.0;
+                last_speed_ = 0;
             }
         #elif __linux__
 

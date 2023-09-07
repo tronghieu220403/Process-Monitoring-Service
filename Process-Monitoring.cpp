@@ -7,16 +7,30 @@
 #define PROCESSMONITORING_PROCESSMONITORING
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
-#include "include/ulti/everything.h"
+#include "include/process/processsupervision.h"
 #else
 #include "include/process/processinfo.h"
 #endif
 
 #include <iostream> 
- 
+#include <vector>
+
 int main()
 {
-    std::cout << "OKE" << std::endl;
+    pm::ProcessSupervision ps("Messenger.exe");
+    pm::MonitoringComponent mc;
+    mc.cpu_usage = 1.3;
+    mc.mem_usage = 100.0;
+    mc.disk_usage = 1000.0;
+    mc.network_usage = 1.0;
+
+    ps.SetMaxUsage(mc);
+
+    while (true)
+    {
+        ps.UpdateProcessStats();
+        ps.CheckProcessStats();
+    }
 }
 
 #endif

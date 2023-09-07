@@ -86,7 +86,6 @@ namespace pm
         MonitoringComponent GetUsage() const;
 
         void UpdateAttributes();
-
     };
 }
 

@@ -19,10 +19,6 @@ ProcessDiskStats::ProcessDiskStats()
 
 };
 
-ProcessDiskStats::ProcessDiskStats(const ProcessDiskStats& pds) = default;
-
-ProcessDiskStats& ProcessDiskStats::operator=(const ProcessDiskStats& pds) = default;
-
 #ifdef _WIN32
 ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
 {
@@ -42,7 +38,7 @@ ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
 
 double ProcessDiskStats::GetCurrentSpeed()
 {
-    unsigned long long speed;
+    double speed;
 
     #ifdef _WIN32
 
@@ -51,7 +47,8 @@ double ProcessDiskStats::GetCurrentSpeed()
 
         if (GetProcessId(process_handle_) == NULL)
         {
-            return 0.0;
+            last_speed_ = 0;
+            return 0;
         }
 
         GetProcessIoCounters(process_handle_, &now_io_counter);
@@ -59,7 +56,7 @@ double ProcessDiskStats::GetCurrentSpeed()
 
         double time_range_in_sec = static_cast<double>(now_time.dwLowDateTime - last_time_.dwLowDateTime) / 10000000;
 
-        speed = (now_io_counter.ReadTransferCount + now_io_counter.WriteTransferCount + 
+        speed = static_cast<double>(now_io_counter.ReadTransferCount + now_io_counter.WriteTransferCount + 
         now_io_counter.OtherTransferCount - 
         last_io_counter_.ReadTransferCount - last_io_counter_.WriteTransferCount - last_io_counter_.OtherTransferCount) / time_range_in_sec ;
 
@@ -79,7 +76,7 @@ double ProcessDiskStats::GetLastSpeed()
     #ifdef _WIN32
         if (GetProcessId(process_handle_) == NULL)
         {
-            return 0.0;
+            last_speed_ = 0;
         }
     #elif __linux__
 
@@ -87,5 +84,6 @@ double ProcessDiskStats::GetLastSpeed()
 
     return last_speed_;
 };
+
 
 }

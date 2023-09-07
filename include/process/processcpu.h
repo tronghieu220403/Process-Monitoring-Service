@@ -52,6 +52,7 @@ namespace pm
 
         double GetCurrentUsage();
         double GetLastUsage();
+
     };
 }
 

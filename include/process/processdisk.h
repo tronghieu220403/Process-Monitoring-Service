@@ -39,11 +39,6 @@ namespace pm
         #ifdef _WIN32
             explicit ProcessDiskStats(HANDLE p_handle);
         #endif
-        ProcessDiskStats(const ProcessDiskStats& pds);
-        ProcessDiskStats(const ProcessDiskStats&& pds) = delete;
-
-        ProcessDiskStats& operator=(const ProcessDiskStats& pds);
-
 
         double GetCurrentSpeed();
         double GetLastSpeed();
