@@ -12,10 +12,10 @@
 #include <string>
 
 #ifdef _WIN32
+    #include <Windows.h>
     #include <WinSock2.h>
     #include <WS2tcpip.h>
     #include <iphlpapi.h>
-    #include <Windows.h>
 #elif __linux__
 
 #endif
