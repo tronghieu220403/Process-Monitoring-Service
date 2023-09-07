@@ -34,9 +34,9 @@ namespace pm
         static int num_processors_;
 
         ProcessDiskStats();
-
-        explicit ProcessDiskStats(HANDLE p_handle);
-
+        #ifdef _WIN32
+            explicit ProcessDiskStats(HANDLE p_handle);
+        #endif
         ProcessDiskStats(const ProcessDiskStats& pds);
         ProcessDiskStats(const ProcessDiskStats&& pds) = delete;
 

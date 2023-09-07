@@ -23,10 +23,9 @@ ProcessDiskStats::ProcessDiskStats(const ProcessDiskStats& pds) = default;
 
 ProcessDiskStats& ProcessDiskStats::operator=(const ProcessDiskStats& pds) = default;
 
-
+#ifdef _WIN32
 ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
 {
-    #ifdef _WIN32
         ZeroMemory(&last_io_counter_, sizeof(IO_COUNTERS));
         ZeroMemory(&last_time_, sizeof(FILETIME));
         ZeroMemory(&process_handle_, sizeof(HANDLE));
@@ -38,10 +37,8 @@ ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
         process_handle_ = p_handle;
         GetProcessIoCounters(process_handle_, &last_io_counter_);
         GetSystemTimeAsFileTime(&last_time_);
-    #elif __linux__
-
-    #endif
 };
+#endif
 
 double ProcessDiskStats::GetCurrentSpeed()
 {

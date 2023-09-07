@@ -10,16 +10,7 @@
 #endif
 
 #include <iostream> 
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-
-//#include "include/process/process.h"
-
-#else
-
-//#include "include/process/processsupervision.h"
-
-#endif
+ 
 int main()
 {
     std::cout << "OKE" << std::endl;
