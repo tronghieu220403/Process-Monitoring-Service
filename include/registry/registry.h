@@ -7,7 +7,6 @@
 #ifndef PROCESSMONITORING_REGISTRY_REGISTRY_H_
 #define PROCESSMONITORING_REGISTRY_REGISTRY_H_
 
-
 #ifndef _VISUAL_STUDIO_WORKSPACE
 #define _CRT_SECURE_NO_DEPRECATE
 #define UNICODE
@@ -15,23 +14,16 @@
 #endif
 
 #include <string.h>
-#include <time.h>
 
 #ifdef _WIN32
-
-#include <windows.h>
-
+#include <Windows.h>
 #endif
+
+
 
 #include <iostream>
 #include <string>
 #include <vector>
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-    #include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
-#else
-    #include "include/process/processinfo.h"
-#endif
 
 namespace pm
 {
