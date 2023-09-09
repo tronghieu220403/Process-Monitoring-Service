@@ -1,0 +1,66 @@
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#pragma once
+#endif
+
+#ifndef PROCESSMONITORING_COMMUNICATION_PIPELINE_SERVER_H_
+#define PROCESSMONITORING_COMMUNICATION_PIPELINE_SERVER_H_
+
+#define _CRT_SECURE_NO_DEPRECATE
+
+#ifndef _VISUAL_STUDIO_WORKSPACE
+#define UNICODE
+#define _UNICODE
+#endif
+
+
+#include <string.h>
+#include <time.h>
+#include <strsafe.h>
+#include <stdio.h>
+#include <tchar.h>
+
+#ifdef _WIN32
+#include <Windows.h> 
+#elif __linux__
+
+#endif
+
+#include <string>
+#include <fstream>
+#include <sstream>
+
+namespace pm
+{
+    class PipelineServer
+    {
+    private:
+        std::string server_name_;
+        int buf_size_;
+        #ifdef _WIN32
+            HANDLE handle_pipe_;
+        #elif __linux__
+
+        #endif
+    public:
+        PipelineServer() = default;
+        PipelineServer(const std::string& pipe_name);
+        PipelineServer(const std::string& pipe_name, int buf_size);
+
+        void SetServerName(const std::string& pipe_name);
+        void SetBufferSize(int buf_size);
+
+        std::string GetServername();
+        int GetBufferSize();
+
+        unsigned long int CreateServer();
+        unsigned long int ListenToClient();
+
+        bool ReceiveMessage();
+
+        bool SendMessage();
+
+    };
+        
+}
+
+#endif

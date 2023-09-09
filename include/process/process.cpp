@@ -24,7 +24,6 @@ namespace pm
 		pid_ = pid;
 	}
 
-
 	std::string Process::GetName() const
 	{
 		return name_;
