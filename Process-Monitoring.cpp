@@ -9,7 +9,7 @@
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #include "include/process/processsupervision.h"
 #else
-#include "include/process/processinfo.h"
+#include "include/process/processsupervision.h"
 #endif
 
 #include <iostream> 
