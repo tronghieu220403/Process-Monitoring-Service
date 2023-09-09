@@ -11,17 +11,20 @@ namespace pm
 	ProcessController::ProcessController(const std::string_view& name)
 	{
         SetHandle(name);
+		#ifdef _WIN32	
+			p_info_ = ProcessInfo(process_handle_);
+		#endif // DEBUG
 	}
 
 	ProcessController::ProcessController(const ProcessController& pc):p_info_(pc.p_info_)
 	{
-        SetHandle(pc.name_);
+        SetHandle(pc.Process::GetName());
 	}
 
 	ProcessController& ProcessController::operator=(const ProcessController& pc)
 	{
 		this->p_info_ = pc.p_info_;
-		this->SetHandle(pc.name_);
+		this->SetHandle(pc.Process::GetName());
 		return *this;
 	}
 
@@ -48,19 +51,21 @@ namespace pm
 	}
 
 	bool ProcessController::SetHandle(const std::string_view& name){
-		name_ = static_cast<std::string>(name);
-		pid_ = FindProcessIdByName(name_);
-		if (pid_ == 0)
+		Process::SetName(static_cast<std::string>(name));
+		Process::SetPid(FindProcessIdByName(GetName()));
+		int pid = Process::GetPid();
+		if (pid == 0)
 		{
 			return false;
 		}
-		return SetHandle(pid_);
+
+		return SetHandle(pid);
 	};
 
 	bool ProcessController::IsExists()
 	{
 		#ifdef _WIN32
-			if (GetProcessId(process_handle_) == pid_ && pid_ != 0)
+			if (int pid = GetPid(); GetProcessId(process_handle_) == pid && pid != 0)
 			{
 				return true;
 			}
@@ -70,13 +75,17 @@ namespace pm
 		#endif
 	}
 
-	int ProcessController::GetPid() const
+	int ProcessController::GetPid()
 	{
         #ifdef _WIN32
-            return GetProcessId(process_handle_);
+			auto pid = static_cast<int>(GetProcessId(process_handle_));
+			Process::SetPid(pid);
+
         #elif __linux__
-		    return FindProcessIdByName(name_);
+		    pid_ FindProcessIdByName(name_);
         #endif
+			return pid;
+
 	}
 
 	ProcessInfo& ProcessController::GetProcessInfo()
@@ -93,7 +102,7 @@ namespace pm
             }
             else 
             {
-                return SetHandle(name_);
+                return SetHandle(Process::GetName());
             }
         #elif __linux__
 			return false;

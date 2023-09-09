@@ -48,7 +48,7 @@ namespace pm
 
 		bool IsExists();
         
-        int GetPid() const override;
+        int GetPid() override;
 
 		ProcessInfo& GetProcessInfo();
 

@@ -27,20 +27,24 @@
 namespace pm
 {
 	class Process {
-	protected:
+	private:
 	
 		int pid_ = 0;
 		std::string name_;
+
+	protected:
+		void SetName(const std::string_view& name);
+		void SetPid(const int pid);
 
 	public:
 		
 		Process();
 
-		explicit Process(const std::string_view& name);
+		explicit Process(const std::string& name);
 
 		std::string GetName() const;
 		
-		virtual int GetPid() const;
+		virtual int GetPid();
 
 		static int FindProcessIdByName(const std::string_view& name);
 		#ifdef _WIN32

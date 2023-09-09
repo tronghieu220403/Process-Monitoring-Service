@@ -27,7 +27,7 @@ namespace pm
         int num_processors_ = 0;
 
         #ifdef _WIN32
-            ULARGE_INTEGER last_cpu_;
+            ULARGE_INTEGER last_cpu_time_;
             ULARGE_INTEGER last_sys_cpu_; 
             ULARGE_INTEGER last_user_cpu_;
 

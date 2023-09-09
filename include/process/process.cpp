@@ -3,24 +3,37 @@
 #else
 #include "include/process/process.h"
 #endif
+#include <iostream>
 
 namespace pm
 {
 
 	Process::Process() = default;
 
-	Process::Process(const std::string_view& name): pid_(FindProcessIdByName(name)), name_(name)
+	Process::Process(const std::string& name): pid_(FindProcessIdByName(name)), name_(name)
 	{
 	};
+
+	void Process::SetName(const std::string_view& name)
+	{
+		name_ = name;
+	}
+
+	void Process::SetPid(const int pid)
+	{
+		pid_ = pid;
+	}
+
 
 	std::string Process::GetName() const
 	{
 		return name_;
 	}
 
-	int Process::GetPid() const
+	int Process::GetPid()
 	{
-		return FindProcessIdByName(name_);
+		pid_ = FindProcessIdByName(name_);
+		return pid_;
 	}
 
 

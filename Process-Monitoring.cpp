@@ -18,20 +18,8 @@
 int main()
 {
     pm::ProcessSupervision ps("Messenger.exe");
-    pm::MonitoringComponent mc;
-    mc.cpu_usage = 0;
-    mc.mem_usage = 0;
-    mc.disk_usage = 0;
-    mc.network_usage = 1.0;
-
-    ps.SetMaxUsage(mc);
-
-    for (int i = 0; i < 2; i++)
-    {
-        Sleep(5000);
-        ps.UpdateProcessStats();
-        ps.CheckProcessStats();
-    }
+    std::shared_ptr<pm::ProcessController>gg = ps.GetProcessController();
+    std::cout << ps.GetProcessController()->GetPid() << std::endl;
 }
 
 #endif

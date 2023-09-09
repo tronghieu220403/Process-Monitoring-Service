@@ -12,10 +12,9 @@ namespace pm
     {
         #ifdef _WIN32
 
-        ZeroMemory(&last_cpu_, sizeof(ULARGE_INTEGER));
+        ZeroMemory(&last_cpu_time_, sizeof(ULARGE_INTEGER));
         ZeroMemory(&last_sys_cpu_, sizeof(ULARGE_INTEGER));
         ZeroMemory(&last_user_cpu_, sizeof(ULARGE_INTEGER));
-
         if (num_processors_ == 0)
         {
             SYSTEM_INFO sysInfo;
@@ -34,7 +33,7 @@ namespace pm
     {
         this->last_usage_percent_ = pcs.last_usage_percent_;
         #ifdef _WIN32
-            this->last_cpu_ = pcs.last_cpu_;
+            this->last_cpu_time_ = pcs.last_cpu_time_;
             this->last_sys_cpu_ = pcs.last_sys_cpu_;
             this->last_user_cpu_ = pcs.last_user_cpu_;
             this->process_handle_ = pcs.process_handle_;
@@ -66,7 +65,7 @@ namespace pm
             num_processors_ = sysInfo.dwNumberOfProcessors;
 
             GetSystemTimeAsFileTime(&ftime);
-            memcpy(&last_cpu_, &ftime, sizeof(FILETIME));
+            memcpy(&last_cpu_time_, &ftime, sizeof(FILETIME));
 
             GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
             memcpy(&last_sys_cpu_, &fsys, sizeof(FILETIME));
@@ -90,27 +89,27 @@ namespace pm
             FILETIME ftime;
             FILETIME fsys;
             FILETIME fuser;
-            ULARGE_INTEGER now;
+            ULARGE_INTEGER now_time;
             ULARGE_INTEGER sys;
             ULARGE_INTEGER user;
 
             GetSystemTimeAsFileTime(&ftime);
-            memcpy(&now, &ftime, sizeof(FILETIME));
+            memcpy(&now_time, &ftime, sizeof(FILETIME));
 
             GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
             memcpy(&sys, &fsys, sizeof(FILETIME));
             memcpy(&user, &fuser, sizeof(FILETIME));
             percent = static_cast<double>((sys.QuadPart - last_sys_cpu_.QuadPart) + (user.QuadPart - last_user_cpu_.QuadPart));
-            if (now.QuadPart - last_cpu_.QuadPart != 0)
+            if (now_time.QuadPart - last_cpu_time_.QuadPart != 0)
             {
-                percent /= static_cast<double>(now.QuadPart - last_cpu_.QuadPart);
+                percent /= static_cast<double>(now_time.QuadPart - last_cpu_time_.QuadPart);
                 percent /= num_processors_;
             }
             else
             {
                 percent = 0;
             }
-            last_cpu_ = now;
+            last_cpu_time_ = now_time;
             last_user_cpu_ = user;
             last_sys_cpu_ = sys;
         #elif __linux__
