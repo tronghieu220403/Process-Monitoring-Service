@@ -34,28 +34,64 @@ namespace pm
         return buf_size_;
     }
 
+    std::vector<char> PipelineServer::GetLastMessage()
+    {
+        return last_receive_;
+    }
+
+    bool PipelineServer::SetMaxConnection(int max_connection)
+    {
+        if (max_connection_ || max_connection > PIPE_UNLIMITED_INSTANCES)
+        {
+            return false;
+        }
+        max_connection_ = max_connection;
+        return true;
+    }
+
     unsigned long int PipelineServer::CreateServer()
     {
         handle_pipe_ = CreateNamedPipe(
             (std::wstring(server_name_.begin(), server_name_.end())).data(),             // pipe name 
-            PIPE_ACCESS_DUPLEX,       // read/write access 
-            PIPE_TYPE_MESSAGE |       // message type pipe 
-            PIPE_READMODE_MESSAGE |   // message-read mode 
-            PIPE_WAIT,                // blocking mode 
-            1, // max. instances  
+            PIPE_ACCESS_DUPLEX,         // read/write access 
+            PIPE_TYPE_MESSAGE |         // message type pipe 
+            PIPE_READMODE_MESSAGE |     // message-read mode 
+            PIPE_NOWAIT,                // blocking mode: NON-BLOCKING
+            max_connection_,            // max. instances  
             buf_size_,                  // output buffer size 
             buf_size_,                  // input buffer size 
-            0,                        // client time-out 
-            nullptr);                    // default security attribute 
+            0,                          // client time-out 
+            nullptr);                   // default security attribute 
         
         if (handle_pipe_ == INVALID_HANDLE_VALUE)
         {
             return GetLastError();
         }
+
+        return true;
         
     }
 
-    unsigned long int ListenToClient()
+    unsigned long int PipelineServer::ListenToClient()
+    {
+        return ConnectNamedPipe(handle_pipe_, nullptr) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+    }
+
+    bool PipelineServer::NewMessageReceived()
+    {
+
+    }
+
+    bool PipelineServer::TryGetMessage()
+    {
+        if (n_remaining_ == 0)
+        {
+            
+        }
+    }
+
+
+    bool PipelineServer::SendMessage(std::vector<char> send)
     {
         
     }

@@ -28,6 +28,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 namespace pm
 {
@@ -36,8 +37,12 @@ namespace pm
     private:
         std::string server_name_;
         int buf_size_;
+        int max_connection_;
         #ifdef _WIN32
             HANDLE handle_pipe_;
+            int n_remaining_;
+            std::vector<char> cur_receive_;
+            std::vector<char> last_receive_;
         #elif __linux__
 
         #endif
@@ -45,19 +50,22 @@ namespace pm
         PipelineServer() = default;
         PipelineServer(const std::string& pipe_name);
         PipelineServer(const std::string& pipe_name, int buf_size);
-
+        
         void SetServerName(const std::string& pipe_name);
         void SetBufferSize(int buf_size);
+        bool SetMaxConnection(int max_connection);
 
         std::string GetServername();
         int GetBufferSize();
+        std::vector<char> GetLastMessage();
 
         unsigned long int CreateServer();
         unsigned long int ListenToClient();
 
-        bool ReceiveMessage();
+        bool NewMessageReceived();
+        bool TryGetMessage();
 
-        bool SendMessage();
+        bool SendMessage(std::vector<char> send);
 
     };
         
