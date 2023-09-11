@@ -50,9 +50,9 @@ namespace pm
         return last_receive_;
     }
 
-    int PipelineServer::GetType()
+    int PipelineServer::GetLastMessageType()
     {
-        return type_;
+        return last_message_type_;
     }
 
     bool PipelineServer::IsActive()
@@ -92,7 +92,8 @@ namespace pm
                 PIPE_ACCESS_DUPLEX,         // read/write access 
                 PIPE_TYPE_MESSAGE |         // message type pipe 
                 PIPE_READMODE_MESSAGE |     // message-read mode 
-                PIPE_NOWAIT,                // blocking mode: NON-BLOCKING
+                //PIPE_NOWAIT,                // blocking mode: NON-BLOCKING
+                PIPE_WAIT,                  // blocking mode: BLOCKING
                 max_connection_,            // max. instances  
                 buf_size_ + 100,                  // output buffer size 
                 buf_size_ + 100,                  // input buffer size 
@@ -101,7 +102,7 @@ namespace pm
             
             if (handle_pipe_ == INVALID_HANDLE_VALUE)
             {
-                return GetLastError();
+                return false;
             }
 
         #elif __linux__
@@ -199,7 +200,7 @@ namespace pm
             }
 
             last_receive_ = cur_receive_;
-            type_ = type;
+            last_message_type_ = type;
         #elif __linux__
 
         #endif

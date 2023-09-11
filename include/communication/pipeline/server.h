@@ -38,11 +38,12 @@ namespace pm
         std::string server_name_;
         int buf_size_;
         int max_connection_;
+        std::vector<char> last_receive_;
+        int last_message_type_;
+
         #ifdef _WIN32
             HANDLE handle_pipe_;
             int n_remaining_;
-            std::vector<char> last_receive_;
-            int type_;
         #elif __linux__
 
         #endif
@@ -58,7 +59,7 @@ namespace pm
         std::string GetPipeName();
         int GetBufferSize();
         std::vector<char> GetLastMessage();
-        int GetType();
+        int GetLastMessageType();
 
         bool IsActive();
 

@@ -14,6 +14,14 @@
 #include <string.h>
 
 #ifdef _WIN32
+    #include <direct.h>
+    #define GetCurrentDir _getcwd
+#else
+    #include <unistd.h>
+    #define GetCurrentDir getcwd
+ #endif
+
+#ifdef _WIN32
 #include <Windows.h>
 #endif
 
@@ -21,10 +29,12 @@
 #include "E:/Code/Github/Process-Monitoring/include/process/processsupervision.h"
 #include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
 #include "E:/Code/Github/Process-Monitoring/include/registry/registry.h"
+#include "E:/Code/Github/Process-Monitoring/include/communication/pipeline/server.h"
 #else
 #include "include/process/processsupervision.h"
 #include "include/ulti/collections.h"
 #include "include/registry/registry.h"
+#include "include/communication/pipeline/server.h"
 #endif
 
 
@@ -40,6 +50,7 @@ namespace pm
         std::vector<ProcessSupervision> process_;
         std::string log_info_;
         bool new_config_;
+        PipelineServer server;
     public:
         CTA();
         void UpdateConfig();
