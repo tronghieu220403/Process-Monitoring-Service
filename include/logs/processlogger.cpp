@@ -33,7 +33,8 @@ namespace pm
         process_controller_ = pc;
     }
 
-    void ProcessLogger::SetMessage(ProcessLoggerType type)
+
+    std::string ProcessLogger::GetAlert(ProcessLoggerType type)
     {
         std::stringstream ss;
 
@@ -77,7 +78,6 @@ namespace pm
             ss << f;
         }
         ss << "\n";
-        SetMessage(ss.str());
     }
 
 }

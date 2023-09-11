@@ -23,6 +23,11 @@ namespace pm
         message_ = message;
     }
 
+    void Logger::AddMessage(const std::string_view& message)
+    {
+        message_.append(message);
+    }
+
     void Logger::SetFolderPath(const std::string_view& folder_path)
     {
         folder_path_ = folder_path;

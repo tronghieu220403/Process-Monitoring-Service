@@ -42,6 +42,7 @@ namespace pm
         explicit Logger(const std::string& message);
         
         void SetMessage(const std::string_view& message);
+        void AddMessage(const std::string_view& message);
         void SetFolderPath(const std::string_view& folder_path);
 
         std::string GetMessage() const;

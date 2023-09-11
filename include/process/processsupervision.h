@@ -39,6 +39,7 @@ namespace pm
         ProcessSupervision();
         
         explicit ProcessSupervision(const std::string& name);
+        explicit ProcessSupervision(const std::string& name, const MonitoringComponent& max_usage);
 
         explicit ProcessSupervision(const ProcessController& pc);
 

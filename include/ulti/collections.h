@@ -26,6 +26,12 @@ namespace pm
         kProcessLoggerNet
     };
 
+    enum class Command
+    {
+        CTB_NOTI_CONFIG,
+        CTA_SEND_LOGS
+    };
+
 }
 
 #endif

@@ -54,6 +54,7 @@ namespace pm
 
         std::string GetPipeName();
         std::vector<char> GetLastMessage();
+        
         int GetType();
 
         bool ConnectToPipeServer();

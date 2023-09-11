@@ -47,7 +47,7 @@ namespace pm
 
         void SetProcessController(const std::shared_ptr<ProcessController>& pc);
 
-        void SetMessage(ProcessLoggerType type);
+        std::string GetAlert(ProcessLoggerType type);
 
         bool operator==(const ProcessLogger& other) = delete;
         ~ProcessLogger() final = default;

@@ -1,4 +1,5 @@
 #include <include/communication/pipeline/client.h>
+#include "client.h"
 
 namespace pm
 {

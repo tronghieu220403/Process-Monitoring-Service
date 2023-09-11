@@ -1,4 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
+    #ifdef _VISUAL_STUDIO_WORKSPACE
 
 #include "processsupervision.h"
 
@@ -19,6 +19,12 @@ namespace pm
         process_logger_ = std::make_shared<ProcessLogger>(process_controller_);
     }
 
+    ProcessSupervision::ProcessSupervision(const std::string& name, const MonitoringComponent& max_usage):
+        process_controller_(std::make_shared<ProcessController>(name))
+    {
+        process_logger_ = std::make_shared<ProcessLogger>(process_controller_);
+        max_usage_ = max_usage;
+    }
 
     ProcessSupervision::ProcessSupervision(const ProcessController& pc):
         process_controller_(std::make_shared<ProcessController>(pc))
@@ -106,8 +112,7 @@ namespace pm
 
     void ProcessSupervision::Alert(ProcessLoggerType type)
     {
-        process_logger_->SetMessage(type);
-        process_logger_->WriteLog();        
+        process_logger_->AddMessage(process_logger_->GetAlert(type));
     }
 
 }
