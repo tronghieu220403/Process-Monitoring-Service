@@ -41,8 +41,8 @@ namespace pm
         #ifdef _WIN32
             HANDLE handle_pipe_;
             int n_remaining_;
-            std::vector<char> cur_receive_;
             std::vector<char> last_receive_;
+            int type_;
         #elif __linux__
 
         #endif
@@ -55,17 +55,20 @@ namespace pm
         void SetBufferSize(int buf_size);
         bool SetMaxConnection(int max_connection);
 
-        std::string GetServername();
+        std::string GetServerName();
         int GetBufferSize();
         std::vector<char> GetLastMessage();
+        int GetType();
+
+        bool IsActive();
 
         unsigned long int CreateServer();
         unsigned long int ListenToClient();
 
-        bool NewMessageReceived();
         bool TryGetMessage();
+        bool TrySendMessage(int type, std::vector<char> data);
 
-        bool SendMessage(std::vector<char> send);
+        void Close();
 
     };
         
