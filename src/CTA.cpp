@@ -17,6 +17,16 @@
 #include <Windows.h>
 #endif
 
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
+#include "E:/Code/Github/Process-Monitoring/include/process/processcontroller.h"
+#include "E:/Code/Github/Process-Monitoring/include/logs/processlogger.h"
+#include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
+#else
+#include "include/process/processinfo.h"
+#include "include/process/processcontroller.h"
+#include "include/logs/processlogger.h"
+#include "include/ulti/collections.h"
 
 
 #include <iostream>
@@ -30,8 +40,9 @@ namespace pm
     private:
     public:
         Cta();
-        bool ReadConfig();
-        bool 
+        bool UpdateConfig();
+        void Monitoring();
+        void CommunicateWithCtb();
     };
 }
 
