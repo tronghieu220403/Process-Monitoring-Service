@@ -14,7 +14,7 @@ namespace pm
 
     };
 
-    void PipelineServer::SetServerName(const std::string& pipe_name)
+    void PipelineServer::SetPipeName(const std::string& pipe_name)
     {
         server_name_ = pipe_name;
     }
@@ -34,7 +34,7 @@ namespace pm
         return true;
     }
 
-    std::string PipelineServer::GetServerName()
+    std::string PipelineServer::GetPipeName()
     {
         return server_name_;
     }

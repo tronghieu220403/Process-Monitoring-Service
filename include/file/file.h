@@ -46,6 +46,7 @@ namespace pm
         std::wstring ReadAll();
 
         bool Append();
+        bool AppendFromFile();
 
         bool Delete();
 

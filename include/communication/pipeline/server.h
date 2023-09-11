@@ -51,11 +51,11 @@ namespace pm
         PipelineServer(const std::string& pipe_name);
         PipelineServer(const std::string& pipe_name, int buf_size);
         
-        void SetServerName(const std::string& pipe_name);
+        void SetPipeName(const std::string& pipe_name);
         void SetBufferSize(int buf_size);
         bool SetMaxConnection(int max_connection);
 
-        std::string GetServerName();
+        std::string GetPipeName();
         int GetBufferSize();
         std::vector<char> GetLastMessage();
         int GetType();
