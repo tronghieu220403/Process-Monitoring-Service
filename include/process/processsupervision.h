@@ -24,6 +24,7 @@
 
 #endif
 
+#include <memory>
 
 namespace pm
 {
