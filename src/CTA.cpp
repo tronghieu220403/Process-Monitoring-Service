@@ -87,7 +87,10 @@ namespace pm
                 log_path.resize(strlen(&log_path[0]));
                 log_path.push_back('\\');
                 std::string log_name = "pm_logs.log";
-                log_path.append(std::vector<char>(log_name.begin(), log_name.end()));
+                for (char c: log_name)
+                {
+                    log_path.push_back(c);
+                }
                 server.TrySendMessage(Command::CTA_SEND_LOGS, log_path);
             }
         }

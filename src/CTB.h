@@ -59,9 +59,9 @@ namespace pm
         #ifdef _WIN32
             HANDLE handle_pipe_;
 
-            HANDLE cta_log_mutex_;
-            HANDLE config_registry_mutex_;
-            HANDLE inner_mutex_;
+            NamedMutex cta_log_mutex_;
+            NamedMutex config_registry_mutex_;
+            NamedMutex inner_mutex_;
 
         #elif __linux__
 

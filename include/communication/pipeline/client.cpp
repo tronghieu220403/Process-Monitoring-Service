@@ -221,4 +221,8 @@ namespace pm
         #endif
     }
 
+    PipelineClient::~PipelineClient()
+    {
+        CloseHandle(handle_pipe_);
+    }
 }

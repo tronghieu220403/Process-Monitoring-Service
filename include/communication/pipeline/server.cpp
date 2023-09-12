@@ -1,4 +1,5 @@
 #include <include/communication/pipeline/server.h>
+#include "server.h"
 
 namespace pm
 {
@@ -254,7 +255,13 @@ namespace pm
                 CloseHandle(handle_pipe_);
                 handle_pipe_ = nullptr;
             }
+        #elif __linux__
+        
         #endif
     }
 
+    PipelineServer::~PipelineServer()
+    {
+        Close();
+    }
 }

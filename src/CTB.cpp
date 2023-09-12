@@ -78,7 +78,8 @@ namespace pm
                 }
                 if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
                 {
-                    GetLog(client.GetLastMessage());
+                    std::string msg(client.GetLastMessage().begin(), client.GetLastMessage().end());
+                    GetLog(msg);
                 }
             }
 
