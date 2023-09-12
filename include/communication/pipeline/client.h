@@ -44,9 +44,6 @@ namespace pm
             std::vector<char> last_receive_;
             int last_message_type_;
 
-            HANDLE log_mutex_;
-            HANDLE config_registry_mutex_;
-            HANDLE inner_mutex_;
         #elif __linux__
 
         #endif
@@ -71,6 +68,7 @@ namespace pm
 
         void Close();
 
+        ~PipelineClient();
     };
 
 }

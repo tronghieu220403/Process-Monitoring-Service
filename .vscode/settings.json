@@ -74,6 +74,7 @@
         "xhash": "cpp",
         "LOCSRVER.C": "cpp",
         "clientNP.C": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "filesystem": "cpp"
     }
 }

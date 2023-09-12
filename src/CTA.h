@@ -39,6 +39,7 @@
 #include "include/registry/registry.h"
 #include "include/communication/pipeline/server.h"
 #include "include/configuration/startupprogram.h"
+#include "include/mutex/mutex.h"
 #endif
 
 
@@ -55,6 +56,13 @@ namespace pm
         std::string log_info_;
         bool new_config_;
         PipelineServer server;
+        #ifdef _WIN32
+            NamedMutex cta_log_mutex_;
+            NamedMutex config_registry_mutex_;
+            NamedMutex inner_mutex_;
+        #elif __linux__
+
+        #endif
     public:
         CTA();
         void AddToStartup();

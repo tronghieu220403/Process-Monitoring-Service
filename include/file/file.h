@@ -23,6 +23,9 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <iterator>
+#include <algorithm>
+#include <filesystem>
 
 namespace pm
 {
@@ -48,10 +51,10 @@ namespace pm
         
         std::vector<char> ReadAll();
 
-        bool Append();
-        bool AppendFromFile();
+        bool Append(const std::vector<char>& chr);
+        bool AppendFromFile(const std::string& src_file_path);
 
-        bool Delete();
+        bool SelfDelete();
 
 
     };
