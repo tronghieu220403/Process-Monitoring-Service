@@ -37,7 +37,7 @@ namespace pm
             return 0;
         }
 
-        if (RegSetValueExW(h_key_, &(std::wstring(value_name.begin(),value_name.end()))[0], static_cast<DWORD>(NULL), REG_BINARY, (const BYTE*)data[0], data.size()) == ERROR_SUCCESS)
+        if (RegSetValueExA(h_key_, &value_name[0], static_cast<DWORD>(NULL), REG_BINARY, (const BYTE*)data[0], data.size()) == ERROR_SUCCESS)
         {
             return true;
         }
@@ -72,7 +72,7 @@ namespace pm
         DWORD c_values;              // number of values for key 
         DWORD cch_max_value;          // longest value name 
         DWORD cb_max_valuedata;       // longest value data 
-        DWORD retCode;
+        DWORD ret_code;
         DWORD cch_value;
         std::string name;
         std::vector<char> bin_arr;
@@ -83,22 +83,22 @@ namespace pm
             return key_arr;
         }
 
-        retCode = RegQueryInfoKeyW(h_key_, NULL, NULL, NULL, NULL, NULL, NULL, &c_values, &cch_max_value, &cb_max_valuedata, NULL, NULL);
+        ret_code = RegQueryInfoKeyW(h_key_, NULL, NULL, NULL, NULL, NULL, NULL, &c_values, &cch_max_value, &cb_max_valuedata, NULL, NULL);
 
-        std::cout << cch_max_value << std::endl;
+        //std::cout << cch_max_value << std::endl;
 
         if (c_values)
         {
-            printf( "\nNumber of values: %d\n", c_values);
+            //printf( "\nNumber of values: %d\n", c_values);
 
-            for (int i = 0, retCode = ERROR_SUCCESS; i < c_values; i++) 
+            for (int i = 0, ret_code = ERROR_SUCCESS; i < c_values; i++) 
             { 
                 cch_value = cch_max_value; 
                 name.clear();
                 name.resize(cch_max_value);
-                retCode = RegEnumValueA(h_key_, i, name.data(), &cch_value, NULL, NULL, NULL, NULL);
+                ret_code = RegEnumValueA(h_key_, i, name.data(), &cch_value, NULL, NULL, NULL, NULL);
                 name.resize(cch_value + 1);
-                if (retCode == ERROR_SUCCESS) 
+                if (ret_code == ERROR_SUCCESS) 
                 {
                     bin_arr.clear();
                     bin_arr.resize(32);
@@ -106,7 +106,7 @@ namespace pm
                     if (RegGetValueA(h_key_, NULL, name.data(), RRF_RT_REG_BINARY, NULL, bin_arr.data(), &bin_arr_sz) == ERROR_SUCCESS)
                     {
                         bin_arr.resize(bin_arr_sz);
-                        key_arr.emplace_back(make_pair(name, bin_arr));
+                        key_arr.push_back(make_pair(name, bin_arr));
                     }
                 } 
             }
@@ -115,6 +115,19 @@ namespace pm
         return key_arr;
     }
 
+    void Registry::Close()
+    {
+        if (h_key_ != nullptr)
+        {
+            RegCloseKey(h_key_);
+            h_key_ = nullptr;
+        }
+    }
+
+    Registry::~Registry()
+    {
+        Close();
+    }
 }
 
 #endif

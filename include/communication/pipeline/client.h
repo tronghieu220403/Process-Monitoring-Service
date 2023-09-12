@@ -32,6 +32,7 @@
 
 namespace pm
 {
+    // Need to abstract a Pipe class 
     class PipelineClient
     {
     private:
@@ -41,7 +42,11 @@ namespace pm
             HANDLE handle_pipe_;
             int n_remaining_;
             std::vector<char> last_receive_;
-            int type_;
+            int last_message_type_;
+
+            HANDLE log_mutex_;
+            HANDLE config_registry_mutex_;
+            HANDLE inner_mutex_;
         #elif __linux__
 
         #endif
@@ -55,7 +60,7 @@ namespace pm
         std::string GetPipeName();
         std::vector<char> GetLastMessage();
         
-        int GetType();
+        int GetLastMessageType();
 
         bool ConnectToPipeServer();
 

@@ -13,7 +13,14 @@ namespace pm
         data.clear();
     }
     
-    bool ProcessJsonConfiguration::SetContent(std::string content)
+    ProcessJsonConfiguration::ProcessJsonConfiguration(std::string contents)
+    {
+        data.clear();
+        SetContent(contents);
+    }
+
+
+    bool ProcessJsonConfiguration::SetContent(std::string contents)
     {
         #ifdef _WIN32
             data.clear();
@@ -23,7 +30,7 @@ namespace pm
             auto arr = JsonArray();
 
 
-            if (std::wstring wcontent(content.begin(), content.end()); JsonArray::TryParse(wcontent, arr) != true)
+            if (std::wstring wcontent(contents.begin(), contents.end()); JsonArray::TryParse(wcontent, arr) != true)
             {
                 return false;
             }
@@ -48,14 +55,14 @@ namespace pm
 
                 if (process.ValueType() == JsonValueType::String && cpu.ValueType() == JsonValueType::Number && memory.ValueType() == JsonValueType::Number && disk.ValueType() == JsonValueType::Number && network.ValueType() == JsonValueType::Number)
                 {
-                    std::wstring p_name(process.GetString());
+                    std::string name(process.GetString().begin(), process.GetString().end());
                     MonitoringComponent max_usage{};
                     max_usage.cpu_usage = cpu.GetNumber();
-                    max_usage.mem_usage = cpu.GetNumber();
-                    max_usage.disk_usage = cpu.GetNumber();
-                    max_usage.network_usage = cpu.GetNumber();
+                    max_usage.mem_usage = memory.GetNumber();
+                    max_usage.disk_usage = disk.GetNumber();
+                    max_usage.network_usage = network.GetNumber();
 
-                    data.emplace_back(p_name, max_usage);
+                    data.push_back(std::make_pair(name, max_usage));
                 }
             }
         #elif __linux__
@@ -64,7 +71,7 @@ namespace pm
         return true;
     }
 
-    std::vector< std::pair< std::wstring, MonitoringComponent > > ProcessJsonConfiguration::GetData()
+    std::vector< std::pair< std::string, MonitoringComponent > > ProcessJsonConfiguration::GetData()
     {
         return data;
     }

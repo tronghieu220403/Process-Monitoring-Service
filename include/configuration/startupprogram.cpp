@@ -28,10 +28,12 @@ namespace pm
         exe_full_path_ = exe_full_path;
     }
 
+    // Need to be re-write using Registry class.
     bool StartUpProgram::Register()
     {
         bool success = false;
         #ifdef _WIN32
+            
 
             auto w_exe_full_path = std::wstring(exe_full_path_.begin(), exe_full_path_.end());
 
@@ -62,6 +64,7 @@ namespace pm
         return success;
     }
 
+    // Need to be re-write using Registry class.
     bool StartUpProgram::IsRegistered()
     {
         bool success = true;

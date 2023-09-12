@@ -37,14 +37,15 @@ namespace pm
     class ProcessJsonConfiguration
     {
     private:
-        std::vector< std::pair< std::wstring, MonitoringComponent > > data;
+        std::vector< std::pair< std::string, MonitoringComponent > > data;
     public:
 
     ProcessJsonConfiguration();
+    ProcessJsonConfiguration(std::string content);
 
     bool SetContent(std::string content);
 
-    std::vector< std::pair< std::wstring, MonitoringComponent > > GetData();
+    std::vector< std::pair< std::string, MonitoringComponent > > GetData();
         
     };
 }

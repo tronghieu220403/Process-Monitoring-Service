@@ -2,8 +2,8 @@
 #pragma once
 #endif
 
-#ifndef PROCESSMONITORING_SRC_CTA_H_
-#define PROCESSMONITORING_SRC_CTA_H_
+#ifndef PROCESSMONITORING_SRC_CTB_H_
+#define PROCESSMONITORING_SRC_CTB_H_
 
 #ifndef _VISUAL_STUDIO_WORKSPACE
 #define _CRT_SECURE_NO_DEPRECATE
@@ -29,16 +29,18 @@
 #include "E:/Code/Github/Process-Monitoring/include/process/processsupervision.h"
 #include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
 #include "E:/Code/Github/Process-Monitoring/include/registry/registry.h"
-#include "E:/Code/Github/Process-Monitoring/include/communication/pipeline/server.h"
-#include "E:/Code/Github/Process-Monitoring/include/configuration/startupprogram.h"
+#include "E:/Code/Github/Process-Monitoring/include/communication/pipeline/client.h"
+#include "E:/Code/Github/Process-Monitoring/include/file/file.h"
+#include "E:/Code/Github/Process-Monitoring/include/configuration/processjsonconfiguration.h"
 
 #else
 
 #include "include/process/processsupervision.h"
 #include "include/ulti/collections.h"
 #include "include/registry/registry.h"
-#include "include/communication/pipeline/server.h"
-#include "include/configuration/startupprogram.h"
+#include "include/communication/pipeline/client.h"
+#include "include/file/file.h"
+#include "include/configuration/processjsonconfiguration.h"
 #endif
 
 
@@ -48,19 +50,29 @@
 
 namespace pm
 {
-    class CTA
+    class CTB
     {
     private:
-        std::vector<ProcessSupervision> process_;
         std::string log_info_;
-        bool new_config_;
-        PipelineServer server;
+        bool new_log_ = true;
+        PipelineClient client;
+
+        #ifdef _WIN32
+            HANDLE handle_pipe_;
+
+            HANDLE log_mutex_;
+            HANDLE config_registry_mutex_;
+            HANDLE inner_mutex_;
+
+        #elif __linux__
+
+        #endif
+
     public:
-        CTA();
-        void AddToStartup();
-        void UpdateConfig();
-        void Monitoring();
-        void CommunicateWithCtb();
+        CTB();
+        void UpdateConfig(const std::string& file_path);
+        void GetLog();
+        void CommunicateWithCta();
     };
 }
 

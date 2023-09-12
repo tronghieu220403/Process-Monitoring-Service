@@ -41,6 +41,8 @@ namespace pm
         bool DeleteContent();
         std::vector<char> GetValueArray(const std::string& key_name);
         std::vector< std::pair< std::string, std::vector<char> > > GetAllBinaryValues(); 
+        void Close();
+        ~Registry();
     };
 }
 

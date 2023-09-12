@@ -32,6 +32,7 @@
 
 namespace pm
 {
+    // Need to abstract a Pipe class 
     class PipelineServer
     {
     private:

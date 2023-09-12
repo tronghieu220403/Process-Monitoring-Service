@@ -21,6 +21,8 @@
 #endif
 
 #include <string>
+#include <vector>
+#include <fstream>
 
 namespace pm
 {
@@ -28,7 +30,7 @@ namespace pm
     {
         private:
 
-        std::wstring content_;
+        std::string file_path_;
         long long file_size_;
 
         #ifdef _WIN32
@@ -40,10 +42,11 @@ namespace pm
         public:
 
         File() = default;
+        File(std::string file_path);
 
-        bool Set(std::wstring name);
+        bool Set(std::string file_path);
         
-        std::wstring ReadAll();
+        std::vector<char> ReadAll();
 
         bool Append();
         bool AppendFromFile();

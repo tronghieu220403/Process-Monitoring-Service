@@ -29,9 +29,9 @@ namespace pm
         return last_receive_;
     }
 
-    int PipelineClient::GetType()
+    int PipelineClient::GetLastMessageType()
     {
-        return type_;
+        return last_message_type_;
     }
 
     bool PipelineClient::IsActive()
@@ -164,7 +164,7 @@ namespace pm
             }
 
             last_receive_ = cur_receive_;
-            type_ = type;
+            last_message_type_ = type;
         #elif __linux__
 
         #endif

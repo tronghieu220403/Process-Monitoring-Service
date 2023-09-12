@@ -2,7 +2,15 @@
 
 namespace pm
 {
+
     CTA::CTA() = default;
+
+    void CTA::AddToStartup()
+    {
+        StartUpProgram startup = StartUpProgram();
+        startup.SetThisProgram();
+        startup.Register();
+    }
 
     void CTA::UpdateConfig()
     {
@@ -17,6 +25,7 @@ namespace pm
             // named mutex lock for registry
             Registry reg("SOFTWARE/CtaProcessMonitoring/ProcsesConf");
             std::vector< std::pair< std::string, std::vector<char> > > info = reg.GetAllBinaryValues();
+            // named mutex unlock for registry
             process_.clear();
             for (int i = 0; i < info.size(); i++)
             {
@@ -27,7 +36,6 @@ namespace pm
                 memcpy(&mc.network_usage, &(info[i].second[3 * sizeof(double)]), sizeof(double));
                 process_.push_back(ProcessSupervision(info[i].first, mc));
             }
-            // named mutex unlock for registry
 
         #elif __linux__
 
