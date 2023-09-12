@@ -14,7 +14,7 @@ namespace pm
 	{
 	};
 
-	void Process::SetName(const std::string_view& name)
+	void Process::SetName(const std::string& name)
 	{
 		name_ = name;
 	}
@@ -59,7 +59,7 @@ namespace pm
 	}
 #endif
 
-	int Process::FindProcessIdByName(const std::string_view& name){
+	int Process::FindProcessIdByName(const std::string& name){
 		int pid = 0;
 		#ifdef _WIN32
 			pid = FindProcessIdByName(std::wstring(name.begin(), name.end()));

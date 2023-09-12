@@ -73,6 +73,7 @@
         "unordered_map": "cpp",
         "xhash": "cpp",
         "LOCSRVER.C": "cpp",
-        "clientNP.C": "cpp"
+        "clientNP.C": "cpp",
+        "string_view": "cpp"
     }
 }

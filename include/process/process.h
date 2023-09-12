@@ -33,7 +33,7 @@ namespace pm
 		std::string name_;
 
 	protected:
-		void SetName(const std::string_view& name);
+		void SetName(const std::string& name);
 		void SetPid(const int pid);
 
 	public:
@@ -46,9 +46,9 @@ namespace pm
 		
 		virtual int GetPid();
 
-		static int FindProcessIdByName(const std::string_view& name);
+		static int FindProcessIdByName(const std::string& name);
 		#ifdef _WIN32
-			static int FindProcessIdByName(const std::wstring_view& name);
+			static int FindProcessIdByName(const std::string& name);
 		#endif
 	};
 }
