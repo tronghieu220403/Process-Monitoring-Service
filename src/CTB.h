@@ -32,15 +32,16 @@
 #include "E:/Code/Github/Process-Monitoring/include/communication/pipeline/client.h"
 #include "E:/Code/Github/Process-Monitoring/include/file/file.h"
 #include "E:/Code/Github/Process-Monitoring/include/configuration/processjsonconfiguration.h"
+#include "E:/Code/Github/Process-Monitoring/include/mutex/mutex.h"
 
 #else
-
 #include "include/process/processsupervision.h"
 #include "include/ulti/collections.h"
 #include "include/registry/registry.h"
 #include "include/communication/pipeline/client.h"
 #include "include/file/file.h"
 #include "include/configuration/processjsonconfiguration.h"
+#include "include/mutex/mutex.h"
 #endif
 
 
@@ -53,14 +54,12 @@ namespace pm
     class CTB
     {
     private:
-        std::string log_info_;
-        bool new_log_ = true;
         PipelineClient client;
 
         #ifdef _WIN32
             HANDLE handle_pipe_;
 
-            HANDLE log_mutex_;
+            HANDLE cta_log_mutex_;
             HANDLE config_registry_mutex_;
             HANDLE inner_mutex_;
 
@@ -71,7 +70,7 @@ namespace pm
     public:
         CTB();
         void UpdateConfig(const std::string& file_path);
-        void GetLog();
+        void GetLog(const std::string& cta_logs_path);
         void CommunicateWithCta();
     };
 }

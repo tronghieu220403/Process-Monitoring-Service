@@ -15,10 +15,11 @@ namespace pm
     void NamedMutex::SetMutex(const std::string& mutex_name)
     {
         #ifdef _WIN32
+        if (mutex_name.size() != 0)
             handle_mutex_ = CreateMutexA(
                                 NULL, 
                                 FALSE, 
-                                &mutex_name[0]
+                                mutex_name.size() != 0 ? &mutex_name[0] : NULL
                             );
         #elif __linux
 

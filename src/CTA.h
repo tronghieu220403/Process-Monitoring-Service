@@ -55,6 +55,13 @@ namespace pm
         std::string log_info_;
         bool new_config_;
         PipelineServer server;
+        #ifdef _WIN32
+            HANDLE cta_log_mutex_;
+            HANDLE config_registry_mutex_;
+            HANDLE inner_mutex_;
+        #elif __linux__
+
+        #endif
     public:
         CTA();
         void AddToStartup();

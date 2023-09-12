@@ -55,7 +55,7 @@ namespace pm
         int year = aTime->tm_year + 1900; // Year is # years since 1900
 
         std::stringstream ss;
-        ss << "pm_logs_" /*<< year << "_" << month << "_" << day*/ << ".log";
+        ss << "pm_logs" /*<< "_" << year << "_" << month << "_" << day*/ << ".log";
 
         std::string file_name;
         file_name = folder_path_ + ss.str();
