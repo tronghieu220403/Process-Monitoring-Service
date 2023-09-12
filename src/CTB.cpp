@@ -5,7 +5,7 @@ namespace pm
 
     CTB::CTB()
     {
-        cta_log_mutex_ = NamedMutex("pm_cta_logs");
+        cta_log_mutex_ = NamedMutex("pm_cta_log");
         config_registry_mutex_ = NamedMutex("config_reg");
         inner_mutex_ = NamedMutex("");
     }
@@ -44,13 +44,13 @@ namespace pm
         #endif
     }
 
-    void CTB::GetLog(const std::string& cta_logs_path)
+    void CTB::GetLog(const std::string& cta_log_path)
     {
-        std::string logs_file_name = "pm_logs.log";
-        File ctb_log = File(logs_file_name);
+        std::string log_file_name = "pm_logs.log";
+        File ctb_log = File(log_file_name);
         cta_log_mutex_.Lock();
-        ctb_log.AppendFromFile(cta_logs_path + logs_file_name);
-        File cta_log = File(cta_logs_path + logs_file_name);
+        ctb_log.AppendFromFile(cta_log_path);
+        File cta_log = File(cta_log_path);
         cta_log.SelfDelete();
         cta_log_mutex_.Unlock();
     }
