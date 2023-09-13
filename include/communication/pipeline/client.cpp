@@ -147,7 +147,7 @@ namespace pm
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
-                        PipelineServer::Close();
+                        Close();
                         return false;
                     }
                     else
@@ -167,7 +167,7 @@ namespace pm
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
-                        PipelineServer::Close();
+                        Close();
                         return false;
                     }
                     else
@@ -188,7 +188,7 @@ namespace pm
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
-                        PipelineServer::Close();
+                        Close();
                         return false;
                     }
                     else
