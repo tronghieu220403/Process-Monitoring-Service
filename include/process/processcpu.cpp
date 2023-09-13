@@ -47,6 +47,7 @@ namespace pm
 
 #ifdef __linux__
     ProcessCpuStats::ProcessCpuStats(int pid)
+        : pid_(pid)
     {
         if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
         {

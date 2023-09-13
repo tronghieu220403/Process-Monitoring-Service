@@ -30,7 +30,11 @@ namespace pm
     ProcessMemoryStats::ProcessMemoryStats(int pid):
         pid_(pid)
     {
-        
+        if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+        {
+            pid_ = 0;
+            return;
+        }
     };
 
 #endif
@@ -38,22 +42,26 @@ namespace pm
     double ProcessMemoryStats::GetCurrentUsage()
     {
         #ifdef _WIN32
+            
             if (GetProcessId(process_handle_) == NULL)
             {
                 last_mem_ = 0;
                 return last_mem_;
             }
+
             PROCESS_MEMORY_COUNTERS_EX pmc{};
 
             GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
             last_mem_ = double(pmc.WorkingSetSize) / (1024*1024);
             return last_mem_;
         #elif __linux__
-            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_) + "/status") == false)
+            
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
             {
                 last_mem_ = 0;
                 return 0;
             }
+
             std::ifstream file("/proc/" + std::to_string(pid_) + "/status");
             std::string line;
             double usage;
@@ -81,7 +89,7 @@ namespace pm
                 last_mem_ = 0;
             }
         #elif __linux__
-            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_) + "/status") == false)
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
             {
                 last_mem_ = 0;
             }
