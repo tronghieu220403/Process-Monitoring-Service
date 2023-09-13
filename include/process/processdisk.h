@@ -22,6 +22,8 @@
 #endif
 
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 
 namespace pm
 {

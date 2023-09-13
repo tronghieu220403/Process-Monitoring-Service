@@ -76,7 +76,30 @@ unsigned long long ProcessDiskStats::GetCurrentCounter()
             return 0;
         }
 
-        return 0;
+        std::ifstream file("/proc/" + std::to_string(pid_) + "/io");
+        std::string line;
+
+        unsigned long long r;
+        unsigned long long w;
+
+        while(getline(file, line))
+        {
+            if (line.find("read_bytes") == 0)
+            {
+                std::stringstream s(line);
+                std::string name;
+                s >> name >> r;
+            }
+            if (line.find("write_bytes") == 0)
+            {
+                std::stringstream s(line);
+                std::string name;
+                s >> name >> w;
+                break;
+            }
+        }
+        return r + w;
+        
     #endif
 }
 
