@@ -38,7 +38,7 @@ namespace pm
 
         num_processors_ = GetNumberOfProcessors();
 
-        last_process_cpu_unit_ = GetSystemClockCycle();
+        last_system_cpu_unit_ = GetSystemClockCycle();
 
         last_process_cpu_unit_ = GetClockCycle();
 
@@ -46,12 +46,14 @@ namespace pm
 #endif
 
 #ifdef __linux__
-    ProcessCpuStats::ProcessCpuStats(int pid): pid_(pid)
+    ProcessCpuStats::ProcessCpuStats(int pid)
     {
         if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
         {
             return;
         }
+
+        pid_ = pid;
 
         num_processors_ = GetNumberOfProcessors();
 
@@ -147,9 +149,8 @@ namespace pm
             memcpy(&sys, &fsys, sizeof(FILETIME));
             memcpy(&user, &fuser, sizeof(FILETIME));
             
-            last_process_cpu_unit_ = sys.QuadPart + user.QuadPart;
+            return sys.QuadPart + user.QuadPart;
 
-            return last_process_cpu_unit_;
         #elif __linux__
 
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
@@ -177,12 +178,12 @@ namespace pm
             {
                 s >> trash;
             }
-            unsigned long long user_process_clock_cycle;
-            unsigned long long sys_process_clock_cycle;
+            unsigned long long user_process_cpu_unit;
+            unsigned long long sys_process_cpu_unit;
 
-            s >> user_process_clock_cycle;
-            s >> sys_process_clock_cycle;
-            return user_process_clock_cycle + sys_process_clock_cycle;
+            s >> user_process_cpu_unit;
+            s >> sys_process_cpu_unit;
+            return user_process_cpu_unit + sys_process_cpu_unit;
         #endif
     }
 
@@ -196,37 +197,7 @@ namespace pm
             {
                 return 0.0;
             }
-            FILETIME ftime;
-            FILETIME fsys;
-            FILETIME fuser;
-            unsigned long long now_system_cpu;
-            unsigned long long now_process_cpu;
 
-            //ULARGE_INTEGER now_time;
-            ULARGE_INTEGER sys;
-            ULARGE_INTEGER user;
-
-            now_system_cpu = GetSystemClockCycle();
-
-            GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
-            memcpy(&sys, &fsys, sizeof(FILETIME));
-            memcpy(&user, &fuser, sizeof(FILETIME));
-            
-            now_process_cpu = sys.QuadPart + user.QuadPart;
-            percent = static_cast<double>(now_process_cpu - last_process_cpu_unit_);
-            if (now_system_cpu - last_process_cpu_unit_ != 0)
-            {
-                percent /= static_cast<double>(now_system_cpu - last_process_cpu_unit_);
-                percent /= num_processors_;
-                percent *= 100;
-            }
-            else
-            {
-                percent = 0;
-            }
-            last_process_cpu_unit_ = now_system_cpu;
-            last_process_cpu_unit_ = now_process_cpu;
-            
         #elif __linux__
 
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
@@ -234,19 +205,32 @@ namespace pm
                 return 0;
             }
 
-            unsigned long now_process_clock_cycle = GetClockCycle();
-            unsigned long long now_system_clock_cycle = GetSystemClockCycle();
-            if (now_system_clock_cycle - last_system_cpu_unit_ != 0)
+        #endif
+
+            unsigned long now_process_cpu_unit = GetClockCycle();
+            unsigned long long now_system_cpu_unit = GetSystemClockCycle();
+
+            if (now_system_cpu_unit - last_system_cpu_unit_ != 0)
             {
-                percent = static_cast<double>(now_process_clock_cycle - last_process_cpu_unit_) * 100 /(now_system_clock_cycle - last_system_cpu_unit_);
+                #ifdef _WIN32
+                    percent /= static_cast<double>(now_system_cpu_unit - last_system_cpu_unit_);
+                    percent /= num_processors_; // ?
+                    percent *= 100;
+                #elif __linux__
+
+                    percent = static_cast<double>(now_process_cpu_unit - last_process_cpu_unit_) * 100 /(now_system_cpu_unit - last_system_cpu_unit_);
+
+                #endif
             }
             else
             {
                 percent = 0;
             }
-            last_system_cpu_unit_ = now_system_clock_cycle;
-            last_process_cpu_unit_ = now_process_clock_cycle;
-        #endif
+
+            last_process_cpu_unit_ = now_process_cpu_unit;
+
+            last_system_cpu_unit_ = now_system_cpu_unit;
+
 
         last_usage_percent_ = percent;
         return last_usage_percent_;
