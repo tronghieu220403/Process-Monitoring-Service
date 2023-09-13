@@ -42,11 +42,11 @@ namespace pm
     
     bool File::Append(const std::vector<char>& chr)
     {
-        ofstream file;
+        std::ofstream file;
         file.open(file_path_, std::ios_base::binary | std::ios_base::app);
         for (int i = 0; i < chr.size(); i++)
         {
-            chr.put(contents[i]);
+            file.put(chr[i]);
         }
         file.close();
     }       

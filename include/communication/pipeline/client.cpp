@@ -223,6 +223,6 @@ namespace pm
 
     PipelineClient::~PipelineClient()
     {
-        CloseHandle(handle_pipe_);
+        Close();
     }
 }

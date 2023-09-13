@@ -7,11 +7,8 @@
 
 #define _CRT_SECURE_NO_DEPRECATE
 
-#ifndef _VISUAL_STUDIO_WORKSPACE
 #define UNICODE
 #define _UNICODE
-#endif
-
 
 #include <string.h>
 #include <time.h>

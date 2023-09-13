@@ -15,9 +15,11 @@
 
 #include <string.h>
 #include <time.h>
+#ifdef _WIN32
 #include <strsafe.h>
-#include <stdio.h>
 #include <tchar.h>
+#endif
+#include <stdio.h>
 
 #ifdef _WIN32
 #include <Windows.h> 

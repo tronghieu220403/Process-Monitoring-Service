@@ -5,6 +5,7 @@
 #ifndef _VISUAL_STUDIO_WORKSPACE
 #define UNICODE
 #define _UNICODE
+#else
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "iphlpapi.lib")
 #endif
@@ -20,7 +21,7 @@
 
 #endif
 
-#ifndef _VISUAL_STUDIO_WORKSPACE
+#ifdef _VISUAL_STUDIO_WORKSPACE
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "iphlpapi.lib")
 #endif

@@ -12,8 +12,6 @@
 #define _UNICODE
 #endif
 
-
-
 #ifdef _VISUAL_STUDIO_WORKSPACE
 
     #include "E:/Code/Github/Process-Monitoring/include/logs/logger.h"

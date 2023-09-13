@@ -31,24 +31,23 @@ ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
         process_handle_ = p_handle;
         last_io_ = GetCurrentCounter();
         GetSystemTimeAsFileTime(&last_time_);
-};
+}
 #endif
 
 #ifdef __linux__
 ProcessDiskStats::ProcessDiskStats(int pid)
 {
+    if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
+    {
+        return;
+    }
 
-        if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
-        {
-            return 0;
-        }
-
-        pid_ = pid;
-        last_io_ = GetCurrentCounter();
-        
-        //Get time here
-        last_time_ = clock();
-};
+    pid_ = pid;
+    last_io_ = GetCurrentCounter();
+    
+    //Get time here
+    last_time_ = clock();
+}
 #endif
 
 
@@ -111,7 +110,7 @@ double ProcessDiskStats::GetCurrentSpeed()
 
         now_time = clock();
 
-        double time_range_in_sec = (double)(now_time - last_time_) / CLOCK_PER_SEC;
+        double time_range_in_sec = (double)(now_time - last_time_) / CLOCKS_PER_SEC;
 
     #endif
 

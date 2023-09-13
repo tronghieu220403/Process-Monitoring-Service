@@ -15,9 +15,11 @@
 
 #include <string.h>
 #include <time.h>
+#ifdef _WIN32
 #include <strsafe.h>
-#include <stdio.h>
 #include <tchar.h>
+#endif
+#include <stdio.h>
 
 #ifdef _WIN32
 #include <Windows.h> 
@@ -40,13 +42,13 @@ namespace pm
         int buf_size_;
         #ifdef _WIN32
             HANDLE handle_pipe_;
-            int n_remaining_;
-            std::vector<char> last_receive_;
-            int last_message_type_;
-
         #elif __linux__
-
+            
         #endif
+
+        std::vector<char> last_receive_;
+        int last_message_type_;
+
     public:
         PipelineClient() = default;
         PipelineClient(const std::string& server_pipe_name);

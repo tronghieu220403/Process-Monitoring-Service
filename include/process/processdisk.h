@@ -21,6 +21,8 @@
 
 #endif
 
+#include <filesystem>
+
 namespace pm
 {
     class ProcessDiskStats
@@ -45,6 +47,8 @@ namespace pm
         ProcessDiskStats();
         #ifdef _WIN32
             explicit ProcessDiskStats(HANDLE p_handle);
+        #elif __linux__
+            explicit ProcessDiskStats(int pid);
         #endif
 
         unsigned long long GetCurrentCounter();

@@ -27,10 +27,14 @@ namespace pm
 
     bool PipelineServer::SetMaxConnection(int max_connection)
     {
-        if (max_connection_ || max_connection > PIPE_UNLIMITED_INSTANCES)
-        {
-            return false;
-        }
+        #ifdef _WIN32
+            if (max_connection_ || max_connection > PIPE_UNLIMITED_INSTANCES)
+            {
+                return false;
+            }
+        #elif __linux__
+
+        #endif
         max_connection_ = max_connection;
         return true;
     }

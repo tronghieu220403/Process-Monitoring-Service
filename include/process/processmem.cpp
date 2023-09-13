@@ -27,14 +27,14 @@ namespace pm
         : process_handle_(process_handle), last_mem_(last_mem){}
 
 #elif __linux__
-    ProcessMemoryStats::ProcessMemoryStats(int pid):
-        pid_(pid)
+    ProcessMemoryStats::ProcessMemoryStats(int pid)
     {
-        if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+        if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
         {
             pid_ = 0;
             return;
         }
+        pid_ = pid;
     };
 
 #endif

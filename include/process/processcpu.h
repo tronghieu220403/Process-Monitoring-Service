@@ -36,7 +36,7 @@ namespace pm
 
         #elif __linux__
             int pid_;
-            
+
         #endif
 
         unsigned long long last_process_cpu_unit_;
