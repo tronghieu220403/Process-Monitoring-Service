@@ -48,17 +48,16 @@ namespace pm
 #ifdef __linux__
     ProcessCpuStats::ProcessCpuStats(int pid): pid_(pid)
     {
-
         if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
         {
-            return 0;
+            return;
         }
 
         num_processors_ = GetNumberOfProcessors();
 
-        last_system_cpu_ = GetSystemClockCycle();
+        last_process_cpu_unit_ = GetSystemClockCycle();
 
-        last_process_cpu_ = GetClockCycle();
+        last_system_cpu_unit_ = GetClockCycle();
 
     }
 
@@ -178,10 +177,8 @@ namespace pm
             {
                 s >> trash;
             }
-            long long user_process_clock_cycle;
-            long long sys_process_clock_cycle;
-
-            long long total_clock_cycle;
+            unsigned long long user_process_clock_cycle;
+            unsigned long long sys_process_clock_cycle;
 
             s >> user_process_clock_cycle;
             s >> sys_process_clock_cycle;
@@ -237,18 +234,18 @@ namespace pm
                 return 0;
             }
 
-            long long now_process_clock_cycle = GetProcessClockCycle();
-            long long now_system_clock_cycle = GetSystemClockCycle();
-            if (now_system_clock_cycle - last_system_clock_cycle_ != 0)
+            unsigned long now_process_clock_cycle = GetClockCycle();
+            unsigned long long now_system_clock_cycle = GetSystemClockCycle();
+            if (now_system_clock_cycle - last_system_cpu_unit_ != 0)
             {
-                percent = static_cast<double>(now_process_clock_cycle - last_process_clock_cycle_) * 100 /(now_system_clock_cycle - last_system_clock_cycle_);
+                percent = static_cast<double>(now_process_clock_cycle - last_process_cpu_unit_) * 100 /(now_system_clock_cycle - last_system_cpu_unit_);
             }
             else
             {
                 percent = 0;
             }
-            last_system_clock_cycle_ = now_system_clock_cycle;
-            last_process_clock_cycle_ = now_process_clock_cycle;
+            last_system_cpu_unit_ = now_system_clock_cycle;
+            last_process_cpu_unit_ = now_process_clock_cycle;
         #endif
 
         last_usage_percent_ = percent;

@@ -19,6 +19,7 @@
 #include <sstream>
 #include <string>
 #include <fstream>
+#include <filesystem>
 
 namespace pm
 {
@@ -33,16 +34,15 @@ namespace pm
         #ifdef _WIN32
             HANDLE process_handle_ = nullptr;
 
-            unsigned long long last_system_cpu_;
-            unsigned long long last_process_cpu_; 
-
         #elif __linux__
             int pid_;
-
-            unsigned long long last_process_clock_cycle_;
-            unsigned long long last_system_clock_cycle_;
             
         #endif
+
+        unsigned long long last_process_cpu_unit_;
+        
+        unsigned long long last_system_cpu_unit_;
+
     public:
 
         ProcessCpuStats();
