@@ -12,6 +12,7 @@
                 "-g",
                 "${workspaceFolder}/include/*/*.cpp",
                 "${workspaceFolder}/${fileBasenameNoExtension}.cpp",
+                //"${workspaceFolder}/src/*.cpp",
                 "-o",
                 "${workspaceFolder}/${fileBasenameNoExtension}"
             ],
