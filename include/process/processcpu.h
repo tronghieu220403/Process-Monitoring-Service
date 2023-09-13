@@ -16,6 +16,10 @@
 
 #endif
 
+#include <sstream>
+#include <string>
+#include <fstream>
+
 namespace pm
 {
     class ProcessCpuStats
@@ -27,13 +31,18 @@ namespace pm
         int num_processors_ = 0;
 
         #ifdef _WIN32
-            ULARGE_INTEGER last_cpu_time_;
-            ULARGE_INTEGER last_sys_cpu_; 
-            ULARGE_INTEGER last_user_cpu_;
-
             HANDLE process_handle_ = nullptr;
-        #elif __linux__
 
+            unsigned long long last_cpu_time_;
+            unsigned long long last_sys_cpu_; 
+            unsigned long long last_user_cpu_;
+
+        #elif __linux__
+            int pid_;
+
+            long long last_process_clock_cycle_;
+            long long last_system_clock_cycle_;
+            
         #endif
     public:
 
@@ -47,12 +56,16 @@ namespace pm
         #ifdef _WIN32
             explicit ProcessCpuStats(HANDLE p_handle);
         #elif __linux__
-
+            explicit ProcessCpuStats(int pid);
         #endif
+
+        long long GetSystemClockCycle();
+        long long GetProcessClockCycle();
 
         double GetCurrentUsage();
         double GetLastUsage();
 
+        static int GetNumberOfProcessors();
     };
 }
 
