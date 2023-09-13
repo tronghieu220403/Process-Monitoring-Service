@@ -12,16 +12,17 @@ namespace pm
     {
         #ifdef _WIN32
 
-        ZeroMemory(&last_cpu_time_, sizeof(ULARGE_INTEGER));
-        ZeroMemory(&last_sys_cpu_, sizeof(ULARGE_INTEGER));
-        ZeroMemory(&last_user_cpu_, sizeof(ULARGE_INTEGER));
-        if (num_processors_ == 0)
-        {
-            SYSTEM_INFO sysInfo;
+            ZeroMemory(&last_cpu_time_, sizeof(ULARGE_INTEGER));
+            ZeroMemory(&last_sys_cpu_, sizeof(ULARGE_INTEGER));
+            ZeroMemory(&last_user_cpu_, sizeof(ULARGE_INTEGER));
+            if (num_processors_ == 0)
+            {
+                SYSTEM_INFO sysInfo;
 
-            GetSystemInfo(&sysInfo);
-            num_processors_ = sysInfo.dwNumberOfProcessors;
-        }
+                GetSystemInfo(&sysInfo);
+                num_processors_ = sysInfo.dwNumberOfProcessors;
+            }
+
         #elif __linux__
 
         #endif
@@ -33,10 +34,12 @@ namespace pm
     {
         this->last_usage_percent_ = pcs.last_usage_percent_;
         #ifdef _WIN32
+
             this->last_cpu_time_ = pcs.last_cpu_time_;
             this->last_sys_cpu_ = pcs.last_sys_cpu_;
             this->last_user_cpu_ = pcs.last_user_cpu_;
             this->process_handle_ = pcs.process_handle_;
+        
         #elif __linux__
 
         #endif
@@ -49,6 +52,7 @@ namespace pm
     ProcessCpuStats::ProcessCpuStats(HANDLE p_handle)
     {
         #ifdef _WIN32
+
             if (GetProcessId(p_handle) == NULL)
             {
                 return;
@@ -70,6 +74,7 @@ namespace pm
             GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
             memcpy(&last_sys_cpu_, &fsys, sizeof(FILETIME));
             memcpy(&last_user_cpu_, &fuser, sizeof(FILETIME));
+
         #elif __linux__
 
         #endif
@@ -82,6 +87,7 @@ namespace pm
         double percent;
 
         #ifdef _WIN32
+
             if (GetProcessId(process_handle_) == NULL)
             {
                 return 0.0;
@@ -112,6 +118,7 @@ namespace pm
             last_cpu_time_ = now_time;
             last_user_cpu_ = user;
             last_sys_cpu_ = sys;
+            
         #elif __linux__
 
         #endif

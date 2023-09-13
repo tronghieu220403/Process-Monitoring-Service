@@ -20,14 +20,6 @@ namespace pm
     void CTA::UpdateConfig()
     {
         #ifdef _WIN32
-            inner_mutex_.Lock();
-            //using mutex here
-            if (new_config_ == false)
-            {
-                return;
-            }
-            inner_mutex_.Unlock();
-            //end mutex here
 
             // named mutex lock for registry
             config_registry_mutex_.Lock();
@@ -48,12 +40,6 @@ namespace pm
                 process_.push_back(ProcessSupervision(info[i].first, mc));
             }
 
-            inner_mutex_.Lock();
-            //using mutex here
-            new_config_ = false;
-            inner_mutex_.Unlock();
-            //end mutex here
-
 
         #elif __linux__
 
@@ -64,8 +50,8 @@ namespace pm
     {
         while(true)
         {
-            Sleep(1000);
-            UpdateConfig();
+            Sleep(500);
+            inner_mutex_.Lock();
             for (auto ps: process_)
             {
                 ps.UpdateProcessStats();
@@ -93,6 +79,7 @@ namespace pm
                 }
                 server.TrySendMessage(Command::CTA_SEND_LOGS, log_path);
             }
+            inner_mutex_.Unlock();
         }
     }
 
@@ -120,16 +107,14 @@ namespace pm
             {
                 if (server.TryGetMessage() == false)
                 {
-                    Sleep(1000);
+                    Sleep(500);
                     continue;
                 }
                 if (server.GetLastMessageType() == Command::CTB_NOTI_CONFIG)
                 {
-                    // using mutex here
                     inner_mutex_.Lock();
-                    new_config_ = true;
+                    UpdateConfig();
                     inner_mutex_.Unlock();
-                    // using mutex here
                 }
             }
 
