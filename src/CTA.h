@@ -54,7 +54,6 @@ namespace pm
     private:
         std::vector<ProcessSupervision> process_;
         std::string log_info_;
-        bool new_config_;
         PipelineServer server;
         #ifdef _WIN32
             NamedMutex cta_log_mutex_;
