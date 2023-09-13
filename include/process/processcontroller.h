@@ -29,7 +29,7 @@ namespace pm
 		ProcessInfo p_info_;
 
         bool SetHandle(int pid);
-		bool SetHandle(const std::string_view& name);
+		bool SetHandle(const std::string& name);
 
 		#ifdef _WIN32
 			HANDLE process_handle_;
@@ -40,7 +40,7 @@ namespace pm
     public:
 
         ProcessController() = default;
-		explicit ProcessController(const std::string_view& name);
+		explicit ProcessController(const std::string& name);
 		ProcessController(const ProcessController& pc);
 		explicit ProcessController(const ProcessController&& pc) = delete;
 

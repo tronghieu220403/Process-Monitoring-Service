@@ -74,6 +74,16 @@
         "xhash": "cpp",
         "LOCSRVER.C": "cpp",
         "clientNP.C": "cpp",
-        "filesystem": "cpp"
+        "string_view": "cpp",
+        "filesystem": "cpp",
+        "*.tcc": "cpp",
+        "codecvt": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "functional": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "numbers": "cpp"
     }
 }

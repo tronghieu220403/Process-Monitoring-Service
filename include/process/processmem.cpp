@@ -24,7 +24,14 @@ namespace pm
     };
 
     ProcessMemoryStats::ProcessMemoryStats(const HANDLE process_handle, double last_mem)
-        : process_handle_(process_handle), last_mem_(last_mem){};
+        : process_handle_(process_handle), last_mem_(last_mem){}
+
+#elif __linux__
+    ProcessMemoryStats::ProcessMemoryStats(int pid):
+        pid_(pid)
+    {
+        
+    };
 
 #endif
 
@@ -42,7 +49,21 @@ namespace pm
             last_mem_ = double(pmc.WorkingSetSize) / (1024*1024);
             return last_mem_;
         #elif __linux__
-            last_mem_ = 0.0;
+            std::ifstream file("/proc/" + std::to_string(pid_) + "/status");
+            std::string line;
+            double usage;
+            while(std::getline(file, line))
+            {
+                if (line.substr(0, std::string("VmRSS").size()) == "VmRSS")
+                {
+                    std::stringstream s(line);
+                    std::string ss;
+                    s >> ss >> last_mem_;
+                    break;
+                }
+            }
+            file.close();
+            last_mem_ /= 1024;
         #endif
             return last_mem_;
     }
@@ -55,7 +76,10 @@ namespace pm
                 last_mem_ = 0;
             }
         #elif __linux__
-
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_) + "/status") == false)
+            {
+                last_mem_ = 0;
+            }
         #endif
 
         return last_mem_;

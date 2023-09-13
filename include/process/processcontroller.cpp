@@ -8,7 +8,7 @@
 namespace pm
 {
 
-	ProcessController::ProcessController(const std::string_view& name)
+	ProcessController::ProcessController(const std::string& name)
 	{
         SetHandle(name);
 		#ifdef _WIN32	
@@ -50,7 +50,7 @@ namespace pm
 
 	}
 
-	bool ProcessController::SetHandle(const std::string_view& name){
+	bool ProcessController::SetHandle(const std::string& name){
 		Process::SetName(static_cast<std::string>(name));
 		Process::SetPid(FindProcessIdByName(GetName()));
 		int pid = Process::GetPid();
@@ -82,7 +82,8 @@ namespace pm
 			Process::SetPid(pid);
 
         #elif __linux__
-		    pid_ FindProcessIdByName(name_);
+		    auto pid = FindProcessIdByName(GetName());
+			Process::SetPid(pid);
         #endif
 			return pid;
 
