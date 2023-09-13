@@ -37,7 +37,7 @@ namespace pm
 
 
 #ifdef _WIN32
-	int Process::FindProcessIdByName(const std::wstring_view& name)
+	int Process::FindProcessIdByName(const std::wstring& name)
 	{
 		int pid = 0;
 		PROCESSENTRY32 entry{};

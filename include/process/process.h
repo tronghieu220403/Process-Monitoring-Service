@@ -48,7 +48,7 @@ namespace pm
 
 		static int FindProcessIdByName(const std::string& name);
 		#ifdef _WIN32
-			static int FindProcessIdByName(const std::string& name);
+			static int FindProcessIdByName(const std::wstring& name);
 		#endif
 	};
 }
