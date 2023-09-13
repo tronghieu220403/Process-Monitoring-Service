@@ -19,8 +19,10 @@
 #include <strsafe.h>
 #include <tchar.h>
 #endif
-#include <stdio.h>
-
+#include <fcntl.h> 
+#include <sys/stat.h> 
+#include <sys/types.h> 
+#include <unistd.h> 
 #ifdef _WIN32
 #include <Windows.h> 
 #elif __linux__
@@ -46,9 +48,9 @@ namespace pm
 
         #ifdef _WIN32
             HANDLE handle_pipe_;
-            int n_remaining_;
         #elif __linux__
-
+            int fd_send_;
+            int fd_recv_;
         #endif
     public:
         PipelineServer() = default;

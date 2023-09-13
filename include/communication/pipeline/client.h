@@ -18,6 +18,11 @@
 #ifdef _WIN32
 #include <strsafe.h>
 #include <tchar.h>
+#elif __linux__
+#include <fcntl.h> 
+#include <sys/stat.h> 
+#include <sys/types.h> 
+#include <unistd.h> 
 #endif
 #include <stdio.h>
 
@@ -43,7 +48,8 @@ namespace pm
         #ifdef _WIN32
             HANDLE handle_pipe_;
         #elif __linux__
-            
+            int fd_send_;
+            int fd_recv_;
         #endif
 
         std::vector<char> last_receive_;

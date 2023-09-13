@@ -56,6 +56,29 @@ namespace pm
             }
         #elif __linux__
 
+            if (fd_recv_ == 0 || fd_send_ == 0)
+            {
+                Close();
+                return false;
+            }
+            unsigned long bytes_read = 0;
+            int success = 0;
+            int n_bytes = 0;
+            
+            success = read(fd_recv_, &n_bytes, 0);
+            if (success == -1)
+            {   
+                Close();
+                return false;
+            }
+
+            success = write(fd_send_, &n_bytes, 0);
+            if (success == -1)
+            {   
+                Close();
+                return false;
+            }
+
         #endif
 
         return true;
@@ -83,6 +106,14 @@ namespace pm
 
         #elif __linux__
 
+            int fd_recv_ = open("/tmp/fifoServerSend", O_RDONLY);
+            int fd_send_ = open("/tmp/fifoServerRecv", O_WRONLY);
+            if (fd_send_ < 0 || fd_recv_ < 0)
+            {
+                Close();
+                return false;
+            }
+        
         #endif
 
         return true;
@@ -91,6 +122,11 @@ namespace pm
 
     bool PipelineClient::TryGetMessage()
     {
+        int success = 0;
+        std::vector<char> cur_receive_;
+        cur_receive_.clear();
+        int type;
+
         #ifdef _WIN32
             if (handle_pipe_ == nullptr)
             {
@@ -111,7 +147,7 @@ namespace pm
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
-                        PipelineClient::Close();
+                        PipelineServer::Close();
                         return false;
                     }
                     else
@@ -131,7 +167,7 @@ namespace pm
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
-                        PipelineClient::Close();
+                        PipelineServer::Close();
                         return false;
                     }
                     else
@@ -152,7 +188,7 @@ namespace pm
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
-                        PipelineClient::Close();
+                        PipelineServer::Close();
                         return false;
                     }
                     else
@@ -163,28 +199,96 @@ namespace pm
                 cur_ptr += bytes_read;
             }
 
-            last_receive_ = cur_receive_;
-            last_message_type_ = type;
         #elif __linux__
+
+            if (fd_send_ == 0)
+            {
+                return false;
+            }
+
+            int n_bytes = 0;
+            int cur_ptr = 0;
+
+            while(cur_ptr < 4)
+            {
+                success = read(fd_recv_, &n_bytes + cur_ptr, sizeof(int) - cur_ptr);
+                if (success == -1)
+                {
+                    Close();
+                    return false;
+                }
+                else if (success == 0)
+                {
+                    return false;
+                }
+                cur_ptr += success;
+            }
+
+            cur_ptr = 0;
+            
+            while(cur_ptr < 4)
+            {
+                success = read(fd_recv_, &type + cur_ptr, sizeof(int) - cur_ptr);
+                if (success == -1)
+                {
+                    Close();
+                    return false;
+                }
+                else if (success == 0)
+                {
+                    return false;
+                }
+                cur_ptr += success;
+            }
+
+            cur_receive_.resize(n_bytes);
+            cur_ptr = 0;
+
+            while(cur_ptr < 4)
+            {
+                success = read(fd_recv_, &cur_receive_[cur_ptr], n_bytes - cur_ptr);
+                if (success == -1)
+                {
+                    Close();
+                    return false;
+                }
+                else if (success == 0)
+                {
+                    return false;
+                }
+                cur_ptr += success;
+            }
 
         #endif
 
+        last_receive_ = cur_receive_;
+        last_message_type_ = type;
+
         return true;
+
 
     }
 
 
     bool PipelineClient::TrySendMessage(int type, std::vector<char> data)
     {
-        // Write the reply to the pipe. 
+                // Write the reply to the pipe. 
         #ifdef _WIN32
             if (handle_pipe_ == nullptr)
             {
                 return false;
             }
+        #elif __linux__
 
-            DWORD bytes_written = 0;
-            BOOL success = FALSE;
+            if (fd_send_ == 0)
+            {
+                return false;
+            }
+
+        #endif
+
+            unsigned long bytes_written = 0;
+            int success = 0;
             std::vector<int> send;
 
             if (data.size() > buf_size_){
@@ -196,6 +300,8 @@ namespace pm
             memcpy(&send[0], &sz, 4);
             memcpy(&send[4], &type, 4);
             memcpy(&send[4], &data[0], sz);
+        
+        #ifdef _WIN32
 
             success = WriteFile(handle_pipe_, &send[0], send.size(), &bytes_written, nullptr);
 
@@ -203,11 +309,20 @@ namespace pm
             {
                 return false;
             }
+    
         #elif __linux__
+
+            bytes_written = write(fd_send_, &send[0], send.size());
+            
+            if (bytes_written != send.size())
+            {
+                return false;
+            }
 
         #endif
 
-        return false;
+        return true;
+
     }
 
     void PipelineClient::Close()
@@ -218,6 +333,19 @@ namespace pm
                 CloseHandle(handle_pipe_);
                 handle_pipe_ = nullptr;
             }
+        #elif __linux__
+            if (fd_send_ != 0 && fd_send_ != -1)
+            {
+                close(fd_send_);
+                fd_send_ = 0;
+            }
+            if (fd_recv_ != 0 && fd_recv_ != -1)
+            {
+                close(fd_recv_);
+                fd_recv_ = 0;
+            }
+            fd_send_ = 0;
+            fd_recv_ = 0;
         #endif
     }
 
