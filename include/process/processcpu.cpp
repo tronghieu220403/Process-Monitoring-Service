@@ -38,9 +38,9 @@ namespace pm
 
         num_processors_ = GetNumberOfProcessors();
 
-        last_system_cpu_ = GetSystemClockCycle();
+        last_process_cpu_unit_ = GetSystemClockCycle();
 
-        last_process_cpu_ = GetClockCycle();
+        last_process_cpu_unit_ = GetClockCycle();
 
     };
 #endif
@@ -147,9 +147,9 @@ namespace pm
             memcpy(&sys, &fsys, sizeof(FILETIME));
             memcpy(&user, &fuser, sizeof(FILETIME));
             
-            last_process_cpu_ = sys.QuadPart + user.QuadPart;
+            last_process_cpu_unit_ = sys.QuadPart + user.QuadPart;
 
-            return last_process_cpu_;
+            return last_process_cpu_unit_;
         #elif __linux__
 
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
@@ -213,10 +213,10 @@ namespace pm
             memcpy(&user, &fuser, sizeof(FILETIME));
             
             now_process_cpu = sys.QuadPart + user.QuadPart;
-            percent = static_cast<double>(now_process_cpu - last_process_cpu_);
-            if (now_system_cpu - last_system_cpu_ != 0)
+            percent = static_cast<double>(now_process_cpu - last_process_cpu_unit_);
+            if (now_system_cpu - last_process_cpu_unit_ != 0)
             {
-                percent /= static_cast<double>(now_system_cpu - last_system_cpu_);
+                percent /= static_cast<double>(now_system_cpu - last_process_cpu_unit_);
                 percent /= num_processors_;
                 percent *= 100;
             }
@@ -224,8 +224,8 @@ namespace pm
             {
                 percent = 0;
             }
-            last_system_cpu_ = now_system_cpu;
-            last_process_cpu_ = now_process_cpu;
+            last_process_cpu_unit_ = now_system_cpu;
+            last_process_cpu_unit_ = now_process_cpu;
             
         #elif __linux__
 
