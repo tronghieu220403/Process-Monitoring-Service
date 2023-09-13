@@ -33,15 +33,14 @@ namespace pm
         #ifdef _WIN32
             HANDLE process_handle_ = nullptr;
 
-            unsigned long long last_cpu_time_;
-            unsigned long long last_sys_cpu_; 
-            unsigned long long last_user_cpu_;
+            unsigned long long last_system_cpu_;
+            unsigned long long last_process_cpu_; 
 
         #elif __linux__
             int pid_;
 
-            long long last_process_clock_cycle_;
-            long long last_system_clock_cycle_;
+            unsigned long long last_process_clock_cycle_;
+            unsigned long long last_system_clock_cycle_;
             
         #endif
     public:
@@ -59,13 +58,14 @@ namespace pm
             explicit ProcessCpuStats(int pid);
         #endif
 
-        long long GetSystemClockCycle();
-        long long GetProcessClockCycle();
+        unsigned long long GetClockCycle();
 
         double GetCurrentUsage();
         double GetLastUsage();
 
         static int GetNumberOfProcessors();
+        unsigned long long GetSystemClockCycle();
+
     };
 }
 

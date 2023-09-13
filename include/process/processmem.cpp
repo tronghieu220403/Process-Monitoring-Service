@@ -49,6 +49,11 @@ namespace pm
             last_mem_ = double(pmc.WorkingSetSize) / (1024*1024);
             return last_mem_;
         #elif __linux__
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_) + "/status") == false)
+            {
+                last_mem_ = 0;
+                return 0;
+            }
             std::ifstream file("/proc/" + std::to_string(pid_) + "/status");
             std::string line;
             double usage;

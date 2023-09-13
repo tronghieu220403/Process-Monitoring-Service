@@ -12,9 +12,6 @@ namespace pm
     {
         #ifdef _WIN32
 
-            ZeroMemory(&last_cpu_time_, sizeof(ULARGE_INTEGER));
-            ZeroMemory(&last_sys_cpu_, sizeof(ULARGE_INTEGER));
-            ZeroMemory(&last_user_cpu_, sizeof(ULARGE_INTEGER));
             if (num_processors_ == 0)
             {
                 num_processors_ = GetNumberOfProcessors();
@@ -27,22 +24,7 @@ namespace pm
 
     ProcessCpuStats::ProcessCpuStats(const ProcessCpuStats& pcs) = default;
 
-    ProcessCpuStats& ProcessCpuStats::operator=(const ProcessCpuStats& pcs)
-    {
-        this->last_usage_percent_ = pcs.last_usage_percent_;
-        #ifdef _WIN32
-
-            this->last_cpu_time_ = pcs.last_cpu_time_;
-            this->last_sys_cpu_ = pcs.last_sys_cpu_;
-            this->last_user_cpu_ = pcs.last_user_cpu_;
-            this->process_handle_ = pcs.process_handle_;
-        
-        #elif __linux__
-
-        #endif
-
-        return *this;
-    }
+    ProcessCpuStats& ProcessCpuStats::operator=(const ProcessCpuStats& pcs) = default;
 
 
 #ifdef _WIN32
@@ -54,18 +36,11 @@ namespace pm
         }
         process_handle_ = p_handle;
 
-        FILETIME ftime;
-        FILETIME fsys;
-        FILETIME fuser;
+        num_processors_ = GetNumberOfProcessors();
 
-        num_processors_ = num_processors_ = GetNumberOfProcessors();
+        last_system_cpu_ = GetSystemClockCycle();
 
-        GetSystemTimeAsFileTime(&ftime);
-        memcpy(&last_cpu_time_, &ftime, sizeof(FILETIME));
-
-        GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
-        memcpy(&last_sys_cpu_, &fsys, sizeof(FILETIME));
-        memcpy(&last_user_cpu_, &fuser, sizeof(FILETIME));
+        last_process_cpu_ = GetClockCycle();
 
     };
 #endif
@@ -73,6 +48,17 @@ namespace pm
 #ifdef __linux__
     ProcessCpuStats::ProcessCpuStats(int pid): pid_(pid)
     {
+
+        if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+        {
+            return 0;
+        }
+
+        num_processors_ = GetNumberOfProcessors();
+
+        last_system_cpu_ = GetSystemClockCycle();
+
+        last_process_cpu_ = GetClockCycle();
 
     }
 
@@ -85,7 +71,9 @@ namespace pm
 
             GetSystemInfo(&sysInfo);
             return sysInfo.dwNumberOfProcessors;
+
         #elif __linux__
+
             int n_processors = 0;
             std::ifstream file("/proc/stat");
             std::string line;
@@ -98,16 +86,22 @@ namespace pm
             }
             n_processors--;
             file.close();
+
         #endif
     }
 
-    long long ProcessCpuStats::GetSystemClockCycle()
+    unsigned long long ProcessCpuStats::GetSystemClockCycle()
     {
         #ifdef _WIN32
+            
             FILETIME ftime;
+            ULARGE_INTEGER now_time;
             GetSystemTimeAsFileTime(&ftime);
-            return ftime.QuadPart;
+            memcpy(&now_time, &ftime, sizeof(FILETIME));
+            return now_time.QuadPart;
+
         #elif __linux__
+
             std::ifstream file("/proc/stat");
             std::string line;
             long long system_clock_cycle = 0;
@@ -130,14 +124,40 @@ namespace pm
             }
             file.close();
             return system_clock_cycle;
+
         #endif
     }
 
-    long long ProcessCpuStats::GetProcessClockCycle()
+    unsigned long long ProcessCpuStats::GetClockCycle()
     {
         #ifdef _WIN32
 
+            if (GetProcessId(process_handle_) == NULL)
+            {
+                return 0.0;
+            }
+
+            FILETIME ftime;
+            FILETIME fsys;
+            FILETIME fuser;
+
+            ULARGE_INTEGER sys;
+            ULARGE_INTEGER user;
+
+            GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
+            memcpy(&sys, &fsys, sizeof(FILETIME));
+            memcpy(&user, &fuser, sizeof(FILETIME));
+            
+            last_process_cpu_ = sys.QuadPart + user.QuadPart;
+
+            return last_process_cpu_;
         #elif __linux__
+
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+            {
+                return 0;
+            }
+
             std::ifstream file("/proc/" + std::to_string(pid_) + "/stat");
             std::string line;
             std::getline(file, line);
@@ -182,22 +202,24 @@ namespace pm
             FILETIME ftime;
             FILETIME fsys;
             FILETIME fuser;
-            ULARGE_INTEGER now_time;
+            unsigned long long now_system_cpu;
+            unsigned long long now_process_cpu;
+
+            //ULARGE_INTEGER now_time;
             ULARGE_INTEGER sys;
             ULARGE_INTEGER user;
 
-
-
-            GetSystemTimeAsFileTime(&ftime);
-            memcpy(&now_time, &ftime, sizeof(FILETIME));
+            now_system_cpu = GetSystemClockCycle();
 
             GetProcessTimes(process_handle_, &ftime, &ftime, &fsys, &fuser);
             memcpy(&sys, &fsys, sizeof(FILETIME));
             memcpy(&user, &fuser, sizeof(FILETIME));
-            percent = static_cast<double>((sys.QuadPart - last_sys_cpu_.QuadPart) + (user.QuadPart - last_user_cpu_.QuadPart));
-            if (now_time.QuadPart - last_cpu_time_.QuadPart != 0)
+            
+            now_process_cpu = sys.QuadPart + user.QuadPart;
+            percent = static_cast<double>(now_process_cpu - last_process_cpu_);
+            if (now_system_cpu - last_system_cpu_ != 0)
             {
-                percent /= static_cast<double>(now_time.QuadPart - last_cpu_time_.QuadPart);
+                percent /= static_cast<double>(now_system_cpu - last_system_cpu_);
                 percent /= num_processors_;
                 percent *= 100;
             }
@@ -205,11 +227,16 @@ namespace pm
             {
                 percent = 0;
             }
-            last_cpu_time_ = now_time;
-            last_user_cpu_ = user;
-            last_sys_cpu_ = sys;
+            last_system_cpu_ = now_system_cpu;
+            last_process_cpu_ = now_process_cpu;
             
         #elif __linux__
+
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+            {
+                return 0;
+            }
+
             long long now_process_clock_cycle = GetProcessClockCycle();
             long long now_system_clock_cycle = GetSystemClockCycle();
             if (now_system_clock_cycle - last_system_clock_cycle_ != 0)
@@ -236,7 +263,10 @@ namespace pm
                 return 0.0;
             }
         #elif __linux__
-
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+            {
+                return 0.0;
+            }
         #endif
 
         return last_usage_percent_;
