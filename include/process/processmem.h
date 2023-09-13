@@ -10,7 +10,7 @@
 
 #endif
 
-#include <string>
+#include <string.h>
 
 #ifdef _WIN32
 	#include <WS2tcpip.h>
@@ -21,6 +21,11 @@
 
 #endif
 
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <filesystem>
+
 namespace pm
 {
     class ProcessMemoryStats
@@ -29,7 +34,7 @@ namespace pm
         #ifdef _WIN32
             HANDLE process_handle_ = nullptr;
         #elif __linux__
-
+            int pid_;
         #endif
 
         double last_mem_ = 0;
@@ -41,7 +46,7 @@ namespace pm
             explicit ProcessMemoryStats(HANDLE p_handle);
             ProcessMemoryStats(const HANDLE process_handle, double last_mem);
         #elif __linux__
-
+            explicit ProcessMemoryStats(int pid);
         #endif
 
         double GetCurrentUsage();

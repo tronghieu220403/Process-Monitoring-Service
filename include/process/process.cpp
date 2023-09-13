@@ -75,7 +75,7 @@ namespace pm
 				// check if the entry is a directory and its name is a number
 				if (entry->d_type == DT_DIR && std::isdigit(entry->d_name[0])) {
 					// read the process name from the cmdline file
-					std::string cmdPath = std::string("/proc/") + entry->d_name + "/cmdline";
+					std::string cmdPath = std::string("/proc/") + entry->d_name + "/comm";
 					//std::cout << cmdPath.c_str() << std::endl;
 					
 					std::ifstream cmdFile(cmdPath.c_str());
@@ -83,7 +83,7 @@ namespace pm
 					std::getline(cmdFile, cmdLine);
 
 					// check if the process name matches
-					if (!cmdLine.empty() && cmdLine.find(name) != std::string::npos) {
+					if (!cmdLine.empty() && cmdLine == name) {
 						pid = std::stoi(entry->d_name);
 						break;
 					}
