@@ -6,7 +6,7 @@ namespace pm
     CTA::CTA()
     {
         cta_log_mutex_ = NamedMutex("pm_cta_logs");
-        config_registry_mutex_ = NamedMutex("config_reg");
+        config_mutex_ = NamedMutex("config_reg");
         inner_mutex_ = NamedMutex("");
     }
 
@@ -22,10 +22,10 @@ namespace pm
         #ifdef _WIN32
 
             // named mutex lock for registry
-            config_registry_mutex_.Lock();
+            config_mutex_.Lock();
             Registry reg("SOFTWARE/CtaProcessMonitoring/ProcsesConf");
             std::vector< std::pair< std::string, std::vector<char> > > info = reg.GetAllBinaryValues();
-            config_registry_mutex_.Unlock();
+            config_mutex_.Unlock();
             // named mutex unlock for registry
 
             process_.clear();

@@ -15,11 +15,14 @@ namespace pm
     void StartUpProgram::SetThisProgram()
     {
         #ifdef _WIN32
-            auto w_exe_full_path = std::wstring(exe_full_path_.begin(), exe_full_path_.end());
-            exe_full_path_.resize(MAX_PATH);
+            std::wstring w_exe_full_path;
+            w_exe_full_path.resize(MAX_PATH);
             GetModuleFileNameW(nullptr, &w_exe_full_path[0], MAX_PATH);
+            exe_full_path_ = std::string(w_exe_full_path.begin(), w_exe_full_path.end());
         #elif __linux__
-
+            exe_full_path_.resize(10000);
+            int sz = readlink("/proc/self/exe", exe_full_path_.data(), exe_full_path_.size());
+            exe_full_path_.resize(sz);
         #endif
     }
 
@@ -34,7 +37,6 @@ namespace pm
         bool success = false;
         #ifdef _WIN32
             
-
             auto w_exe_full_path = std::wstring(exe_full_path_.begin(), exe_full_path_.end());
 
             long result = 0;
@@ -59,6 +61,26 @@ namespace pm
 
             return success;
         #elif __linux__
+
+            int pos = exe_full_path_.find("/", exe_full_path_.find("/", exe_full_path_.find("/") + 1) + 1);
+
+            std::string user_autostart_path = exe_full_path_.substr(0, pos + 1) + ".config/autostart";
+
+            struct stat st;
+            if(stat(user_autostart_path.data(),&st) != 0 || st.st_mode & S_IFDIR == 0)
+            {
+                mkdir(user_autostart_path.data(),0777);
+            }
+
+            std::ofstream outfile(user_autostart_path + "/pm.desktop");
+            outfile << "[Desktop Entry]" << std::endl;
+            outfile << "Type=Application" << std::endl;
+            outfile << "Exec=" << exe_full_path_ << std::endl;
+            outfile << "Hidden=false\nNoDisplay=false\nX-GNOME-Autostart-enabled=true" << std::endl;
+            outfile << "Name[en_US]=" << exe_full_path_ << std::endl;
+            outfile << "Name=" << exe_full_path_ << std::endl;
+            outfile << "Comment[en_US]=\nComment=" << std::endl;
+            outfile.close();
 
         #endif
         return success;
@@ -101,6 +123,32 @@ namespace pm
             }
 
         #elif __linux__
+
+            int pos = exe_full_path_.find("/", exe_full_path_.find("/", exe_full_path_.find("/") + 1) + 1);
+
+            std::string user_autostart_path = exe_full_path_.substr(0, pos + 1) + ".config/autostart";
+
+            DIR* dir = opendir(user_autostart_path.data());
+            if (!dir) {
+                return false;
+            }
+            
+            success = false;
+            dirent* entry;
+            
+            while ((entry = readdir(dir)) != nullptr) {
+                if (entry->d_type == DT_REG) 
+                {
+                    std::vector<char> ans = File(user_autostart_path + "/" + entry->d_name).ReadAll();
+                    std::string s(ans.begin(), ans.end());
+                    if (s.find(exe_full_path_) != std::string::npos)
+                    {
+                        success = true;
+                        break;
+                    }
+                }
+            }
+            closedir(dir);
 
         #endif
         return success;

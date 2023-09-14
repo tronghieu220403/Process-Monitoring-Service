@@ -16,10 +16,14 @@
 #include <string.h>
 #include <stdio.h>
 
+
 #ifdef _WIN32
 #include <Windows.h> 
 #elif __linux__
-
+#include <sys/stat.h> 
+#include <fcntl.h>
+#include <semaphore.h> 
+#include <unistd.h>
 #endif
 
 #include <string>
@@ -34,7 +38,7 @@ namespace pm
         #ifdef _WIN32
             HANDLE handle_mutex_;
         #elif __linux__
-
+            sem_t *sema_;
         #endif
     public:
         NamedMutex() = default;

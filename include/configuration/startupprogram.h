@@ -17,10 +17,22 @@
 #include <strsafe.h>
 #include <Windows.h>
 #elif __linux__
+#include <unistd.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
 
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/file/file.h"
+#else
+#include "include/file/file.h"
 #endif
 
 #include <string>
+#include <vector>
+#include <fstream>
+#include <sstream>
 
 namespace pm
 {

@@ -69,9 +69,8 @@ namespace pm
 				return false;
 			}
 
-			bool found = false;
 			dirent* entry;
-			while ((entry = readdir(dir)) != nullptr && !found) {
+			while ((entry = readdir(dir)) != nullptr) {
 				// check if the entry is a directory and its name is a number
 				if (entry->d_type == DT_DIR && std::isdigit(entry->d_name[0])) {
 					// read the process name from the cmdline file

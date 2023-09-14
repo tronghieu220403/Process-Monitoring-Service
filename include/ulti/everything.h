@@ -40,4 +40,10 @@
     #define ZeroMem(data,sz) memset(data,size)
 #endif
 
+#ifdef _WIN32
+    
+#elif __linux__
+    #define Sleep(ms) usleep(ms*1000)
+#endif
+
 #endif
