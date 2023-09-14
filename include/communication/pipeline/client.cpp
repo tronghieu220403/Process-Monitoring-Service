@@ -4,9 +4,8 @@
 namespace pm
 {
     PipelineClient::PipelineClient(const std::string& server_pipe_name)
-        : server_name_(server_pipe_name)
     {
-
+        server_name_ = server_pipe_name;
     };
 
     void PipelineClient::SetServerPipeName(const std::string& server_pipe_name)
@@ -14,11 +13,12 @@ namespace pm
         server_name_ = server_pipe_name;
     }
 
+#ifdef _WIN32
     void PipelineClient::SetBufferSize(int buf_size)
     {
         buf_size_ = buf_size;
     }
-
+#endif
     std::string PipelineClient::GetPipeName()
     {
         return server_name_;
@@ -88,9 +88,10 @@ namespace pm
     bool PipelineClient::ConnectToPipeServer()
     {
         #ifdef _WIN32
+            std::string server_pipe = "\\\\.\\pipe\\" + server_name_;
 
             handle_pipe_ = CreateFile(
-                (std::wstring(server_name_.begin(), server_name_.end())).data(),             // pipe name 
+                (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
                 GENERIC_READ |  // read and write access 
                 GENERIC_WRITE,
                 0,              // no sharing 
@@ -106,8 +107,13 @@ namespace pm
 
         #elif __linux__
 
-            int fd_recv_ = open("/tmp/fifoServerSend", O_RDONLY);
-            int fd_send_ = open("/tmp/fifoServerRecv", O_WRONLY);
+            std::string server_send = "/tmp/" + server_name_ + "serversend";
+
+            int fd_recv_ = open(server_send.data(), O_RDONLY);
+
+            std::string server_recv = "/tmp/" + server_name_ + "serverrecv";
+
+            int fd_send_ = open(server_recv.data(), O_WRONLY);
             if (fd_send_ < 0 || fd_recv_ < 0)
             {
                 Close();
@@ -185,7 +191,7 @@ namespace pm
             {
                 success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, NULL);
                 if (!success || bytes_read == 0)
-                {   
+                {
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
                         Close();
@@ -272,7 +278,7 @@ namespace pm
 
     bool PipelineClient::TrySendMessage(int type, std::vector<char> data)
     {
-                // Write the reply to the pipe. 
+        // Write the reply to the pipe. 
         #ifdef _WIN32
             if (handle_pipe_ == nullptr)
             {
@@ -291,10 +297,11 @@ namespace pm
             int success = 0;
             std::vector<int> send;
 
-            if (data.size() > buf_size_){
-                return false;
-            }
-
+            #ifdef _WIN32
+                if (data.size() > buf_size_){
+                    return false;
+                }
+            #endif
             int sz = data.size();
             send.resize(4 + 4 + sz);
             memcpy(&send[0], &sz, 4);

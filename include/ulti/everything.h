@@ -19,10 +19,11 @@
 	#include <TlHelp32.h>
     #include <Psapi.h>
     #include <Windows.h>
+    #include <direct.h>
 #elif __linux__
 	#include <sys/wait.h>
 	#include <dirent.h>
-
+    #include <unistd.h>
 #endif
 
 #include <iostream>
@@ -43,5 +44,12 @@
 #elif __linux__
     #define Sleep(ms) usleep(ms*1000)
 #endif
+
+#ifdef _WIN32
+    #define GetCurrentDir _getcwd
+#else
+    #define GetCurrentDir getcwd
+ #endif
+
 
 #endif

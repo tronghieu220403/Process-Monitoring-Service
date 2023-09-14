@@ -4,21 +4,28 @@
 namespace pm
 {
     PipelineServer::PipelineServer(const std::string& pipe_name)
-        : server_name_(pipe_name)
     {
-
+        server_name_ = pipe_name;
     };
 
-    PipelineServer::PipelineServer(const std::string& pipe_name, int buf_size)
-        : server_name_(pipe_name), buf_size_(buf_size_)
-    {
-
-    };
 
     void PipelineServer::SetPipeName(const std::string& pipe_name)
     {
         server_name_ = pipe_name;
     }
+
+    std::string PipelineServer::GetPipeName()
+    {
+        return server_name_;
+    }
+
+#ifdef _WIN32
+
+    PipelineServer::PipelineServer(const std::string& pipe_name, int buf_size)
+        : buf_size_(buf_size_)
+    {
+        server_name_ = pipe_name;
+    };
 
     void PipelineServer::SetBufferSize(int buf_size)
     {
@@ -39,16 +46,12 @@ namespace pm
         return true;
     }
 
-    std::string PipelineServer::GetPipeName()
-    {
-        return server_name_;
-    }
-
     int PipelineServer::GetBufferSize()
     {
         last_receive_.resize(buf_size_);
         return buf_size_;
     }
+#endif
 
     std::vector<char> PipelineServer::GetLastMessage()
     {
@@ -115,8 +118,9 @@ namespace pm
     {
         #ifdef _WIN32
 
+            std::string server_pipe = "\\\\.\\pipe\\" + server_name_;
             handle_pipe_ = CreateNamedPipe(
-                (std::wstring(server_name_.begin(), server_name_.end())).data(),             // pipe name 
+                (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
                 PIPE_ACCESS_DUPLEX,         // read/write access 
                 PIPE_TYPE_MESSAGE |         // message type pipe 
                 PIPE_READMODE_MESSAGE |     // message-read mode 
@@ -135,11 +139,15 @@ namespace pm
 
         #elif __linux__
 
-            mkfifo("/tmp/fifoServerSend", 0666);                      /* read/write for user/group/others */
-            fd_send_ = open("/tmp/fifoServerSend", O_CREAT | O_WRONLY); /* open as write-only */
+            std::string server_send = "/tmp/" + server_name_ + "serversend";
 
-            mkfifo("/tmp/fifoServerRecv", 0666);                      /* read/write for user/group/others */
-            fd_recv_ = open("/tmp/fifoServerRecv", O_CREAT | O_RDONLY); /* open as read-only */
+            mkfifo(server_send.data(), 0666);                      /* read/write for user/group/others */
+            fd_send_ = open(server_send.data(), O_CREAT | O_WRONLY); /* open as write-only */
+
+            std::string server_recv = "/tmp/" + server_name_ + "serverrecv";
+
+            mkfifo(server_recv.data(), 0666);                      /* read/write for user/group/others */
+            fd_recv_ = open(server_recv.data(), O_CREAT | O_RDONLY); /* open as read-only */
 
             if (fd_send_ == -1 || fd_recv_ == -1)
             {
@@ -335,10 +343,11 @@ namespace pm
             int success = 0;
             std::vector<int> send;
 
-            if (data.size() > buf_size_){
-                return false;
-            }
-
+            #ifdef __WIN32
+                if (data.size() > buf_size_){
+                    return false;
+                }
+            #endif
             int sz = data.size();
             send.resize(4 + 4 + sz);
             memcpy(&send[0], &sz, 4);

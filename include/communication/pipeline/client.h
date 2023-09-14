@@ -44,8 +44,8 @@ namespace pm
     {
     private:
         std::string server_name_;
-        int buf_size_;
         #ifdef _WIN32
+            int buf_size_;
             HANDLE handle_pipe_;
         #elif __linux__
             int fd_send_;
@@ -60,8 +60,10 @@ namespace pm
         PipelineClient(const std::string& server_pipe_name);
 
         void SetServerPipeName(const std::string& server_pipe_name);
-        void SetBufferSize(int buf_size);
-
+        
+        #ifdef _WIN32
+            void SetBufferSize(int buf_size);
+        #endif
         std::string GetPipeName();
         std::vector<char> GetLastMessage();
         

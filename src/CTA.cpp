@@ -40,7 +40,6 @@ namespace pm
                 process_.push_back(ProcessSupervision(info[i].first, mc));
             }
 
-
         #elif __linux__
 
         #endif
@@ -85,8 +84,10 @@ namespace pm
 
     void CTA::CommunicateWithCtb()
     {
-        server = PipelineServer("\\\\.\\pipe\\processmonitoringpipe");
-        server.SetMaxConnection(1);
+        server = PipelineServer("processmonitoringpipe");
+        #ifdef _WIN32
+            server.SetMaxConnection(1);
+        #endif
         while(true)
         {
             while(true)

@@ -15,10 +15,8 @@
 
 #ifdef _WIN32
     #include <direct.h>
-    #define GetCurrentDir _getcwd
 #else
     #include <unistd.h>
-    #define GetCurrentDir getcwd
  #endif
 
 #ifdef _WIN32
@@ -33,6 +31,7 @@
 #include "E:/Code/Github/Process-Monitoring/include/file/file.h"
 #include "E:/Code/Github/Process-Monitoring/include/configuration/processjsonconfiguration.h"
 #include "E:/Code/Github/Process-Monitoring/include/mutex/mutex.h"
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
 
 #else
 #include "include/process/processsupervision.h"
@@ -42,6 +41,7 @@
 #include "include/file/file.h"
 #include "include/configuration/processjsonconfiguration.h"
 #include "include/mutex/mutex.h"
+#include "include/ulti/everything.h"
 #endif
 
 
@@ -56,13 +56,12 @@ namespace pm
     private:
         PipelineClient client;
 
+        NamedMutex cta_log_mutex_;
+        NamedMutex config_registry_mutex_;
+        NamedMutex inner_mutex_;
+
         #ifdef _WIN32
             HANDLE handle_pipe_;
-
-            NamedMutex cta_log_mutex_;
-            NamedMutex config_registry_mutex_;
-            NamedMutex inner_mutex_;
-
         #elif __linux__
 
         #endif

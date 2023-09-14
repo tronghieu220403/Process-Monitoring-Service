@@ -43,12 +43,12 @@ namespace pm
     {
     private:
         std::string server_name_;
-        int buf_size_;
-        int max_connection_;
         std::vector<char> last_receive_;
         int last_message_type_;
 
         #ifdef _WIN32
+            int buf_size_;
+            int max_connection_;
             HANDLE handle_pipe_;
         #elif __linux__
             int fd_send_;
@@ -57,14 +57,16 @@ namespace pm
     public:
         PipelineServer() = default;
         PipelineServer(const std::string& pipe_name);
-        PipelineServer(const std::string& pipe_name, int buf_size);
         
         void SetPipeName(const std::string& pipe_name);
-        void SetBufferSize(int buf_size);
-        bool SetMaxConnection(int max_connection);
+        #ifdef _WIN32
+            PipelineServer(const std::string& pipe_name, int buf_size);
+            bool SetMaxConnection(int max_connection);
+            void SetBufferSize(int buf_size);
+            int GetBufferSize();
+        #endif
 
         std::string GetPipeName();
-        int GetBufferSize();
         std::vector<char> GetLastMessage();
         int GetLastMessageType();
 
