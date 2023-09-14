@@ -10,12 +10,12 @@ namespace pm
 {
     ProcessJsonConfiguration::ProcessJsonConfiguration()
     {
-        data.clear();
+        data_.clear();
     }
     
     ProcessJsonConfiguration::ProcessJsonConfiguration(std::string contents)
     {
-        data.clear();
+        data_.clear();
         SetContent(contents);
     }
 
@@ -23,7 +23,7 @@ namespace pm
     bool ProcessJsonConfiguration::SetContent(std::string contents)
     {
         #ifdef _WIN32
-            data.clear();
+            data_.clear();
             using namespace winrt;
             using namespace winrt::Windows::Data::Json;
 
@@ -62,10 +62,79 @@ namespace pm
                     max_usage.disk_usage = disk.GetNumber();
                     max_usage.network_usage = network.GetNumber();
 
-                    data.push_back(std::make_pair(name, max_usage));
+                    data_.push_back(std::make_pair(name, max_usage));
                 }
             }
         #elif __linux__
+                using json = nlohmann::json;
+
+                json json_data;
+                try
+                {
+                    json_data = json::parse(contents);
+                }
+                catch(const std::exception& e)
+                {
+                    return false;
+                }
+                
+                if (json_data.is_array())
+                {
+                    for (json::iterator it = json_data.begin(); it != json_data.end(); ++it) 
+                    {
+                        //cout << it->type_name() << endl;
+                        if (!it->is_object())
+                        {
+                            continue;
+                        }
+                        bool check = true;
+                        std::string name;
+                        MonitoringComponent mc;
+                        for (json::iterator ele = it->begin(); ele != it->end(); ++ele) {
+                            if (ele->is_string())
+                            {
+                                name = *ele;
+                            }
+                            else if (ele->is_number())
+                            {
+                                if (ele.key() == "cpu")
+                                {
+                                    mc.cpu_usage = double(*ele);
+                                }
+                                else if (ele.key() == "memory")
+                                {
+                                    mc.mem_usage = double(*ele);
+                                }
+                                else if (ele.key() == "disk")
+                                {
+                                    mc.disk_usage = double(*ele);
+                                }
+                                else if (ele.key() == "network")
+                                {
+                                    mc.network_usage = double(*ele);
+                                }
+                                else
+                                {
+                                    check = false;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                check = false;
+                                break;
+                            }
+                        }
+                        if (check == true)
+                        {
+                            ProcessJsonConfiguration::data_.push_back(make_pair(name, mc));
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
 
         #endif
         return true;
@@ -73,7 +142,7 @@ namespace pm
 
     std::vector< std::pair< std::string, MonitoringComponent > > ProcessJsonConfiguration::GetData()
     {
-        return data;
+        return data_;
     }
 
 }

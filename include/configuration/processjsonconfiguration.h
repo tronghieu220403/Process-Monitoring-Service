@@ -19,10 +19,13 @@
 #elif __linux__
 
 #endif
+#include "include/nlohmann/json.hpp"
 
 #include <string>
 #include <map>
 #include <vector>
+#include <sstream>
+#include <fstream>
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
@@ -37,7 +40,7 @@ namespace pm
     class ProcessJsonConfiguration
     {
     private:
-        std::vector< std::pair< std::string, MonitoringComponent > > data;
+        std::vector< std::pair< std::string, MonitoringComponent > > data_;
     public:
 
     ProcessJsonConfiguration();
