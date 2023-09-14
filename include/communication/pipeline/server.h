@@ -18,11 +18,13 @@
 #ifdef _WIN32
 #include <strsafe.h>
 #include <tchar.h>
-#endif
+#elif __linux__
 #include <fcntl.h> 
 #include <sys/stat.h> 
 #include <sys/types.h> 
 #include <unistd.h> 
+#endif
+
 #ifdef _WIN32
 #include <Windows.h> 
 #elif __linux__
