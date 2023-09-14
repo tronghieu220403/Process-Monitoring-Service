@@ -57,7 +57,7 @@ namespace pm
 
     void CTB::CommunicateWithCta()
     {
-        client = PipelineClient("\\\\.\\pipe\\processmonitoringpipe");
+        client = PipelineClient("processmonitoringpipe");
         while(true)
         {
             while(true)
