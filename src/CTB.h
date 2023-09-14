@@ -57,7 +57,7 @@ namespace pm
         PipelineClient client;
 
         NamedMutex cta_log_mutex_;
-        NamedMutex config_registry_mutex_;
+        NamedMutex config_mutex_;
         NamedMutex inner_mutex_;
 
         #ifdef _WIN32

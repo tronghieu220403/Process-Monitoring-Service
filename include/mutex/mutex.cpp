@@ -15,12 +15,11 @@ namespace pm
     void NamedMutex::SetMutex(const std::string& mutex_name)
     {
         #ifdef _WIN32
-        if (mutex_name.size() != 0)
-            handle_mutex_ = CreateMutexA(
-                                NULL, 
-                                FALSE, 
-                                mutex_name.size() != 0 ? &mutex_name[0] : NULL
-                            );
+        handle_mutex_ = CreateMutexA(
+                            NULL, 
+                            FALSE, 
+                            mutex_name.size() != 0 ? &mutex_name[0] : NULL
+                        );
         #elif __linux
         if (mutex_name.size() != 0)
         {
@@ -30,6 +29,10 @@ namespace pm
                 sema_ = sem_open(name.data(), O_RDWR);
                 return;
             }
+        }
+        else
+        {
+            sem_init(sema_, 0, 1);
         }
         #endif
     }

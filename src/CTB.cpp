@@ -6,7 +6,7 @@ namespace pm
     CTB::CTB()
     {
         cta_log_mutex_ = NamedMutex("pm_cta_log");
-        config_registry_mutex_ = NamedMutex("config_reg");
+        config_mutex_ = NamedMutex("config_reg");
         inner_mutex_ = NamedMutex("");
     }
 
@@ -22,7 +22,7 @@ namespace pm
             ProcessJsonConfiguration(std::string(config_json.begin(), config_json.end())).GetData();
             
             // named mutex lock for registry
-            config_registry_mutex_.Lock();
+            config_mutex_.Lock();
             Registry reg("SOFTWARE/CtaProcessMonitoring/ProcsesConf");
             reg.DeleteContent();
             for (int i = 0; i < data.size(); i++)
@@ -35,7 +35,7 @@ namespace pm
                 memcpy(&value[sizeof(double) * 3], &data[i].second.network_usage, sizeof(double));
                 reg.CreateBinaryValue(data[i].first, value);
             }
-            config_registry_mutex_.Unlock();
+            config_mutex_.Unlock();
             // named mutex unlock for registry
 
             client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
