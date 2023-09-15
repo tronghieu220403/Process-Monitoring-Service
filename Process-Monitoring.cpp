@@ -34,9 +34,8 @@ int main()
 
 int main()
 {
-	//pm::CTB ctb;
-	//ctb.CommunicateWithCta();
-	std::cout << "OKE" << std::endl;
+	pm::CTB ctb;
+	ctb.CommunicateWithCta();
 	return 0;
 }
 
