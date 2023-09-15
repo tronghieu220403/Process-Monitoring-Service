@@ -11,16 +11,10 @@
 #define _UNICODE
 #endif
 
-#include <string.h>
-
-#ifdef _WIN32
-    #include <direct.h>
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
 #else
-    #include <unistd.h>
- #endif
-
-#ifdef _WIN32
-#include <Windows.h>
+#include "include/ulti/everything.h"
 #endif
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
@@ -31,7 +25,6 @@
 #include "E:/Code/Github/Process-Monitoring/include/file/file.h"
 #include "E:/Code/Github/Process-Monitoring/include/configuration/processjsonconfiguration.h"
 #include "E:/Code/Github/Process-Monitoring/include/mutex/mutex.h"
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
 
 #else
 #include "include/process/processsupervision.h"
@@ -41,7 +34,6 @@
 #include "include/file/file.h"
 #include "include/configuration/processjsonconfiguration.h"
 #include "include/mutex/mutex.h"
-#include "include/ulti/everything.h"
 #endif
 
 

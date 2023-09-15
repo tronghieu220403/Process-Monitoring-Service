@@ -1,29 +1,13 @@
 #ifdef _WIN32
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma once
-#endif
-
 #ifndef PROCESSMONITORING_REGISTRY_REGISTRY_H_
 #define PROCESSMONITORING_REGISTRY_REGISTRY_H_
 
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define _CRT_SECURE_NO_DEPRECATE
-#define UNICODE
-#define _UNICODE
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
-
-#include <string.h>
-
-#ifdef _WIN32
-#include <Windows.h>
-#endif
-
-
-
-#include <iostream>
-#include <string>
-#include <vector>
 
 namespace pm
 {

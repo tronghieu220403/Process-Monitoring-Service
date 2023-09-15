@@ -1,30 +1,11 @@
-#pragma once
-
 #ifndef PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 #define PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 
-#define _CRT_SECURE_NO_DEPRECATE
-
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
-
-
-#include <string.h>
-
-#if defined(_WIN32)
-	#include <WS2tcpip.h>
-	#include <TlHelp32.h>
-	#include <Windows.h>
-    #include <Psapi.h>
-#elif __linux__
-	#include <sys/wait.h>
-	#include <dirent.h>
-#endif
-
-#include <string>
-#include <fstream>
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
     #include "E:/Code/Github/Process-Monitoring/include/process/processmem.h"

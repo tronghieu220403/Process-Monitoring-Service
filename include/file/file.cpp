@@ -16,7 +16,7 @@ namespace pm
 
     }
 
-    bool File::Set(std::string file_path)
+    void File::Set(std::string file_path)
     {
         file_path_ = file_path;
     }
@@ -40,18 +40,18 @@ namespace pm
         return contents;
     }
     
-    bool File::Append(const std::vector<char>& chr)
+    void File::Append(const std::vector<char>& chr)
     {
         std::ofstream file;
         file.open(file_path_, std::ios_base::binary | std::ios_base::app);
-        for (int i = 0; i < chr.size(); i++)
+        for (auto c: chr)
         {
-            file.put(chr[i]);
+            file.put(c);
         }
         file.close();
     }       
 
-    bool File::AppendFromFile(const std::string& src_file_path)
+    void File::AppendFromFile(const std::string& src_file_path)
     {
         //std::vector<char> contents = File(src_file_path).ReadAll();
         std::ifstream input(src_file_path, std::ios::binary );

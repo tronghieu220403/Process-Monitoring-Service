@@ -2,28 +2,10 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSNETWORK_H_
 #define PROCESSMONITORING_PROCESS_PROCESSNETWORK_H_
 
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
-#else
-#pragma comment(lib, "Ws2_32.lib")
-#pragma comment(lib, "iphlpapi.lib")
-#endif
-
-#include <string>
-
-#ifdef _WIN32
-    #include <WinSock2.h>
-    #include <WS2tcpip.h>
-    #include <iphlpapi.h>
-    #include <Windows.h>
-#elif __linux__
-
-#endif
-
 #ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma comment(lib, "Ws2_32.lib")
-#pragma comment(lib, "iphlpapi.lib")
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
 
 

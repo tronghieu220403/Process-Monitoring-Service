@@ -1,13 +1,17 @@
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "CTB.h"
+#else
 #include "src/CTB.h"
+#endif // _VISUAL_STUDIO_WORKSPACE
 
 namespace pm
 {
 
-    CTB::CTB()
+    CTB::CTB():
+        cta_log_mutex_(NamedMutex("pm_cta_log")),
+        config_mutex_(NamedMutex("config_reg")),
+        inner_mutex_(NamedMutex(""))
     {
-        cta_log_mutex_ = NamedMutex("pm_cta_log");
-        config_mutex_ = NamedMutex("config_reg");
-        inner_mutex_ = NamedMutex("");
     }
 
     void CTB::UpdateConfig(const std::string& file_path)

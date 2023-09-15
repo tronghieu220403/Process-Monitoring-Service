@@ -10,22 +10,11 @@
 #define _UNICODE
 #endif
 
-
-#include <string.h>
-
-#ifdef _WIN32
-#include <Windows.h>
-
-#elif __linux__
-
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
-
-#include <string>
-#include <vector>
-#include <fstream>
-#include <iterator>
-#include <algorithm>
-#include <filesystem>
 
 namespace pm
 {
@@ -45,14 +34,14 @@ namespace pm
         public:
 
         File() = default;
-        File(std::string file_path);
+        explicit File(std::string file_path);
 
-        bool Set(std::string file_path);
+        void Set(std::string file_path);
         
         std::vector<char> ReadAll();
 
-        bool Append(const std::vector<char>& chr);
-        bool AppendFromFile(const std::string& src_file_path);
+        void Append(const std::vector<char>& chr);
+        void AppendFromFile(const std::string& src_file_path);
 
         bool SelfDelete();
 

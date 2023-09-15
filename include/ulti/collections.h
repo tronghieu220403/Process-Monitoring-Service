@@ -3,9 +3,8 @@
 #ifndef PROCESSMONITORING_ULTI_COLLECTIONS_H_
 #define PROCESSMONITORING_ULTI_COLLECTIONS_H_
 
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#pragma once
 #endif
 
 namespace pm

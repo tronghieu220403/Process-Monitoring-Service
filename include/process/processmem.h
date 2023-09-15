@@ -2,29 +2,11 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSMEM_H_
 #define PROCESSMONITORING_PROCESS_PROCESSMEM_H_
 
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
-#pragma comment(lib, "Ws2_32.lib")
-#pragma comment(lib, "iphlpapi.lib")
-
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
-
-#include <string.h>
-
-#ifdef _WIN32
-	#include <WS2tcpip.h>
-	#include <TlHelp32.h>
-	#include <Windows.h>
-    #include <Psapi.h>
-#elif __linux__
-
-#endif
-
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <filesystem>
 
 namespace pm
 {

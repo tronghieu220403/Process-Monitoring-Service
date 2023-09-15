@@ -1,28 +1,11 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma once
-#endif
-
 #ifndef PROCESSMONITORING_PROCESS_PROCESS_H_
 #define PROCESSMONITORING_PROCESS_PROCESS_H_
 
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
-
-
-#include <string.h>
-
-#if defined(_WIN32)
-	#include <WS2tcpip.h>
-	#include <TlHelp32.h>
-#elif __linux__
-	#include <sys/wait.h>
-	#include <dirent.h>
-#endif
-
-#include <string>
-#include <fstream>
 
 namespace pm
 {

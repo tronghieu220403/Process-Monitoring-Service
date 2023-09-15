@@ -7,16 +7,16 @@
 
 #define _CRT_SECURE_NO_DEPRECATE
 
+#ifndef _VISUAL_STUDIO_WORKSPACE
 #define UNICODE
 #define _UNICODE
+#endif
 
-#include <string.h>
-#include <time.h>
-
-
-#include <string>
-#include <fstream>
-#include <sstream>
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
+#endif
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
     #include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"

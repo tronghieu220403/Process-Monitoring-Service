@@ -16,9 +16,9 @@ namespace pm
     {
         #ifdef _WIN32
         handle_mutex_ = CreateMutexA(
-                            NULL, 
+                            nullptr, 
                             FALSE, 
-                            mutex_name.size() != 0 ? &mutex_name[0] : NULL
+                            mutex_name.size() != 0 ? &mutex_name[0] : nullptr
                         );
         #elif __linux
         if (mutex_name.size() != 0)

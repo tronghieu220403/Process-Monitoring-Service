@@ -1,15 +1,10 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma once
-#endif
-
 #ifndef PROCESSMONITORING_LOGGER_PROCESSLOGGER_H_
 #define PROCESSMONITORING_LOGGER_PROCESSLOGGER_H_
 
-#define _CRT_SECURE_NO_DEPRECATE
-
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
 
 #ifdef _VISUAL_STUDIO_WORKSPACE

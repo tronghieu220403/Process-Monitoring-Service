@@ -1,29 +1,12 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma once
-#endif
-
 #ifndef PROCESSMONITORING_PROCESS_PROCESSDISK_H_
 #define PROCESSMONITORING_PROCESS_PROCESSDISK_H_
 
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
-
-#ifdef __linux__
-#include<time.h>
-#include<unistd.h>
-#endif
-
-#ifdef _WIN32
-#include <Windows.h>
-#elif __linux__
-
-#endif
-
-#include <filesystem>
-#include <fstream>
-#include <sstream>
 
 namespace pm
 {

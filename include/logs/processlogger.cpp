@@ -78,6 +78,7 @@ namespace pm
             ss << f;
         }
         ss << "\n";
+        return ss.str();
     }
 
 }

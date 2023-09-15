@@ -1,5 +1,13 @@
-#include <include/communication/pipeline/client.h>
+
+#ifdef _VISUAL_STUDIO_WORKSPACE
+
 #include "client.h"
+
+#else
+
+#include "include/communication/pipeline/client.h"
+
+#endif
 
 namespace pm
 {
@@ -45,14 +53,11 @@ namespace pm
             BOOL success = FALSE;
             int n_bytes = 0;
             
-            success = ReadFile(handle_pipe_, &n_bytes, 0, &bytes_read, NULL);
-            if (!success || bytes_read == 0)
+            success = ReadFile(handle_pipe_, &n_bytes, 0, &bytes_read, nullptr);
+            if ((!success || bytes_read == 0) && GetLastError() == ERROR_BROKEN_PIPE)
             {   
-                if (GetLastError() == ERROR_BROKEN_PIPE)
-                {
-                    PipelineClient::Close();
-                    return false;
-                }
+                PipelineClient::Close();
+                return false;
             }
         #elif __linux__
 
@@ -88,7 +93,7 @@ namespace pm
     bool PipelineClient::ConnectToPipeServer()
     {
         #ifdef _WIN32
-            std::string server_pipe = "\\\\.\\pipe\\" + server_name_;
+            std::string server_pipe = R"(\\.\pipe\)" + server_name_;
 
             handle_pipe_ = CreateFile(
                 (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
@@ -131,7 +136,7 @@ namespace pm
         int success = 0;
         std::vector<char> cur_receive_;
         cur_receive_.clear();
-        int type;
+        int type = 0;
 
         #ifdef _WIN32
             if (handle_pipe_ == nullptr)
@@ -139,16 +144,13 @@ namespace pm
                 return false;
             }
             DWORD bytes_read = 0;
-            BOOL success = FALSE;
-            std::vector<char> cur_receive_;
             cur_receive_.clear();
-            int type;
 
             int n_bytes = 0;
             int cur_ptr = 0;
             while(cur_ptr < 4)
             {
-                success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, NULL);
+                success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
                 if (!success || bytes_read == 0)
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
@@ -168,7 +170,7 @@ namespace pm
             bytes_read = 0;
             while(cur_ptr < 4)
             {
-                success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, NULL);
+                success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
                 if (!success || bytes_read == 0)
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
@@ -189,7 +191,7 @@ namespace pm
 
             while (cur_ptr < n_bytes)
             {
-                success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, NULL);
+                success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, nullptr);
                 if (!success || bytes_read == 0)
                 {
                     if (GetLastError() == ERROR_BROKEN_PIPE)
@@ -302,15 +304,15 @@ namespace pm
                     return false;
                 }
             #endif
-            int sz = data.size();
-            send.resize(4 + 4 + sz);
+            long long sz = data.size();
+            send.resize(static_cast<long long>(4 + 4) + sz);
             memcpy(&send[0], &sz, 4);
             memcpy(&send[4], &type, 4);
             memcpy(&send[4], &data[0], sz);
         
         #ifdef _WIN32
 
-            success = WriteFile(handle_pipe_, &send[0], send.size(), &bytes_written, nullptr);
+            success = WriteFile(handle_pipe_, &send[0], static_cast<int>(send.size()), &bytes_written, nullptr);
 
             if (!success || bytes_written != send.size())
             {

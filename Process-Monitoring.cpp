@@ -7,19 +7,23 @@
 #define PROCESSMONITORING_PROCESSMONITORING
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
-#include "include/process/processsupervision.h"
+#include "src/CTA.h"
 #else
-#include "include/process/processsupervision.h"
+#include "src/CTA.h"
 #endif
 
 #include <iostream> 
 #include <vector>
 
+#include <thread>
+
 int main()
 {
-    pm::ProcessSupervision ps("Messenger.exe");
-    std::shared_ptr<pm::ProcessController>gg = ps.GetProcessController();
-    std::cout << ps.GetProcessController()->GetPid() << std::endl;
+	pm::CTA cta;
+	cta.AddToStartup();
+	std::jthread connection_thread(&pm::CTA::CommunicateWithCtb,cta);
+	cta.Monitoring();
+	return 0;
 }
 
 #endif

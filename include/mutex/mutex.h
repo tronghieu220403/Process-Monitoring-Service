@@ -1,32 +1,12 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma once
-#endif
 
 #ifndef PROCESSMONITORING_COMMUNICATION_MUTEX_MUTEX_H_
 #define PROCESSMONITORING_COMMUNICATION_MUTEX_MUTEX_H_
 
-#define _CRT_SECURE_NO_DEPRECATE
-
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
-
-
-#include <string.h>
-#include <stdio.h>
-
-
-#ifdef _WIN32
-#include <Windows.h> 
-#elif __linux__
-#include <sys/stat.h> 
-#include <fcntl.h>
-#include <semaphore.h> 
-#include <unistd.h>
-#endif
-
-#include <string>
 
 namespace pm
 {
@@ -42,7 +22,7 @@ namespace pm
         #endif
     public:
         NamedMutex() = default;
-        NamedMutex(const std::string& mutex_name);
+        explicit NamedMutex(const std::string& mutex_name);
         
         void SetMutex(const std::string& mutex_name);
 

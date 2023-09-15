@@ -1,43 +1,22 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma once
-#endif
 
 #ifndef PROCESSMONITORING_CONFIGURATION_STARTUPROGRAM_H_
 #define PROCESSMONITORING_CONFIGURATION_STARTUPROGRAM_H_
 
-#include <string.h>
-
-#ifndef _VISUAL_STUDIO_WORKSPACE
-#define UNICODE
-#define _UNICODE
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#else
+#include "include/ulti/everything.h"
 #endif
 
-#ifdef _WIN32
-#include <WS2tcpip.h>
-#include <strsafe.h>
-#include <Windows.h>
-#elif __linux__
-#include <unistd.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#endif
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #include "E:/Code/Github/Process-Monitoring/include/file/file.h"
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
 
 #else
 
 #include "include/file/file.h"
-#include "include/ulti/everything.h"
 
 #endif
-
-#include <string>
-#include <vector>
-#include <fstream>
-#include <sstream>
 
 namespace pm
 {

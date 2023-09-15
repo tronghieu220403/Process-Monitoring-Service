@@ -1,13 +1,18 @@
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "CTA.h"
+#else
 #include "src/CTA.h"
+#endif // _VISUAL_STUDIO_WORKSPACE
+
 
 namespace pm
 {
 
-    CTA::CTA()
+    CTA::CTA():
+        cta_log_mutex_(NamedMutex("pm_cta_logs")),
+        config_mutex_(NamedMutex("config_reg")),
+        inner_mutex_(NamedMutex(""))
     {
-        cta_log_mutex_ = NamedMutex("pm_cta_logs");
-        config_mutex_ = NamedMutex("config_reg");
-        inner_mutex_ = NamedMutex("");
     }
 
     void CTA::AddToStartup()
@@ -70,7 +75,7 @@ namespace pm
         {
             Sleep(500);
             inner_mutex_.Lock();
-            for (auto ps: process_)
+            for (auto& ps : process_)
             {
                 ps.UpdateProcessStats();
                 ps.CheckProcessStats();

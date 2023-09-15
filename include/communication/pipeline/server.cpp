@@ -1,11 +1,16 @@
-#include <include/communication/pipeline/server.h>
+#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "server.h"
+#else
+#include "include/communication/pipeline/server.h"
+#endif // _VISUAL_STUDIO_WORKSPACE
+
 
 namespace pm
 {
     PipelineServer::PipelineServer(const std::string& pipe_name)
+        : server_name_(pipe_name)
     {
-        server_name_ = pipe_name;
+        
     };
 
 
@@ -22,9 +27,9 @@ namespace pm
 #ifdef _WIN32
 
     PipelineServer::PipelineServer(const std::string& pipe_name, int buf_size)
-        : buf_size_(buf_size_)
+        : server_name_(pipe_name), buf_size_(buf_size)
     {
-        server_name_ = pipe_name;
+        
     };
 
     void PipelineServer::SetBufferSize(int buf_size)
@@ -118,7 +123,7 @@ namespace pm
     {
         #ifdef _WIN32
 
-            std::string server_pipe = "\\\\.\\pipe\\" + server_name_;
+            std::string server_pipe = R"(\\.\pipe\)" + server_name_;
             handle_pipe_ = CreateNamedPipe(
                 (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
                 PIPE_ACCESS_DUPLEX,         // read/write access 
@@ -178,7 +183,7 @@ namespace pm
         int success = 0;
         std::vector<char> cur_receive_;
         cur_receive_.clear();
-        int type;
+        int type = 0;
 
         #ifdef _WIN32
             if (handle_pipe_ == nullptr)
@@ -186,10 +191,6 @@ namespace pm
                 return false;
             }
             DWORD bytes_read = 0;
-            BOOL success = FALSE;
-            std::vector<char> cur_receive_;
-            cur_receive_.clear();
-            int type;
 
             int n_bytes = 0;
             int cur_ptr = 0;
@@ -348,7 +349,7 @@ namespace pm
                     return false;
                 }
             #endif
-            int sz = data.size();
+            auto sz = static_cast<int>(data.size());
             send.resize(4 + 4 + sz);
             memcpy(&send[0], &sz, 4);
             memcpy(&send[4], &type, 4);
