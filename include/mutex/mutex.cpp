@@ -15,8 +15,12 @@ namespace pm
     void NamedMutex::SetMutex(const std::string& mutex_name)
     {
         #ifdef _WIN32
+        _SECURITY_ATTRIBUTES sec;
+        sec.nLength = sizeof(_SECURITY_ATTRIBUTES);
+        sec.bInheritHandle = TRUE;
+        sec.lpSecurityDescriptor = nullptr;
         handle_mutex_ = CreateMutexA(
-                            nullptr, 
+                            &sec,
                             FALSE, 
                             mutex_name.size() != 0 ? &mutex_name[0] : nullptr
                         );

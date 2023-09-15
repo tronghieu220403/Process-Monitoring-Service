@@ -3,20 +3,20 @@
 #else
 #include "include/process/process.h"
 #endif
-#include <iostream>
 
 namespace pm
 {
 
 	Process::Process() = default;
 
-	Process::Process(const std::string& name): pid_(FindProcessIdByName(name)), name_(name)
+	Process::Process(const std::string& name): pid_(FindProcessIdByName(name))
 	{
+		name_ = name.substr(0, strlen(&name[0]));
 	};
 
 	void Process::SetName(const std::string& name)
 	{
-		name_ = name;
+		name_ = name.substr(0, strlen(&name[0]));
 	}
 
 	void Process::SetPid(const int pid)

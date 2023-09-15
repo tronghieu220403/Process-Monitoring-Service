@@ -214,7 +214,7 @@ namespace pm
             if (now_system_cpu_unit - last_system_cpu_unit_ != 0)
             {
                 #ifdef _WIN32
-                    percent = static_cast<double>(now_system_cpu_unit - last_system_cpu_unit_);
+                    percent = static_cast<double>((now_process_cpu_unit - last_process_cpu_unit_)/(now_system_cpu_unit - last_system_cpu_unit_));
                     percent /= num_processors_; // ?
                     percent *= 100;
                 #elif __linux__

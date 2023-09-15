@@ -31,14 +31,28 @@ namespace pm
         cpu_usage_ = ProcessCpuStats(process_handle_);
         disk_usage_ = ProcessDiskStats(process_handle_);
         network_usage_ = ProcessNetworkStats(process_handle_);
+        UpdateTime();
     };
 #elif __linux__
+    ProcessInfo::ProcessInfo(int pid)
+    {
+#ifdef _WIN32
+#elif __linux__
+
+#endif
+
+        memory_usage_ = ProcessMemoryStats(pid);
+        cpu_usage_ = ProcessCpuStats(pid);
+        disk_usage_ = ProcessDiskStats(pid);
+        network_usage_ = ProcessNetworkStats(pid);
+        UpdateTime();
+    };
 
 #endif
 
     time_t ProcessInfo::UpdateTime()
     {
-        ctime(&time_);
+        this->time_ = time(0);
         return time_;
     }
 
@@ -105,7 +119,7 @@ namespace pm
 
     void ProcessInfo::UpdateAttributes()
     {
-        UpdateTime();
+        ProcessInfo::UpdateTime();
         last_usage_.cpu_usage = UpdateCpuUsage();
         last_usage_.mem_usage = UpdateMemoryUsage();
         last_usage_.disk_usage = UpdateDiskUsage();

@@ -54,6 +54,7 @@
 #include <iterator>
 #include <algorithm>
 #include <filesystem>
+#include <thread>
 
 #ifdef __linux__
 

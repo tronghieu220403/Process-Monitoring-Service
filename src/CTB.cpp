@@ -18,7 +18,7 @@ namespace pm
     {
         std::vector<char> config_json = File(file_path).ReadAll();
         
-        if (config_json.size()==0)
+        if (config_json.empty())
         {
             return;
         }
@@ -30,7 +30,7 @@ namespace pm
             
             // named mutex lock for registry
             config_mutex_.Lock();
-            Registry reg("SOFTWARE/CtaProcessMonitoring/ProcsesConf");
+            Registry reg("SOFTWARE\\CtaProcessMonitoring\\ProcsesConf");
             reg.DeleteContent();
             for (int i = 0; i < data.size(); i++)
             {
@@ -42,10 +42,14 @@ namespace pm
                 memcpy(&value[sizeof(double) * 3], &data[i].second.network_usage, sizeof(double));
                 reg.CreateBinaryValue(data[i].first, value);
             }
+            reg.Close();
             config_mutex_.Unlock();
             // named mutex unlock for registry
 
-            client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
+            if (client.IsActive())
+            {
+                client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
+            }
 
         #elif __linux__
             
@@ -73,7 +77,11 @@ namespace pm
 
             config_mutex_.Unlock();
 
-            client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
+            if (client.IsActive())
+            {
+                client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
+
+            }
 
         #endif
     }
@@ -81,10 +89,10 @@ namespace pm
     void CTB::GetLog(const std::string& cta_log_path)
     {
         std::string log_file_name = "pm_logs.log";
-        File ctb_log = File(log_file_name);
+        auto ctb_log = File(log_file_name);
         cta_log_mutex_.Lock();
         ctb_log.AppendFromFile(cta_log_path);
-        File cta_log = File(cta_log_path);
+        auto cta_log = File(cta_log_path);
         cta_log.SelfDelete();
         cta_log_mutex_.Unlock();
     }
@@ -102,17 +110,20 @@ namespace pm
                 }
                 Sleep(1000);
             }
+
+            UpdateConfig("config.json");
             
             while(true)
             {
                 if (client.TryGetMessage() == false)
                 {
+                    break;
                     Sleep(500);
-                    continue;
                 }
                 if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
                 {
-                    std::string msg(client.GetLastMessage().begin(), client.GetLastMessage().end());
+                    std::vector<char> v_msg = client.GetLastMessage();
+                    std::string msg(v_msg.begin(), v_msg.end());
                     GetLog(msg);
                 }
             }

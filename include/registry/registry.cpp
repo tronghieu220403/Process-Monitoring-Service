@@ -19,9 +19,8 @@ namespace pm
     bool Registry::SetRegistryPath(const std::string& registry_path)
     {
         registry_path_ = registry_path;
-        std::wstring w_registry_path(registry_path.begin(), registry_path.end());
 
-        if (RegCreateKeyExW(h_key_root_, &w_registry_path[0], static_cast<DWORD>(NULL), nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE | KEY_READ | DELETE | KEY_ENUMERATE_SUB_KEYS | KEY_QUERY_VALUE | KEY_SET_VALUE |
+        if (std::wstring w_registry_path(registry_path.begin(), registry_path.end()); RegCreateKeyExW(h_key_root_, &w_registry_path[0], static_cast<DWORD>(NULL), nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE | KEY_READ | DELETE | KEY_ENUMERATE_SUB_KEYS | KEY_QUERY_VALUE | KEY_SET_VALUE |
     KEY_WOW64_64KEY, nullptr, &h_key_, nullptr) == ERROR_SUCCESS)
         {
             return true;
@@ -37,7 +36,7 @@ namespace pm
             return 0;
         }
 
-        if (RegSetValueExA(h_key_, &value_name[0], static_cast<DWORD>(NULL), REG_BINARY, (const BYTE*)data[0], data.size()) == ERROR_SUCCESS)
+        if (RegSetValueExA(h_key_, &value_name[0], static_cast<DWORD>(NULL), REG_BINARY, &(std::vector<unsigned char>(data.begin(), data.end()))[0], data.size()) == ERROR_SUCCESS)
         {
             return true;
         }
@@ -93,7 +92,7 @@ namespace pm
 
             for (int i = 0, ret_code = ERROR_SUCCESS; i < c_values; i++) 
             { 
-                cch_value = cch_max_value; 
+                cch_value = cch_max_value + 1; 
                 name.clear();
                 name.resize(cch_max_value);
                 ret_code = RegEnumValueA(h_key_, i, name.data(), &cch_value, NULL, NULL, NULL, NULL);

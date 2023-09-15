@@ -15,15 +15,15 @@ namespace pm
     private:
         std::string server_name_;
         std::vector<char> last_receive_;
-        int last_message_type_;
+        int last_message_type_ = 0;
 
         #ifdef _WIN32
-            int buf_size_;
-            int max_connection_;
-            HANDLE handle_pipe_;
+            int buf_size_ = 0;
+            int max_connection_ = 0;
+            HANDLE handle_pipe_ = 0;
         #elif __linux__
-            int fd_send_;
-            int fd_recv_;
+            int fd_send_ = 0;
+            int fd_recv_ = 0;
         #endif
     public:
         PipelineServer() = default;

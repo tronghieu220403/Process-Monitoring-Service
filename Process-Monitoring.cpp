@@ -1,8 +1,3 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma once
-#endif
-
-
 #ifndef PROCESSMONITORING_PROCESSMONITORING
 #define PROCESSMONITORING_PROCESSMONITORING
 
@@ -12,18 +7,16 @@
 #include "src/CTA.h"
 #endif
 
-#include <iostream> 
-#include <vector>
-
-#include <thread>
-
 int main()
 {
-	pm::CTA cta;
-	cta.AddToStartup();
-	std::jthread connection_thread(&pm::CTA::CommunicateWithCtb,cta);
-	cta.Monitoring();
+	auto cta = std::make_shared<pm::CTA>();
+	cta->AddToStartup();
+	std::jthread connection_thread(&pm::CTA::CommunicateWithCtb, cta);
+	cta->Monitoring();
+	//std::jthread monitoring_thread(&pm::CTA::Monitoring, cta);
+
 	return 0;
 }
+
 
 #endif

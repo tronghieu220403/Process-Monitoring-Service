@@ -49,6 +49,7 @@ namespace pm
             {
                 return false;
             }
+            /*
             DWORD bytes_read = 0;
             BOOL success = FALSE;
             int n_bytes = 0;
@@ -59,6 +60,7 @@ namespace pm
                 PipelineClient::Close();
                 return false;
             }
+            */
         #elif __linux__
 
             if (fd_recv_ == 0 || fd_send_ == 0)
@@ -105,7 +107,15 @@ namespace pm
                 0,              // default attributes 
                 nullptr);          // no template file 
 
-            if (handle_pipe_ == INVALID_HANDLE_VALUE || GetLastError() != ERROR_PIPE_BUSY || !WaitNamedPipe((std::wstring(server_name_.begin(), server_name_.end())).data(), 0))
+            if (handle_pipe_ != INVALID_HANDLE_VALUE)
+            {
+                return true;
+            }
+            if (GetLastError() != ERROR_PIPE_BUSY)
+            {
+                return false;
+            }
+            if (!WaitNamedPipe((std::wstring(server_name_.begin(), server_name_.end())).data(), 0))
             {
                 return false;
             }
@@ -297,7 +307,7 @@ namespace pm
 
             unsigned long bytes_written = 0;
             int success = 0;
-            std::vector<int> send;
+            std::vector<char> send;
 
             #ifdef _WIN32
                 if (data.size() > buf_size_){
@@ -308,7 +318,10 @@ namespace pm
             send.resize(static_cast<long long>(4 + 4) + sz);
             memcpy(&send[0], &sz, 4);
             memcpy(&send[4], &type, 4);
-            memcpy(&send[4], &data[0], sz);
+            if (sz != 0)
+            {
+                memcpy(&send[8], &data[0], sz);
+            }
         
         #ifdef _WIN32
 

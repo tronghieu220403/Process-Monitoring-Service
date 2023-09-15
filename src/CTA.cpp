@@ -28,7 +28,7 @@ namespace pm
 
             // named mutex lock for registry
             config_mutex_.Lock();
-            Registry reg("SOFTWARE/CtaProcessMonitoring/ProcsesConf");
+            Registry reg("SOFTWARE\\CtaProcessMonitoring\\ProcsesConf");
             std::vector< std::pair< std::string, std::vector<char> > > info = reg.GetAllBinaryValues();
             config_mutex_.Unlock();
             // named mutex unlock for registry
@@ -111,6 +111,7 @@ namespace pm
         server = PipelineServer("processmonitoringpipe");
         #ifdef _WIN32
             server.SetMaxConnection(1);
+            server.SetBufferSize(10000);
         #endif
         while(true)
         {
@@ -128,18 +129,26 @@ namespace pm
                 Sleep(100);
             }
 
+            std::cout << "Client connected" << std::endl;
+
             while(true)
             {
                 if (server.TryGetMessage() == false)
                 {
-                    Sleep(500);
-                    continue;
+                    if (!server.IsActive())
+                    {
+                        break;
+                    }
                 }
-                if (server.GetLastMessageType() == Command::CTB_NOTI_CONFIG)
+                else
                 {
-                    inner_mutex_.Lock();
-                    UpdateConfig();
-                    inner_mutex_.Unlock();
+                    if (server.GetLastMessageType() == Command::CTB_NOTI_CONFIG)
+                    {
+                        inner_mutex_.Lock();
+                        UpdateConfig();
+                        inner_mutex_.Unlock();
+                    }
+                    Sleep(500);
                 }
             }
 
