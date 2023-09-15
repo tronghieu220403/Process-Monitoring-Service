@@ -17,7 +17,7 @@ namespace pm
         #ifdef _WIN32
             HANDLE process_handle_ = nullptr;
         #elif __linux__
-
+            int pid_ = 0;
         #endif
 
         long long last_data_recv_ = 0;
@@ -31,7 +31,7 @@ namespace pm
             explicit ProcessNetworkStats(HANDLE p_handle);
             ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_);
         #elif __linux__
-
+            explicit ProcessNetworkStats(int pid);
         #endif
 
         double GetCurrentSpeed();

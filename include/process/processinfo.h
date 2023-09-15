@@ -54,7 +54,7 @@ namespace pm
         #ifdef _WIN32
             explicit ProcessInfo(HANDLE process_handle_);
         #elif __linux__
-
+            explicit ProcessInfo(int pid);
         #endif
 
         int GetPid() const;

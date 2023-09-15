@@ -66,7 +66,7 @@ namespace pm
 
             if (CreateFolder(user_autostart_path) == false)
             {
-                return;
+                return false;
             }
 
             std::ofstream outfile(user_autostart_path + "/pm.desktop");

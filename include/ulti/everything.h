@@ -95,7 +95,7 @@ namespace pm
     }
 
     #ifdef __linux__
-        std::string GetCurrentUserPath()
+        inline std::string GetCurrentUserPath()
         {
             std::string path;
             path.resize(10000);
@@ -105,7 +105,7 @@ namespace pm
             return path.substr(0, pos);
         }
 
-        bool CreateFolder(std::string path)
+        inline bool CreateFolder(std::string path)
         {
             struct stat st;
             if(stat(path.data(),&st) != 0 || st.st_mode & S_IFDIR == 0)

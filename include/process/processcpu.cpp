@@ -88,6 +88,7 @@ namespace pm
             }
             n_processors--;
             file.close();
+            return n_processors;
 
         #endif
     }

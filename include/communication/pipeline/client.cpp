@@ -62,7 +62,7 @@ namespace pm
             }
             */
         #elif __linux__
-
+            /*
             if (fd_recv_ == 0 || fd_send_ == 0)
             {
                 Close();
@@ -85,7 +85,7 @@ namespace pm
                 Close();
                 return false;
             }
-
+            */
         #endif
 
         return true;
@@ -373,6 +373,6 @@ namespace pm
 
     PipelineClient::~PipelineClient()
     {
-        Close();
+        PipelineClient::Close();
     }
 }

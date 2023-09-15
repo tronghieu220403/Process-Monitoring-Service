@@ -8,7 +8,10 @@
 namespace pm
 {
     PipelineServer::PipelineServer(const std::string& pipe_name)
-        : server_name_(pipe_name), max_connection_(0)
+        : server_name_(pipe_name)
+        #ifdef _WIN32
+        , max_connection_(0)
+        #endif
     {
         
     };
@@ -408,6 +411,6 @@ namespace pm
 
     PipelineServer::~PipelineServer()
     {
-        Close();
+        PipelineServer::Close();
     }
 }

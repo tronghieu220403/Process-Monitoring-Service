@@ -34,13 +34,9 @@ namespace pm
         UpdateTime();
     };
 #elif __linux__
+
     ProcessInfo::ProcessInfo(int pid)
     {
-#ifdef _WIN32
-#elif __linux__
-
-#endif
-
         memory_usage_ = ProcessMemoryStats(pid);
         cpu_usage_ = ProcessCpuStats(pid);
         disk_usage_ = ProcessDiskStats(pid);

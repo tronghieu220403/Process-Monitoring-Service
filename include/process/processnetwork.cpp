@@ -25,6 +25,16 @@ namespace pm
     ProcessNetworkStats::ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_)
         : process_handle_(process_handle_), last_data_recv_(last_data_recv_), last_data_sent_(last_data_sent_), last_speed_(last_speed_){};
 
+#elif __linux__
+    ProcessNetworkStats::ProcessNetworkStats(int pid)
+    {
+        if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
+        {
+            pid_ = 0;
+            return;
+        }
+    };
+
 #endif
 
     double ProcessNetworkStats::GetCurrentSpeed()
