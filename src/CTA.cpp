@@ -42,6 +42,25 @@ namespace pm
 
         #elif __linux__
 
+            config_mutex_.Lock();
+
+            process_.clear();
+
+            std::stringstream ss(CharVectorToString(File(GetCurrentUserPath() + "/.config/Process Monitoring" + "/ProcessMonitoringStats").ReadAll()));
+
+            std::string name;
+            MonitoringComponent mc;
+
+            while(ss >> name)
+            {
+                ss >> mc.cpu_usage;
+                ss >> mc.mem_usage;
+                ss >> mc.disk_usage;
+                ss >> mc.network_usage;
+                process_.push_back(ProcessSupervision(name, mc));
+            }
+
+            config_mutex_.Unlock();
         #endif
     }
 

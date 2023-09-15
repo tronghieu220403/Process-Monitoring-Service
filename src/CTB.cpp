@@ -12,14 +12,17 @@ namespace pm
 
     void CTB::UpdateConfig(const std::string& file_path)
     {
+        std::vector<char> config_json = File(file_path).ReadAll();
+        
+        if (config_json.size()==0)
+        {
+            return;
+        }
+
+        auto data = 
+        ProcessJsonConfiguration(std::string(config_json.begin(), config_json.end())).GetData();
+
         #ifdef _WIN32
-            std::vector<char> config_json = File(file_path).ReadAll();
-            if (config_json.size()==0)
-            {
-                return;
-            }
-            auto data = 
-            ProcessJsonConfiguration(std::string(config_json.begin(), config_json.end())).GetData();
             
             // named mutex lock for registry
             config_mutex_.Lock();
@@ -39,7 +42,34 @@ namespace pm
             // named mutex unlock for registry
 
             client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
+
         #elif __linux__
+            
+            std::string pm_config_path = GetCurrentUserPath() + "/.config/Process Monitoring";
+
+            if (CreateFolder(pm_config_path) == false)
+            {
+                return;
+            }
+
+            config_mutex_.Lock();
+            
+            std::ofstream outfile(pm_config_path + "/ProcessMonitoringStats");
+
+            for (int i = 0; i < data.size(); i++)
+            {
+                outfile << data[i].first << std::endl;
+                outfile << data[i].second.cpu_usage << std::endl;
+                outfile << data[i].second.mem_usage << std::endl;
+                outfile << data[i].second.disk_usage << std::endl;
+                outfile << data[i].second.network_usage << std::endl;
+            }
+
+            outfile.close();
+
+            config_mutex_.Unlock();
+
+            client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
 
         #endif
     }

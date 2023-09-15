@@ -51,5 +51,38 @@
     #define GetCurrentDir getcwd
  #endif
 
+namespace pm
+{
+
+    std::string CharVectorToString(std::vector<char> v)
+    {
+        return std::string(v.begin(), v.end());
+    }
+
+    #ifdef __linux__
+        std::string GetCurrentUserPath()
+        {
+            std::string path;
+            path.resize(10000);
+            int sz = readlink("/proc/self/exe", path.data(), path.size());
+            path.resize(sz);
+            int pos = path.find("/", path.find("/", path.find("/") + 1) + 1);
+            return path.substr(0, pos);
+        }
+
+        bool CreateFolder(std::string path)
+        {
+            struct stat st;
+            if(stat(path.data(),&st) != 0 || st.st_mode & S_IFDIR == 0)
+            {
+                if (mkdir(path.data(),0777) != 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    #endif
+}
 
 #endif

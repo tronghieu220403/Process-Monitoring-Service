@@ -107,13 +107,13 @@ namespace pm
 
         #elif __linux__
 
-            std::string server_send = "/tmp/" + server_name_ + "serversend";
+            std::string client_recv = "/tmp/" + server_name_ + "serversend";
 
-            int fd_recv_ = open(server_send.data(), O_RDONLY);
+            int fd_recv_ = open(client_recv.data(), O_RDONLY);
 
-            std::string server_recv = "/tmp/" + server_name_ + "serverrecv";
+            std::string client_send = "/tmp/" + server_name_ + "serverrecv";
 
-            int fd_send_ = open(server_recv.data(), O_WRONLY);
+            int fd_send_ = open(client_send.data(), O_WRONLY);
             if (fd_send_ < 0 || fd_recv_ < 0)
             {
                 Close();

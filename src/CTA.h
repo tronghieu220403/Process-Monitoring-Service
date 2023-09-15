@@ -41,9 +41,11 @@
 #include "include/configuration/startupprogram.h"
 #include "include/mutex/mutex.h"
 #include "include/ulti/everything.h"
+#include "include/file/file.h"
+
 #endif
 
-
+#include <sstream>
 #include <iostream>
 #include <string>
 #include <vector>

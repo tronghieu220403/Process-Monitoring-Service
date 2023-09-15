@@ -25,8 +25,13 @@
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #include "E:/Code/Github/Process-Monitoring/include/file/file.h"
+#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+
 #else
+
 #include "include/file/file.h"
+#include "include/ulti/everything.h"
+
 #endif
 
 #include <string>

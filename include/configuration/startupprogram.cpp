@@ -62,14 +62,11 @@ namespace pm
             return success;
         #elif __linux__
 
-            int pos = exe_full_path_.find("/", exe_full_path_.find("/", exe_full_path_.find("/") + 1) + 1);
+            std::string user_autostart_path = GetCurrentUserPath() + "/.config/autostart";
 
-            std::string user_autostart_path = exe_full_path_.substr(0, pos + 1) + ".config/autostart";
-
-            struct stat st;
-            if(stat(user_autostart_path.data(),&st) != 0 || st.st_mode & S_IFDIR == 0)
+            if (CreateFolder(user_autostart_path) == false)
             {
-                mkdir(user_autostart_path.data(),0777);
+                return;
             }
 
             std::ofstream outfile(user_autostart_path + "/pm.desktop");
@@ -124,9 +121,7 @@ namespace pm
 
         #elif __linux__
 
-            int pos = exe_full_path_.find("/", exe_full_path_.find("/", exe_full_path_.find("/") + 1) + 1);
-
-            std::string user_autostart_path = exe_full_path_.substr(0, pos + 1) + ".config/autostart";
+            std::string user_autostart_path = GetCurrentUserPath() + "/.config/autostart";
 
             DIR* dir = opendir(user_autostart_path.data());
             if (!dir) {
