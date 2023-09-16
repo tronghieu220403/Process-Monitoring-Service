@@ -18,7 +18,8 @@ namespace pm
         #ifdef _WIN32
             HANDLE handle_mutex_;
         #elif __linux__
-            sem_t *sema_;
+            sem_t *p_sema_;
+            sem_t sema_;
         #endif
     public:
         NamedMutex() = default;

@@ -13,7 +13,7 @@
 #include "include/program/ctb.h"
 #endif
 
-#define _CTB
+#define _CTA
 
 #ifdef _CTA
 
@@ -23,7 +23,6 @@ int main()
 	cta->AddToStartup();
 	std::jthread connection_thread(&pm::CTA::CommunicateWithCtb, cta);
 	cta->Monitoring();
-	//std::jthread monitoring_thread(&pm::CTA::Monitoring, cta);
 
 	return 0;
 }

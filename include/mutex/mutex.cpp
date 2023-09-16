@@ -24,19 +24,20 @@ namespace pm
                             FALSE, 
                             mutex_name.size() != 0 ? &mutex_name[0] : nullptr
                         );
-        #elif __linux
+        #elif __linux__
+        p_sema_ = &sema_;
         if (mutex_name.size() != 0)
         {
             std::string name = "/" + mutex_name;
-            sema_ = sem_open(name.data(), O_RDWR | O_CREAT, 0660, 1);
-            if (sema_ == SEM_FAILED){
-                sema_ = sem_open(name.data(), O_RDWR);
+            p_sema_ = sem_open(name.data(), O_RDWR | O_CREAT, 0660, 1);
+            if (p_sema_ == SEM_FAILED){
+                p_sema_ = sem_open(name.data(), O_RDWR);
                 return;
             }
         }
         else
         {
-            sem_init(sema_, 0, 1);
+            sem_init(p_sema_, 0, 1);
         }
         #endif
     }
@@ -51,7 +52,7 @@ namespace pm
         #ifdef _WIN32
             WaitForSingleObject(handle_mutex_, INFINITY);
         #elif __linux__
-            sem_wait(sema_);
+            sem_wait(p_sema_);
         #endif
     }
 
@@ -60,7 +61,7 @@ namespace pm
         #ifdef _WIN32
             ReleaseMutex(handle_mutex_);
         #elif __linux__
-            sem_post(sema_);
+            sem_post(p_sema_);
         #endif
     }
 
@@ -73,10 +74,10 @@ namespace pm
                 handle_mutex_ = 0;
             }
         #elif __linux__
-            if (sema_ != nullptr)
+            if (p_sema_ != nullptr)
             {
-                sem_destroy(sema_);
-                sema_ = 0;
+                sem_destroy(p_sema_);
+                p_sema_ = 0;
             }
         #endif
     }

@@ -149,6 +149,9 @@ namespace pm
 
         #elif __linux__
 
+            // must handle the return value of mkfifo to determine if we should use O_CREAT or not
+            // https://man7.org/linux/man-pages/man3/mkfifo.3.html
+
             std::string server_send = "/tmp/" + server_name_ + "serversend";
 
             mkfifo(server_send.data(), 0666);                      /* read/write for user/group/others */
