@@ -41,7 +41,7 @@
     #include <sys/stat.h> 
     #include <sys/types.h> 
     #include <semaphore.h> 
-
+    #include <errno.h>
 #endif
 
 #include <memory>
