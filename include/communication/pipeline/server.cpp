@@ -154,8 +154,12 @@ namespace pm
 
             std::string server_send = "/tmp/" + server_name_ + "serversend";
 
-            mkfifo(server_send.data(), 0666);                      /* read/write for user/group/others */
-            fd_send_ = open(server_send.data(), O_CREAT | O_WRONLY); /* open as write-only */
+            if (mkfifo(server_send.data(), 0666) == -1);                      /* read/write for user/group/others */
+        {
+            
+        }
+        else
+        fd_send_ = open(server_send.data(), O_CREAT | O_WRONLY); /* open as write-only */
 
             std::string server_recv = "/tmp/" + server_name_ + "serverrecv";
 
