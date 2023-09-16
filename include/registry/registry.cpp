@@ -96,7 +96,8 @@ namespace pm
                 name.clear();
                 name.resize(cch_max_value);
                 ret_code = RegEnumValueA(h_key_, i, name.data(), &cch_value, NULL, NULL, NULL, NULL);
-                name.resize(cch_value + 1);
+                // name.resize(cch_value + 1);
+                name.resize(strlen(&name[0]);
                 if (ret_code == ERROR_SUCCESS) 
                 {
                     bin_arr.clear();
