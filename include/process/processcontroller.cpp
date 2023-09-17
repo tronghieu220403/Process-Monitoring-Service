@@ -44,6 +44,13 @@ namespace pm
 			}
 		#elif __linux__
 
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
+            {
+                return false;
+            }
+
+			p_info_ = ProcessInfo(pid);
+
 		#endif
 		
 		return success;
@@ -71,6 +78,12 @@ namespace pm
 			}
 			return false;
 		#elif __linux__
+
+            if (std::filesystem::is_directory("/proc/" + std::to_string(GetPid())) == false)
+            {
+                return 0;
+            }
+
 			return false;
 		#endif
 	}

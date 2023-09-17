@@ -220,7 +220,9 @@ namespace pm
                     percent *= 100;
                 #elif __linux__
 
-                    percent = static_cast<double>(now_process_cpu_unit - last_process_cpu_unit_) * 100 /(now_system_cpu_unit - last_system_cpu_unit_);
+                    percent = (double)(now_process_cpu_unit - last_process_cpu_unit_);
+                    percent /= (double)(now_system_cpu_unit - last_system_cpu_unit_);
+                    percent *= 100;
 
                 #endif
             }

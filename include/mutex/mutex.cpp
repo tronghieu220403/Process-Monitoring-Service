@@ -78,8 +78,7 @@ namespace pm
             {
                 sem_destroy(p_sema_);
                 p_sema_ = 0;
-                sema_ = 0;
-        
+                ZeroMem(&sema_, sizeof(sema_));
             }
         #endif
     }

@@ -18,8 +18,8 @@ namespace pm
             int buf_size_ = 0;
             HANDLE handle_pipe_ = 0;
         #elif __linux__
-            int fd_send_ = 0;
-            int fd_recv_ = 0;
+            int fd_send_ = -1;
+            int fd_recv_ = -1;
         #endif
 
         std::vector<char> last_receive_;

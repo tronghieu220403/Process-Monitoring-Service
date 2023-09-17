@@ -1,0 +1,31 @@
+[
+    {
+      "process": "chrome.exe",
+      "cpu": 10,
+      "memory": 200,
+      "disk": 1,
+      "network": 500
+    },
+    {
+      "process": "devenv.exe",
+      "cpu": 50,
+      "memory": 100,
+      "disk": 10,
+      "network": 100
+    },
+    {
+        "process": "code",
+        "cpu": 0,
+        "memory": 0,
+        "disk": 0,
+        "network": 0
+    },
+    {
+        "process": "firefox",
+        "cpu": 0,
+        "memory": 0,
+        "disk": 0,
+        "network": 0
+      }
+  ]
+  

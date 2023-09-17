@@ -129,6 +129,7 @@ double ProcessDiskStats::GetCurrentSpeed()
         if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
         {
             last_speed_ = 0;
+            return 0;
         }
 
         now_time = clock();

@@ -78,7 +78,7 @@ namespace pm
             outfile << "Name=" << exe_full_path_ << std::endl;
             outfile << "Comment[en_US]=\nComment=" << std::endl;
             outfile.close();
-
+            success = true;
         #endif
         return success;
     }
