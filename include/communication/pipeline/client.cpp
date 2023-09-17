@@ -124,19 +124,19 @@ namespace pm
 
             std::string client_recv = "/tmp/" + server_name_ + "serversend";
 
-            fd_recv_ = open(client_recv.data(), O_RDONLY | O_NONBLOCK);
+            fd_recv_ = open(client_recv.data(), O_RDONLY);
 
             std::string client_send = "/tmp/" + server_name_ + "serverrecv";
 
-            fd_send_ = open(client_send.data(), O_WRONLY | O_NONBLOCK);
+            fd_send_ = open(client_send.data(), O_WRONLY);
             
             if (fd_send_ < 0 || fd_recv_ < 0)
             {
                 Close();
                 return false;
             }
-            
-            std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
+
+            //std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
 
         #endif
 
@@ -222,11 +222,11 @@ namespace pm
 
         #elif __linux__
 
-            std::cout << "Receiving..." << std::endl;
+            //std::cout << "Receiving..." << std::endl;
 
             if (fd_recv_ < 0)
             {
-                std::cout << "Recv false in line 227 client.cpp" << std::endl;
+                //std::cout << "Recv false in line 227 client.cpp" << std::endl;
 
                 return false;
             }
@@ -240,14 +240,13 @@ namespace pm
                 if (success == -1)
                 {
                     Close();
-                    std::cout << "Recv false in line 241 client.cpp" << std::endl;perror("");
-
+                    //std::cout << "Recv false in line 243 client.cpp" << std::endl;perror("");
                     return false;
                 }
                 cur_ptr += success;
             }
             
-            std::cout << n_bytes << std::endl;
+            //std::cout << n_bytes << std::endl;
 
             cur_ptr = 0;
             
@@ -256,14 +255,14 @@ namespace pm
                 success = read(fd_recv_, &type + cur_ptr, sizeof(int) - cur_ptr);
                 if (success == -1)
                 {
-                    std::cout << "Recv false in line 257 client.cpp" << std::endl;perror("");
+                    //std::cout << "Recv false in line 257 client.cpp" << std::endl;perror("");
                     Close();
                     return false;
                 }
                 cur_ptr += success;
             }
 
-            std::cout << type << std::endl;
+            //std::cout << type << std::endl;
 
             cur_receive_.resize(n_bytes);
             cur_ptr = 0;
@@ -273,7 +272,7 @@ namespace pm
                 success = read(fd_recv_, &cur_receive_[cur_ptr], n_bytes - cur_ptr);
                 if (success == -1)
                 {
-                    std::cout << "Recv false in line 274 client.cpp" << std::endl;perror("");
+                    //std::cout << "Recv false in line 274 client.cpp" << std::endl;perror("");
                     Close();
                     return false;
                 }
@@ -285,7 +284,7 @@ namespace pm
         last_receive_ = cur_receive_;
         last_message_type_ = type;
         
-        std::cout << "Recv success, type: " << type << ", content: " << CharVectorToString(cur_receive_) << std::endl;
+        //std::cout << "Recv success, type: " << type << ", content: " << CharVectorToString(cur_receive_) << std::endl;
 
         return true;
     }
@@ -303,7 +302,7 @@ namespace pm
 
             if (fd_send_ < 0)
             {
-                std::cout << "Send failed in line 304 client.cpp" << std::endl;
+                //std::cout << "Send failed in line 304 client.cpp" << std::endl;
                 return false;
             }
 
@@ -345,14 +344,14 @@ namespace pm
                 
                 if (bytes_written == -1)
                 {
-                    std::cout << "Send failed in line 346 client.cpp" << std::endl;
+                    //std::cout << "Send failed in line 346 client.cpp" << std::endl;
                     PipelineClient::Close();
                     return false;
                 }
 
                 cur_ptr += bytes_written;
             }
-            std::cout << "Send Oke" << std::endl;
+            //std::cout << "Send Oke" << std::endl;
 
         #endif
 

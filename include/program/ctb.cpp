@@ -98,7 +98,7 @@ namespace pm
         client = PipelineClient("processmonitoringpipe");
         while(true)
         {
-            std::cout << "Connecting..." << std::endl;
+            //std::cout << "Connecting..." << std::endl;
             while(true)
             {
                 if (client.ConnectToPipeServer() == true)
@@ -108,7 +108,7 @@ namespace pm
                 Sleep(1000);
             }
 
-            std::cout << "Server Connected" << std::endl;
+            //std::cout << "Server Connected" << std::endl;
 
             UpdateConfig("config.json");
             
@@ -116,14 +116,14 @@ namespace pm
             {
                 if (client.TryGetMessage() == false)
                 {
-                    std::cout << "Server Disconnected" << std::endl;
+                    //std::cout << "Server Disconnected" << std::endl;
                     Sleep(500);
                     break;
 
                 }
                 if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
                 {
-                    std::cout << "Get messages" << std::endl;
+                    //std::cout << "Get messages" << std::endl;
                     std::vector<char> v_msg = client.GetLastMessage();
                     std::string msg(v_msg.begin(), v_msg.end());
                     GetLog(msg);

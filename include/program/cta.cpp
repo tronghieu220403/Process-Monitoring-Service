@@ -71,12 +71,15 @@ namespace pm
 
     void CTA::Monitoring()
     {
+        CTA::UpdateConfig();
+
         while(true)
         {
             Sleep(500);
             inner_mutex_.Lock();
             for (auto& ps : process_)
             {
+                //std::cout << ps.GetProcessController()->GetPid() << std::endl;
                 ps.UpdateProcessStats();
                 ps.CheckProcessStats();
                 if ((ps.GetProcessLogger()->GetMessage()).size() != 0)
@@ -94,7 +97,11 @@ namespace pm
                 log_path.resize(1000);
                 GetCurrentDir(&log_path[0], 1000);
                 log_path.resize(strlen(&log_path[0]));
-                log_path.push_back('\\');
+                #ifdef _WIN32
+                    log_path.push_back('\\');
+                #elif __linux__
+                    log_path.push_back('/');
+                #endif
                 std::string log_name = "pm_logs.log";
                 for (char c: log_name)
                 {
@@ -115,7 +122,7 @@ namespace pm
         #endif
         while(true)
         {
-            std::cout << "Creating" << std::endl;
+            //std::cout << "Creating" << std::endl;
             while(true)
             {
                 if (server.CreateServer() == true)
@@ -130,13 +137,13 @@ namespace pm
                 Sleep(100);
             }
 
-            std::cout << "Client connected" << std::endl;
+            //std::cout << "Client connected" << std::endl;
 
             while(true)
             {
                 if (server.TryGetMessage() == false)
                 {
-                    std::cout << "Client disconnected" << std::endl;
+                    //std::cout << "Client disconnected" << std::endl;
                     Sleep(500);
                     break;
                 }
@@ -144,7 +151,7 @@ namespace pm
                 {
                     if (server.GetLastMessageType() == Command::CTB_NOTI_CONFIG)
                     {
-                        std::cout << "Get messages" << std::endl;
+                        //std::cout << "Get messages" << std::endl;
 
                         inner_mutex_.Lock();
                         UpdateConfig();
