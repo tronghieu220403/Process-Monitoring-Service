@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="pm::PipelineClient">
+    <Position X="17.5" Y="20.25" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAIAAADACEAEgAQAAAAABAQAoAAAAAAAQDQAQg=</HashCode>
+      <FileName>include\communication\pipeline\client.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::CTA">
+    <Position X="22.75" Y="11.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>YEIAAhBAAAABAAACAAgAAAAAAAAAAAAgAAAAAAAQAQI=</HashCode>
+      <FileName>include\program\cta.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="server" />
+      <Field Name="cta_log_mutex_" />
+      <Field Name="inner_mutex_" />
+      <Field Name="config_mutex_" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="pm::CTB">
+    <Position X="16.5" Y="16.75" Width="4.25" />
+    <AssociationLine Name="cta_log_mutex_" Type="pm::NamedMutex" FixedToPoint="true">
+      <Path>
+        <Point X="16.812" Y="16.75" />
+        <Point X="16.812" Y="14.978" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="config_mutex_" Type="pm::NamedMutex" FixedToPoint="true">
+      <Path>
+        <Point X="20.062" Y="16.75" />
+        <Point X="20.062" Y="14.978" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IAIAAgAAAAABAAAAAAgAAIAAAAAAAgAgAgAABAAAAQA=</HashCode>
+      <FileName>include\program\ctb.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="client" />
+      <Field Name="cta_log_mutex_" />
+      <Field Name="config_mutex_" />
+      <Field Name="inner_mutex_" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="pm::File" Collapsed="true">
+    <Position X="34" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAABAAAGAEAAAAAAGAEAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\file\file.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::Logger">
+    <Position X="18.25" Y="2" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>ACEQAAAQAAIIgAAAAEAAAAIAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>include\logs\logger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::ProcessController">
+    <Position X="11.75" Y="5.5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAEACIAAAAAAAAAAAEAACAAAAQBAAAAQAAAgAAKAAAA=</HashCode>
+      <FileName>include\process\processcontroller.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="p_info_" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="pm::Process">
+    <Position X="12.75" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAiAAAAAAAABAAAAAAAAAwAIAJAA=</HashCode>
+      <FileName>include\process\process.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::NamedMutex">
+    <Position X="16.75" Y="11.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>ggAQAAAIAAAAEABAAAAAAAAgAACIAAQAAAAAAACAAAA=</HashCode>
+      <FileName>include\mutex\mutex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::ProcessCpuStats">
+    <Position X="1.25" Y="0.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAgCAAAAAAAAAAAABAAAQAAAIgAAIBAwA=</HashCode>
+      <FileName>include\process\processcpu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::ProcessDiskStats">
+    <Position X="6.75" Y="0.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAIAAAAAAAAAJAAABEBAAAAAAAIAAAEAAAA=</HashCode>
+      <FileName>include\process\processdisk.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::ProcessInfo">
+    <Position X="7" Y="4.75" Width="4" />
+    <AssociationLine Name="cpu_usage_" Type="pm::ProcessCpuStats" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7" Y="5.689" />
+        <Point X="2.943" Y="5.689" />
+        <Point X="2.943" Y="5.354" />
+        <Point X="2.938" Y="5.354" />
+        <Point X="2.938" Y="5.19" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AwAYAAAAAAAAAwAAAAAAIEAAQBDAAgDAAAACIAIgAAI=</HashCode>
+      <FileName>include\process\processinfo.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="memory_usage_" />
+      <Field Name="cpu_usage_" />
+      <Field Name="disk_usage_" />
+      <Field Name="network_usage_" />
+      <Field Name="last_usage_" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="pm::ProcessJsonConfiguration" Collapsed="true">
+    <Position X="35.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAEAIAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>include\configuration\processjsonconfiguration.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::ProcessLogger">
+    <Position X="17.75" Y="5.75" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAQAAAAAAAAAAAAIAAQgAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>include\logs\processlogger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::ProcessNetworkStats">
+    <Position X="11.25" Y="10.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAACBAAAAAAAAAgAAAAABABAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>include\process\processnetwork.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::ProcessSupervision">
+    <Position X="6" Y="13.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAACAAEQACAAAAAIAAAIECCAUEACAAI=</HashCode>
+      <FileName>include\process\processsupervision.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="max_usage_" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="pm::ProcessMemoryStats">
+    <Position X="0.5" Y="6.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAASQ=</HashCode>
+      <FileName>include\process\processmem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::Registry" Collapsed="true">
+    <Position X="34" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAEIIQAAAACAACAAABAAAAAABAAIAACAAAA=</HashCode>
+      <FileName>include\registry\registry.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::PipelineServer">
+    <Position X="28" Y="10.5" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAICCQAYACADBAEAEiAUAAAAAAAQAoAAAAAAAQDQAAg=</HashCode>
+      <FileName>include\communication\pipeline\server.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pm::StartUpProgram" Collapsed="true">
+    <Position X="35.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAEAAAAAAAABCAAAAAEAAgAAAAA=</HashCode>
+      <FileName>include\configuration\startupprogram.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="pm::MonitoringComponent">
+    <Position X="7.25" Y="10.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAQgAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>include\ulti\collections.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="pm::ProcessLoggerType" Collapsed="true">
+    <Position X="35.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACgAAAAAAEAAEAAAA=</HashCode>
+      <FileName>include\ulti\collections.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="pm::Command" Collapsed="true">
+    <Position X="34" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>include\ulti\collections.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
