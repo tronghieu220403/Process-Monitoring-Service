@@ -14,7 +14,7 @@
                 "${workspaceFolder}/include/*/*/*.cpp",
                 "${workspaceFolder}/${fileBasenameNoExtension}.cpp",
                 "-o",
-                "${workspaceFolder}/release/x64/linux/${fileBasenameNoExtension}"
+                "${workspaceFolder}/binary release/x64/linux/${fileBasenameNoExtension}"
             ],
             "problemMatcher": [
                 "$gcc"
