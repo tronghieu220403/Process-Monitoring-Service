@@ -72,7 +72,7 @@
 #ifdef _WIN32
     #define ZeroMem(data,size) ZeroMemory(data,size)
 #elif __linux__
-    #define ZeroMem(data,sz) memset(data,size)
+    #define ZeroMem(data,size) memset(data, 0, size)
 #endif
 
 #ifdef _WIN32

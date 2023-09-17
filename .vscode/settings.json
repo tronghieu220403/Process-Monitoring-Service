@@ -86,6 +86,7 @@
         "random": "cpp",
         "numbers": "cpp",
         "valarray": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "semaphore": "cpp"
     }
 }

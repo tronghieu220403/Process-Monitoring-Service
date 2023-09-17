@@ -115,6 +115,7 @@ namespace pm
         #endif
         while(true)
         {
+            std::cout << "Creating" << std::endl;
             while(true)
             {
                 if (server.CreateServer() == true)
@@ -135,15 +136,16 @@ namespace pm
             {
                 if (server.TryGetMessage() == false)
                 {
-                    if (!server.IsActive())
-                    {
-                        break;
-                    }
+                    std::cout << "Client disconnected" << std::endl;
+                    Sleep(500);
+                    break;
                 }
                 else
                 {
                     if (server.GetLastMessageType() == Command::CTB_NOTI_CONFIG)
                     {
+                        std::cout << "Get messages" << std::endl;
+
                         inner_mutex_.Lock();
                         UpdateConfig();
                         inner_mutex_.Unlock();

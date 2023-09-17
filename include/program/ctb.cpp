@@ -46,11 +46,6 @@ namespace pm
             config_mutex_.Unlock();
             // named mutex unlock for registry
 
-            if (client.IsActive())
-            {
-                client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
-            }
-
         #elif __linux__
             
             std::string pm_config_path = GetCurrentUserPath() + "/.config/Process Monitoring";
@@ -77,13 +72,14 @@ namespace pm
 
             config_mutex_.Unlock();
 
-            if (client.IsActive())
-            {
-                client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
-
-            }
 
         #endif
+
+        if (client.IsActive())
+        {
+            client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
+        }
+
     }
 
     void CTB::GetLog(const std::string& cta_log_path)
@@ -102,6 +98,7 @@ namespace pm
         client = PipelineClient("processmonitoringpipe");
         while(true)
         {
+            std::cout << "Connecting..." << std::endl;
             while(true)
             {
                 if (client.ConnectToPipeServer() == true)
@@ -111,17 +108,22 @@ namespace pm
                 Sleep(1000);
             }
 
+            std::cout << "Server Connected" << std::endl;
+
             UpdateConfig("config.json");
             
             while(true)
             {
                 if (client.TryGetMessage() == false)
                 {
-                    break;
+                    std::cout << "Server Disconnected" << std::endl;
                     Sleep(500);
+                    break;
+
                 }
                 if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
                 {
+                    std::cout << "Get messages" << std::endl;
                     std::vector<char> v_msg = client.GetLastMessage();
                     std::string msg(v_msg.begin(), v_msg.end());
                     GetLog(msg);
