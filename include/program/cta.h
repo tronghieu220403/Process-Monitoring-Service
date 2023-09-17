@@ -36,6 +36,8 @@ namespace pm
         std::string log_info_;
         PipelineServer server;
         
+        bool new_log_ = false;
+        std::vector<char> v_log_path_;
         NamedMutex cta_log_mutex_;
         NamedMutex inner_mutex_;
         NamedMutex config_mutex_;
@@ -44,6 +46,8 @@ namespace pm
         void AddToStartup();
         void UpdateConfig();
         void Monitoring();
+        void RecvCommunication();
+        void SendCommunication();
         void CommunicateWithCtb();
     };
 }

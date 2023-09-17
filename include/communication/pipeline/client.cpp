@@ -111,7 +111,8 @@ namespace pm
             {
                 return true;
             }
-            if (GetLastError() != ERROR_PIPE_BUSY)
+            int err = GetLastError();
+            if (err != ERROR_PIPE_BUSY)
             {
                 return false;
             }
@@ -164,40 +165,36 @@ namespace pm
             while(cur_ptr < 4)
             {
                 success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
-                if (!success || bytes_read == 0)
+                if (!success)
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
                         Close();
                         return false;
                     }
-                    else
-                    {
-                        return false;
-                    }
                 }
                 cur_ptr += bytes_read;
             }
+
+            std::cout << n_bytes << std::endl;
             
             cur_ptr = 0;
             bytes_read = 0;
             while(cur_ptr < 4)
             {
                 success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
-                if (!success || bytes_read == 0)
+                if (!success)
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
                         Close();
                         return false;
                     }
-                    else
-                    {
-                        return false;
-                    }
                 }
                 cur_ptr += bytes_read;
             }
+
+            std::cout << type << std::endl;
 
             cur_receive_.resize(n_bytes);
             cur_ptr = 0;
@@ -205,15 +202,11 @@ namespace pm
             while (cur_ptr < n_bytes)
             {
                 success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, nullptr);
-                if (!success || bytes_read == 0)
+                if (!success)
                 {
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
                         Close();
-                        return false;
-                    }
-                    else
-                    {
                         return false;
                     }
                 }
@@ -328,11 +321,15 @@ namespace pm
         
         #ifdef _WIN32
 
-            success = WriteFile(handle_pipe_, &send[0], static_cast<int>(send.size()), &bytes_written, nullptr);
-
-            if (!success || bytes_written != send.size())
+            long long cur_ptr = 0;
+            while (cur_ptr < send.size())
             {
-                return false;
+                success = WriteFile(handle_pipe_, &send[cur_ptr], static_cast<int>(send.size()- cur_ptr), &bytes_written, nullptr);
+                if (!success)
+                {
+                    return false;
+                }
+                cur_ptr += bytes_written;
             }
     
         #elif __linux__

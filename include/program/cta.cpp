@@ -13,6 +13,21 @@ namespace pm
         config_mutex_(NamedMutex("config_reg")),
         inner_mutex_(NamedMutex(""))
     {
+        std::vector<char> log_path;
+        log_path.resize(1000);
+        GetCurrentDir(&log_path[0], 1000);
+        log_path.resize(strlen(&log_path[0]));
+#ifdef _WIN32
+        log_path.push_back('\\');
+#elif __linux__
+        log_path.push_back('/');
+#endif
+        for (std::string log_name = "pm_logs.log"; char c : log_name)
+        {
+            log_path.push_back(c);
+        }
+            v_log_path_ = log_path;
+
     }
 
     void CTA::AddToStartup()
@@ -73,7 +88,10 @@ namespace pm
     {
         CTA::UpdateConfig();
 
-        while(true)
+        long long cnt = 0;
+        std::string log;
+
+        while (true)
         {
             Sleep(500);
             inner_mutex_.Lock();
@@ -85,31 +103,75 @@ namespace pm
                 if ((ps.GetProcessLogger()->GetMessage()).size() != 0)
                 {
                     // named mutex lock for log file
-                    cta_log_mutex_.Lock();
-                    ps.GetProcessLogger()->WriteLog();
-                    cta_log_mutex_.Unlock();
+                    //cta_log_mutex_.Lock();
+                    //iii++;
+                    //std::cout << "Lock log " << iii << std::endl;
+                    log.append(ps.GetProcessLogger()->GetMessage());
+                    ps.GetProcessLogger()->SetMessage("");
+                    //cta_log_mutex_.Unlock();
                     // named mutex unlock for log file
                 }
             }
-            if (server.IsActive())
+
+            if (log.size() > 100)
             {
-                std::vector<char> log_path;
-                log_path.resize(1000);
-                GetCurrentDir(&log_path[0], 1000);
-                log_path.resize(strlen(&log_path[0]));
-                #ifdef _WIN32
-                    log_path.push_back('\\');
-                #elif __linux__
-                    log_path.push_back('/');
-                #endif
-                std::string log_name = "pm_logs.log";
-                for (char c: log_name)
-                {
-                    log_path.push_back(c);
-                }
-                server.TrySendMessage(Command::CTA_SEND_LOGS, log_path);
+                cta_log_mutex_.Lock();
+                Logger(log).WriteLog();
+                log.clear();
+                cta_log_mutex_.Unlock();
+            }
+            cnt++;
+            if (server.IsActive() && cnt % 10 == 0)
+            {
+                new_log_ = true;
             }
             inner_mutex_.Unlock();
+        }
+    }
+
+    void CTA::RecvCommunication()
+    {
+        while (true)
+        {
+            if (server.TryGetMessage() == false)
+            {
+                Sleep(500);
+                return;
+            }
+            else
+            {
+                if (server.GetLastMessageType() == Command::CTB_NOTI_CONFIG)
+                {
+                    inner_mutex_.Lock();
+                    UpdateConfig();
+                    inner_mutex_.Unlock();
+                }
+                Sleep(500);
+            }
+        }
+    }
+
+    void CTA::SendCommunication()
+    {
+        while (true)
+        {
+            if (new_log_ == true)
+            {
+                inner_mutex_.Lock();
+                new_log_ = false;
+                inner_mutex_.Lock();
+                std::cout << "Send msg" << std::endl;
+                if (server.TrySendMessage(Command::CTA_SEND_LOGS, v_log_path_) == false)
+                {
+                    return;
+                }
+                std::cout << "Send oke.\n";
+            }
+            if (!server.IsActive())
+            {
+                return;
+            }
+            Sleep(500);
         }
     }
 
@@ -122,7 +184,7 @@ namespace pm
         #endif
         while(true)
         {
-            //std::cout << "Creating" << std::endl;
+            std::cout << "Server Creating...\n";
             while(true)
             {
                 if (server.CreateServer() == true)
@@ -131,36 +193,24 @@ namespace pm
                 }
                 Sleep(1000);
             }
-            
-            while(server.ListenToClient() == false)
-            {
+            std::cout << "Server Created...\n";
+            while (server.ListenToClient() == false){
                 Sleep(100);
             }
 
-            //std::cout << "Client connected" << std::endl;
+            std::cout << "Client connected" << std::endl;
 
-            while(true)
-            {
-                if (server.TryGetMessage() == false)
-                {
-                    //std::cout << "Client disconnected" << std::endl;
-                    Sleep(500);
-                    break;
-                }
-                else
-                {
-                    if (server.GetLastMessageType() == Command::CTB_NOTI_CONFIG)
-                    {
-                        //std::cout << "Get messages" << std::endl;
+            std::jthread recv(std::bind_front(&pm::CTA::RecvCommunication, this));
+            std::jthread send(std::bind_front(&pm::CTA::SendCommunication, this));
+            recv.join();
+            send.join();
 
-                        inner_mutex_.Lock();
-                        UpdateConfig();
-                        inner_mutex_.Unlock();
-                    }
-                    Sleep(500);
-                }
-            }
+            std::cout << "Client disconnected" << std::endl;
+
+            Sleep(100);
 
         }
     }
+
+    
 }

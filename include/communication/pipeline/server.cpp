@@ -74,7 +74,7 @@ namespace pm
     bool PipelineServer::IsActive()
     {
         #ifdef _WIN32
-            if (handle_pipe_ == nullptr)
+            if (handle_pipe_ == nullptr || connected_ == false)
             {
                 return false;
             }
@@ -135,8 +135,8 @@ namespace pm
                 PIPE_ACCESS_DUPLEX,         // read/write access 
                 PIPE_TYPE_MESSAGE |         // message type pipe 
                 PIPE_READMODE_MESSAGE |     // message-read mode 
-                //PIPE_NOWAIT,                // blocking mode: NON-BLOCKING
-                PIPE_WAIT,                  // blocking mode: BLOCKING
+                PIPE_NOWAIT,                // blocking mode: NON-BLOCKING
+                //PIPE_WAIT,                  // blocking mode: BLOCKING
                 max_connection_,            // max. instances  
                 buf_size_ + 100,                  // output buffer size 
                 buf_size_ + 100,                  // input buffer size 
@@ -199,7 +199,8 @@ namespace pm
     {        
         #ifdef _WIN32
 
-            return ConnectNamedPipe(handle_pipe_, nullptr) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+            connected_ = ConnectNamedPipe(handle_pipe_, nullptr) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+            return connected_;
 
         #elif __linux__
             return true;
@@ -234,10 +235,6 @@ namespace pm
                         PipelineServer::Close();
                         return false;
                     }
-                    else
-                    {
-                        return false;
-                    }
                 }
                 cur_ptr += bytes_read;
             }
@@ -255,10 +252,6 @@ namespace pm
                         PipelineServer::Close();
                         return false;
                     }
-                    else
-                    {
-                        return false;
-                    }
                 }
                 cur_ptr += bytes_read;
             }
@@ -274,10 +267,6 @@ namespace pm
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
                         PipelineServer::Close();
-                        return false;
-                    }
-                    else
-                    {
                         return false;
                     }
                 }
@@ -391,12 +380,19 @@ namespace pm
         
         #ifdef _WIN32
 
-            success = WriteFile(handle_pipe_, &send[0], send.size(), &bytes_written, nullptr);
-
-            if (!success || bytes_written != send.size())
+            int cur_ptr = 0;
+            bytes_written = 0;
+            while (cur_ptr < send.size())
             {
-                return false;
+                success = WriteFile(handle_pipe_, &send[0 + cur_ptr], send.size() - cur_ptr, &bytes_written, nullptr);
+                if (!success)
+                {
+                    Close();
+                    return false;
+                }
+                cur_ptr += bytes_written;
             }
+
     
         #elif __linux__
 
@@ -427,6 +423,7 @@ namespace pm
             if (handle_pipe_ != nullptr)
             {
                 CloseHandle(handle_pipe_);
+                connected_ = 0;
                 handle_pipe_ = nullptr;
             }
         #elif __linux__

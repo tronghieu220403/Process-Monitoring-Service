@@ -47,6 +47,8 @@ namespace pm
         NamedMutex config_mutex_;
         NamedMutex inner_mutex_;
 
+        bool new_config_ = true;
+
         #ifdef _WIN32
             HANDLE handle_pipe_;
         #elif __linux__
@@ -57,6 +59,8 @@ namespace pm
         CTB();
         void UpdateConfig(const std::string& file_path);
         void GetLog(const std::string& cta_logs_path);
+        void RecvCommunication();
+        void SendCommunication();
         void CommunicateWithCta();
     };
 }

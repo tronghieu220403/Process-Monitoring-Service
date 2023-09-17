@@ -18,6 +18,7 @@ namespace pm
         int last_message_type_ = 0;
 
         #ifdef _WIN32
+            bool connected_ = false;
             int buf_size_ = 0;
             int max_connection_ = 0;
             HANDLE handle_pipe_ = 0;

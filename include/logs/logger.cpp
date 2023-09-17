@@ -66,7 +66,6 @@ namespace pm
         std::ofstream ofs(file_name, std::ios_base::app);
         ofs.write(&message_[0], strlen(&message_[0]));
         ofs.close();
-
     }
 
 }

@@ -74,23 +74,61 @@ namespace pm
 
 
         #endif
-
-        if (client.IsActive())
-        {
-            client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>());
-        }
-
+        inner_mutex_.Lock();
+        new_config_ = true;
+        inner_mutex_.Unlock();
     }
 
     void CTB::GetLog(const std::string& cta_log_path)
     {
         std::string log_file_name = "pm_logs.log";
-        auto ctb_log = File(log_file_name);
+        std::cout << "Lock" << std::endl;
         cta_log_mutex_.Lock();
+        auto ctb_log = File(log_file_name);
         ctb_log.AppendFromFile(cta_log_path);
         auto cta_log = File(cta_log_path);
         cta_log.SelfDelete();
         cta_log_mutex_.Unlock();
+        std::cout << "Unlock" << std::endl;
+
+    }
+
+    void CTB::RecvCommunication()
+    {
+        while (true)
+        {
+            std::cout << "Receiving..." << std::endl;
+            if (client.TryGetMessage() == false)
+            {
+                std::cout << "Server Disconnected" << std::endl;
+                return;
+            }
+            if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
+            {
+                std::vector<char> v_msg = client.GetLastMessage();
+                std::string msg(v_msg.begin(), v_msg.end());
+                GetLog(msg);
+            }
+            Sleep(500);
+        }
+    }
+
+    void CTB::SendCommunication()
+    {
+        while (true)
+        {
+            if (new_config_ == true)
+            {
+                inner_mutex_.Lock();
+                new_config_ = false;
+                inner_mutex_.Unlock();
+                if (client.TrySendMessage(Command::CTB_NOTI_CONFIG, std::vector<char>()) == false)
+                {
+                    return;
+                }
+            }
+            Sleep(500);
+        }
     }
 
     void CTB::CommunicateWithCta()
@@ -98,7 +136,7 @@ namespace pm
         client = PipelineClient("processmonitoringpipe");
         while(true)
         {
-            //std::cout << "Connecting..." << std::endl;
+            std::cout << "Connecting..." << std::endl;
             while(true)
             {
                 if (client.ConnectToPipeServer() == true)
@@ -108,27 +146,12 @@ namespace pm
                 Sleep(1000);
             }
 
-            //std::cout << "Server Connected" << std::endl;
+            std::cout << "Server Connected" << std::endl;
 
-            UpdateConfig("config.json");
-            
-            while(true)
-            {
-                if (client.TryGetMessage() == false)
-                {
-                    //std::cout << "Server Disconnected" << std::endl;
-                    Sleep(500);
-                    break;
-
-                }
-                if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
-                {
-                    //std::cout << "Get messages" << std::endl;
-                    std::vector<char> v_msg = client.GetLastMessage();
-                    std::string msg(v_msg.begin(), v_msg.end());
-                    GetLog(msg);
-                }
-            }
+            std::jthread recv(std::bind_front(&pm::CTB::RecvCommunication, this));
+            std::jthread send(std::bind_front(&pm::CTB::SendCommunication, this));
+            recv.join();
+            send.join();
 
         }
     }

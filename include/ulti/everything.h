@@ -55,6 +55,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <thread>
+#include <functional>
 
 #ifdef __linux__
 

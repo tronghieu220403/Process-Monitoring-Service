@@ -28,7 +28,7 @@ namespace pm
 		bool SetHandle(const std::string& name);
 
 		#ifdef _WIN32
-			HANDLE process_handle_;
+			HANDLE process_handle_ = nullptr;
 		#elif __linux__
 
 		#endif
