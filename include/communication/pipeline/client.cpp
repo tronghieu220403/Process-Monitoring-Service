@@ -135,7 +135,9 @@ namespace pm
                 Close();
                 return false;
             }
-        
+            
+            std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
+
         #endif
 
         return true;

@@ -187,6 +187,8 @@ namespace pm
                 return false;
             }
 
+            std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
+
         #endif
 
         return true;
@@ -285,7 +287,7 @@ namespace pm
         #elif __linux__
             std::cout << "Receiving..." << std::endl;
 
-            if (fd_send_ == -1 || fd_send_ == 0)
+            if (fd_recv_ == -1 || fd_recv_ == 0)
             {
                 std::cout << "Recv fail in line 290 server.cpp" << std::endl;
                 PipelineServer::Close();
