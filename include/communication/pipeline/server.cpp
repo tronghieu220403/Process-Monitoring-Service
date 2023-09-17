@@ -187,7 +187,7 @@ namespace pm
                 return false;
             }
 
-            std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
+            //std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
 
         #endif
 
@@ -285,11 +285,11 @@ namespace pm
             }
 
         #elif __linux__
-            std::cout << "Receiving..." << std::endl;
+            //std::cout << "Receiving..." << std::endl;
 
             if (fd_recv_ == -1 || fd_recv_ == 0)
             {
-                std::cout << "Recv fail in line 290 server.cpp" << std::endl;
+                //std::cout << "Recv fail in line 290 server.cpp" << std::endl;
                 PipelineServer::Close();
                 return false;
             }
@@ -302,14 +302,14 @@ namespace pm
                 success = read(fd_recv_, &n_bytes + cur_ptr, sizeof(int) - cur_ptr);
                 if (success == -1)
                 {
-                    std::cout << "Recv fail in line 303 server.cpp" << std::endl;perror("");
+                    //std::cout << "Recv fail in line 303 server.cpp" << std::endl;perror("");
                     PipelineServer::Close();
                     return false;
                 }
                 cur_ptr += success;
             }
 
-            std::cout << n_bytes << std::endl;
+            //std::cout << n_bytes << std::endl;
 
             cur_ptr = 0;
             
@@ -318,7 +318,7 @@ namespace pm
                 success = read(fd_recv_, &type + cur_ptr, sizeof(int) - cur_ptr);
                 if (success == -1)
                 {
-                    std::cout << "Recv fail in line 319 server.cpp: " << std::endl;
+                    //std::cout << "Recv fail in line 319 server.cpp: " << std::endl;
                     perror("");
                     PipelineServer::Close();
                     return false;
@@ -326,7 +326,7 @@ namespace pm
                 cur_ptr += success;
             }
 
-            std::cout << type << std::endl;
+            //std::cout << type << std::endl;
 
             cur_receive_.resize(n_bytes);
             cur_ptr = 0;
@@ -336,7 +336,7 @@ namespace pm
                 success = read(fd_recv_, &cur_receive_[cur_ptr], n_bytes - cur_ptr);
                 if (success == -1)
                 {
-                    std::cout << "Recv fail in line 337 server.cpp" << std::endl;
+                    //std::cout << "Recv fail in line 337 server.cpp" << std::endl;
                     PipelineServer::Close();
                     return false;
                 }
@@ -348,7 +348,7 @@ namespace pm
         last_receive_ = cur_receive_;
         last_message_type_ = type;
 
-        std::cout << "Recv success, type: " << type << ", content: " << CharVectorToString(cur_receive_) << std::endl;
+        //std::cout << "Recv success, type: " << type << ", content: " << CharVectorToString(cur_receive_) << std::endl;
 
         return true;
 
@@ -367,7 +367,7 @@ namespace pm
 
             if (fd_send_ == -1 || fd_send_ == 0)
             {
-                std::cout << "Send fail in line 373 server.cpp" << std::endl;
+                //std::cout << "Send fail in line 373 server.cpp" << std::endl;
                 PipelineServer::Close();
                 return false;
             }
@@ -416,7 +416,7 @@ namespace pm
 
         #endif
 
-        std::cout << "Send oke" << std::endl;
+        //std::cout << "Send oke" << std::endl;
 
         return true;
     }
