@@ -82,43 +82,13 @@ namespace pm
             BOOL success = FALSE;
             int n_bytes = 0;
             
-            /*
-            success = ReadFile(handle_pipe_, &n_bytes, 0, &bytes_read, NULL);
-            if (!success || bytes_read == 0)
-            {   
-                if (GetLastError() == ERROR_BROKEN_PIPE)
-                {
-                    PipelineServer::Close();
-                    return false;
-                }
-            }
-            */
         #elif __linux__
 
-            if (fd_recv_ == 0 || fd_send_ == 0 || fd_recv_ == -1 || fd_send_ == -1)
+            if (fd_recv_ == 0 || fd_send_ == 0 || fd_recv_ == -1 || fd_send_ == -1 || connected_ == false)
             {
                 PipelineServer::Close();
                 return false;
             }
-            /*
-            unsigned long bytes_read = 0;
-            int success = 0;
-            int n_bytes = 0;
-            
-            success = read(fd_recv_, &n_bytes, 0);
-            if (success == -1)
-            {   
-                PipelineServer::Close();
-                return false;
-            }
-
-            success = write(fd_send_, &n_bytes, 0);
-            if (success == -1)
-            {   
-                PipelineServer::Close();
-                return false;
-            }
-            */
         #endif
 
         return true;
@@ -188,7 +158,7 @@ namespace pm
             }
 
             //std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
-
+            connected_ = true;
         #endif
 
         return true;
@@ -216,7 +186,7 @@ namespace pm
         long long type = 0;
 
         #ifdef _WIN32
-            if (handle_pipe_ == nullptr)
+            if (handle_pipe_ == nullptr || connected_ == false)
             {
                 return false;
             }
@@ -274,11 +244,9 @@ namespace pm
             }
 
         #elif __linux__
-            //std::cout << "Receiving..." << std::endl;
 
-            if (fd_recv_ == -1 || fd_recv_ == 0)
+            if (fd_recv_ == -1 || fd_recv_ == 0 || connected_ == false)
             {
-                //std::cout << "Recv fail in line 290 server.cpp" << std::endl;
                 PipelineServer::Close();
                 return false;
             }
@@ -298,8 +266,6 @@ namespace pm
                 cur_ptr += success;
             }
 
-            //std::cout << n_bytes << std::endl;
-
             cur_ptr = 0;
             
             while(cur_ptr < 4)
@@ -307,15 +273,12 @@ namespace pm
                 success = read(fd_recv_, &type + cur_ptr, sizeof(int) - cur_ptr);
                 if (success == -1)
                 {
-                    //std::cout << "Recv fail in line 319 server.cpp: " << std::endl;
                     perror("");
                     PipelineServer::Close();
                     return false;
                 }
                 cur_ptr += success;
             }
-
-            //std::cout << type << std::endl;
 
             cur_receive_.resize(n_bytes);
             cur_ptr = 0;
@@ -325,7 +288,6 @@ namespace pm
                 success = read(fd_recv_, &cur_receive_[cur_ptr], n_bytes - cur_ptr);
                 if (success == -1)
                 {
-                    //std::cout << "Recv fail in line 337 server.cpp" << std::endl;
                     PipelineServer::Close();
                     return false;
                 }
@@ -337,7 +299,6 @@ namespace pm
         last_receive_ = cur_receive_;
         last_message_type_ = type;
 
-        //std::cout << "Recv success, type: " << type << ", content: " << CharVectorToString(cur_receive_) << std::endl;
 
         return true;
 
@@ -348,13 +309,13 @@ namespace pm
     {
         // Write the reply to the pipe. 
         #ifdef _WIN32
-            if (handle_pipe_ == nullptr)
+            if (handle_pipe_ == nullptr || connected_ == false)
             {
                 return false;
             }
         #elif __linux__
 
-            if (fd_send_ == -1 || fd_send_ == 0)
+            if (fd_send_ == -1 || fd_send_ == 0 || connected_ == false)
             {
                 //std::cout << "Send fail in line 373 server.cpp" << std::endl;
                 PipelineServer::Close();
@@ -412,8 +373,6 @@ namespace pm
 
         #endif
 
-        //std::cout << "Send oke" << std::endl;
-
         return true;
     }
 
@@ -423,7 +382,7 @@ namespace pm
             if (handle_pipe_ != nullptr)
             {
                 CloseHandle(handle_pipe_);
-                connected_ = 0;
+                connected_ = false;
                 handle_pipe_ = nullptr;
             }
         #elif __linux__
@@ -437,6 +396,7 @@ namespace pm
                 close(fd_recv_);
                 fd_recv_ = -1;
             }
+            connected_ = false;
             fd_send_ = -1;
             fd_recv_ = -1;
         #endif

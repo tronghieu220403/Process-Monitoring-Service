@@ -82,25 +82,20 @@ namespace pm
     void CTB::GetLog(const std::string& cta_log_path)
     {
         std::string log_file_name = "pm_logs.log";
-        std::cout << "Lock" << std::endl;
         cta_log_mutex_.Lock();
         auto ctb_log = File(log_file_name);
         ctb_log.AppendFromFile(cta_log_path);
         auto cta_log = File(cta_log_path);
         cta_log.SelfDelete();
         cta_log_mutex_.Unlock();
-        std::cout << "Unlock" << std::endl;
-
     }
 
     void CTB::RecvCommunication()
     {
         while (true)
         {
-            std::cout << "Receiving..." << std::endl;
             if (client.TryGetMessage() == false)
             {
-                std::cout << "Server Disconnected" << std::endl;
                 return;
             }
             if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
@@ -127,6 +122,10 @@ namespace pm
                     return;
                 }
             }
+            if (!client.IsActive())
+            {
+                return;
+            }
             Sleep(500);
         }
     }
@@ -136,7 +135,6 @@ namespace pm
         client = PipelineClient("processmonitoringpipe");
         while(true)
         {
-            std::cout << "Connecting..." << std::endl;
             while(true)
             {
                 if (client.ConnectToPipeServer() == true)
@@ -145,8 +143,6 @@ namespace pm
                 }
                 Sleep(1000);
             }
-
-            std::cout << "Server Connected" << std::endl;
 
             std::jthread recv(std::bind_front(&pm::CTB::RecvCommunication, this));
             std::jthread send(std::bind_front(&pm::CTB::SendCommunication, this));

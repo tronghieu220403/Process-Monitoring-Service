@@ -97,19 +97,12 @@ namespace pm
             inner_mutex_.Lock();
             for (auto& ps : process_)
             {
-                //std::cout << ps.GetProcessController()->GetPid() << std::endl;
                 ps.UpdateProcessStats();
                 ps.CheckProcessStats();
                 if ((ps.GetProcessLogger()->GetMessage()).size() != 0)
                 {
-                    // named mutex lock for log file
-                    //cta_log_mutex_.Lock();
-                    //iii++;
-                    //std::cout << "Lock log " << iii << std::endl;
                     log.append(ps.GetProcessLogger()->GetMessage());
                     ps.GetProcessLogger()->SetMessage("");
-                    //cta_log_mutex_.Unlock();
-                    // named mutex unlock for log file
                 }
             }
 
@@ -160,12 +153,10 @@ namespace pm
                 inner_mutex_.Lock();
                 new_log_ = false;
                 inner_mutex_.Lock();
-                std::cout << "Send msg" << std::endl;
                 if (server.TrySendMessage(Command::CTA_SEND_LOGS, v_log_path_) == false)
                 {
                     return;
                 }
-                std::cout << "Send oke.\n";
             }
             if (!server.IsActive())
             {
@@ -184,7 +175,6 @@ namespace pm
         #endif
         while(true)
         {
-            std::cout << "Server Creating...\n";
             while(true)
             {
                 if (server.CreateServer() == true)
@@ -193,19 +183,14 @@ namespace pm
                 }
                 Sleep(1000);
             }
-            std::cout << "Server Created...\n";
             while (server.ListenToClient() == false){
                 Sleep(100);
             }
-
-            std::cout << "Client connected" << std::endl;
 
             std::jthread recv(std::bind_front(&pm::CTA::RecvCommunication, this));
             std::jthread send(std::bind_front(&pm::CTA::SendCommunication, this));
             recv.join();
             send.join();
-
-            std::cout << "Client disconnected" << std::endl;
 
             Sleep(100);
 

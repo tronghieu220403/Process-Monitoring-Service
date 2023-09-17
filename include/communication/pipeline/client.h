@@ -14,6 +14,7 @@ namespace pm
     {
     private:
         std::string server_name_;
+        bool connected_ = false;
         #ifdef _WIN32
             int buf_size_ = 0;
             HANDLE handle_pipe_ = 0;
