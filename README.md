@@ -11,11 +11,12 @@ Folder structure
 ```
 .
 ├── Process-Monitoring-Report.pdf                        # Report in Vietnamese
-│   pm_ctb.cpp                                           # code for client
-│   pm_cta.cpp                                           # code for server
 │   │
 ├── Class diagram.png
 ├── Class diagram.cd
+│   │                
+│   pm_ctb.cpp                                           # code for client
+│   pm_cta.cpp                                           # code for server
 │   │                
 ├── inlucde
 │   └── communication                                            
