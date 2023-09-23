@@ -20,21 +20,9 @@
 int main()
 {
 	auto cta = std::make_shared<pm::CTA>();
-	cta->AddToStartup();
 	std::jthread connection_thread(&pm::CTA::CommunicateWithCtb, cta);
 	cta->Monitoring();
 
-	return 0;
-}
-
-#else
-
-#include <iostream>
-
-int main()
-{
-	pm::CTB ctb;
-	ctb.CommunicateWithCta();
 	return 0;
 }
 

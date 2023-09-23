@@ -14,7 +14,12 @@ namespace pm
     {
     private:
         std::string server_name_;
+        
+        std::vector<char> last_receive_;
+        int last_message_type_ = 0;
+
         bool connected_ = false;
+
         #ifdef _WIN32
             int buf_size_ = 0;
             HANDLE handle_pipe_ = 0;
@@ -22,9 +27,6 @@ namespace pm
             int fd_send_ = -1;
             int fd_recv_ = -1;
         #endif
-
-        std::vector<char> last_receive_;
-        int last_message_type_ = 0;
 
     public:
         PipelineClient() = default;

@@ -15,25 +15,14 @@
 
 #define _CTB
 
-#ifdef _CTA
-
-int main()
-{
-	auto cta = std::make_shared<pm::CTA>();
-	cta->AddToStartup();
-	std::jthread connection_thread(&pm::CTA::CommunicateWithCtb, cta);
-	cta->Monitoring();
-
-	return 0;
-}
-
-#else
+#ifdef _CTB
 
 #include <iostream>
 
 int main()
 {
 	pm::CTB ctb;
+	ctb.AddToStartUp();
 	ctb.CommunicateWithCta();
 	return 0;
 }

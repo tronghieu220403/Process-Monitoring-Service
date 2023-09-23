@@ -21,7 +21,6 @@
 #include "include/ulti/collections.h"
 #include "include/registry/registry.h"
 #include "include/communication/pipeline/server.h"
-#include "include/configuration/startupprogram.h"
 #include "include/mutex/mutex.h"
 #include "include/file/file.h"
 
@@ -43,7 +42,6 @@ namespace pm
         NamedMutex config_mutex_;
     public:
         CTA();
-        void AddToStartup();
         void UpdateConfig();
         void Monitoring();
         void RecvCommunication();

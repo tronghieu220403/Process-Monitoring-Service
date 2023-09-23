@@ -52,7 +52,7 @@ namespace pm
             PROCESS_MEMORY_COUNTERS_EX pmc{};
 
             GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-            last_mem_ = double(pmc.WorkingSetSize) / (1024*1024);
+            last_mem_ = double(pmc.WorkingSetSize) / (1024 * 1024);
             return last_mem_;
         #elif __linux__
             

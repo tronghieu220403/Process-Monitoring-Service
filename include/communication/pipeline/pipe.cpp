@@ -1,123 +1,99 @@
-
 #ifdef _VISUAL_STUDIO_WORKSPACE
-
-#include "client.h"
-
+#include "server.h"
 #else
+#include "include/communication/pipeline/pipe.h"
+#endif // _VISUAL_STUDIO_WORKSPACE
 
-#include "include/communication/pipeline/client.h"
-
-#endif
 
 namespace pm
 {
-    PipelineClient::PipelineClient(const std::string& server_pipe_name)
-    {
-        server_name_ = server_pipe_name;
-    };
-
-    void PipelineClient::SetServerPipeName(const std::string& server_pipe_name)
-    {
-        server_name_ = server_pipe_name;
-    }
 
 #ifdef _WIN32
-    void PipelineClient::SetBufferSize(int buf_size)
+
+    Pipeline::Pipeline(HANDLE handle_pipe)
+        : handle_pipe_(handle_pipe), connected_(true)
     {
-        buf_size_ = buf_size;
-    }
+        
+    };
+
+#elif __linux__
+
+    Pipeline::Pipeline(int fd_send, int fd_recv)
+        : fd_send_(fd_send), fd_recv_(fd_recv), connected_(true)
+    {
+        
+    };
+
 #endif
-    std::string PipelineClient::GetPipeName()
+
+
+    void Pipeline::SetPipeName(const std::string& pipe_name)
     {
-        return server_name_;
+        name_ = pipe_name;
     }
 
-    std::vector<char> PipelineClient::GetLastMessage()
+    #ifdef _WIN32
+        void Pipeline::SetConnect(HANDLE handle_pipe)
+        {
+            handle_pipe_ = handle_pipe;
+            connected_ = true;
+        }
+    #elif __linux__
+        void Pipeline::SetConnect(int fd_send, int fd_recv)
+        {
+            fd_send_ = fd_send;
+            fd_recv_ = fd_recv;
+            connected_ = true;
+        }
+    #endif
+
+    std::string Pipeline::GetPipeName()
+    {
+        return name_;
+    }
+
+    std::vector<char> Pipeline::GetLastMessage()
     {
         return last_receive_;
     }
 
-    int PipelineClient::GetLastMessageType()
+    int Pipeline::GetLastMessageType()
     {
         return last_message_type_;
     }
 
-    bool PipelineClient::IsActive()
+    #ifdef _WIN32
+        HANDLE Pipeline::GetHandle()
+        {
+            return handle_pipe_;
+        }
+    #elif __linux__
+        int Pipeline::GetFdSend()
+        {
+            return fd_send_;
+        }
+        int Pipeline::GetFdRecv()
+        {
+            return fd_recv_;
+        }
+    #endif
+
+
+    bool Pipeline::IsActive()
     {
         #ifdef _WIN32
             if (handle_pipe_ == nullptr || connected_ == false)
-            {
-                return false;
-            }
         #elif __linux__
             if (fd_recv_ == 0 || fd_send_ == 0 || fd_recv_ == -1 || fd_send_ == -1 || connected_ == false)
+        #endif
             {
                 Close();
                 return false;
             }
-        #endif
-
         return true;
-
     }
 
-    bool PipelineClient::ConnectToPipeServer()
-    {
-        #ifdef _WIN32
-            std::string server_pipe = R"(\\.\pipe\)" + server_name_;
-
-            handle_pipe_ = CreateFile(
-                (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
-                GENERIC_READ |  // read and write access 
-                GENERIC_WRITE,
-                0,              // no sharing 
-                nullptr,           // default security attributes
-                OPEN_EXISTING,  // opens existing pipe 
-                0,              // default attributes 
-                nullptr);          // no template file 
-
-            if (handle_pipe_ != INVALID_HANDLE_VALUE)
-            {
-                connected_ = true;
-                return true;
-            }
-            int err = GetLastError();
-            if (err != ERROR_PIPE_BUSY)
-            {
-                connected_ = false;
-                return false;
-            }
-            if (!WaitNamedPipe((std::wstring(server_name_.begin(), server_name_.end())).data(), 0))
-            {
-                connected_ = false;
-                return false;
-            }
-
-        #elif __linux__
-
-            std::string client_recv = "/tmp/" + server_name_ + "serversend";
-
-            fd_recv_ = open(client_recv.data(), O_RDONLY);
-
-            std::string client_send = "/tmp/" + server_name_ + "serverrecv";
-
-            fd_send_ = open(client_send.data(), O_WRONLY);
-            
-            if (fd_send_ < 0 || fd_recv_ < 0)
-            {
-                Close();
-                return false;
-            }
-
-            //std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
-
-        #endif
-        connected_ = true;
-        return true;
-        
-    }
-
-    bool PipelineClient::TryGetMessage()
+    bool Pipeline::TryGetMessage()
     {
         int success = 0;
         std::vector<char> cur_receive_;
@@ -136,9 +112,10 @@ namespace pm
             while(cur_ptr < 4)
             {
                 success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
-                if (!success)
+                if (!success && bytes_read == 0)
                 {   
-                    if (GetLastError() == ERROR_BROKEN_PIPE)
+                    DWORD error = GetLastError();
+                    if (error == ERROR_BROKEN_PIPE)
                     {
                         Close();
                         return false;
@@ -151,8 +128,9 @@ namespace pm
             bytes_read = 0;
             while(cur_ptr < 4)
             {
-                success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
-                if (!success)
+                
+                success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, NULL);
+                if (!success && bytes_read == 0)
                 {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
@@ -169,8 +147,8 @@ namespace pm
             while (cur_ptr < n_bytes)
             {
                 success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, nullptr);
-                if (!success)
-                {
+                if (!success && bytes_read == 0)
+                {   
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
                         Close();
@@ -182,12 +160,9 @@ namespace pm
 
         #elif __linux__
 
-            //std::cout << "Receiving..." << std::endl;
-
             if (fd_recv_ == -1 || fd_recv_ == -1 || connected_ == false)
             {
-                //std::cout << "Recv false in line 227 client.cpp" << std::endl;
-                Pipeline::Close();
+                Close();
                 return false;
             }
 
@@ -200,13 +175,10 @@ namespace pm
                 if (success == -1)
                 {
                     Close();
-                    //std::cout << "Recv false in line 243 client.cpp" << std::endl;perror("");
                     return false;
                 }
                 cur_ptr += success;
             }
-            
-            //std::cout << n_bytes << std::endl;
 
             cur_ptr = 0;
             
@@ -215,14 +187,11 @@ namespace pm
                 success = read(fd_recv_, &type + cur_ptr, sizeof(int) - cur_ptr);
                 if (success == -1)
                 {
-                    //std::cout << "Recv false in line 257 client.cpp" << std::endl;perror("");
                     Close();
                     return false;
                 }
                 cur_ptr += success;
             }
-
-            //std::cout << type << std::endl;
 
             cur_receive_.resize(n_bytes);
             cur_ptr = 0;
@@ -232,7 +201,6 @@ namespace pm
                 success = read(fd_recv_, &cur_receive_[cur_ptr], n_bytes - cur_ptr);
                 if (success == -1)
                 {
-                    //std::cout << "Recv false in line 274 client.cpp" << std::endl;perror("");
                     Close();
                     return false;
                 }
@@ -245,10 +213,11 @@ namespace pm
         last_message_type_ = type;
 
         return true;
+
     }
 
 
-    bool PipelineClient::TrySendMessage(int type, std::vector<char> data)
+    bool Pipeline::TrySendMessage(int type, std::vector<char> data)
     {
         // Write the reply to the pipe. 
         #ifdef _WIN32
@@ -258,8 +227,9 @@ namespace pm
             }
         #elif __linux__
 
-            if (fd_send_ < 0 || connected_ == false)
+            if (fd_send_ == -1 || fd_send_ == -1 || connected_ == false)
             {
+                Close();
                 return false;
             }
 
@@ -269,32 +239,27 @@ namespace pm
             int success = 0;
             std::vector<char> send;
 
-            #ifdef _WIN32
-                if (data.size() > buf_size_){
-                    return false;
-                }
-            #endif
-            long long sz = data.size();
-            send.resize(static_cast<long long>(4 + 4) + sz);
+            auto sz = static_cast<int>(data.size());
+            send.resize(4 + 4 + sz);
             memcpy(&send[0], &sz, 4);
             memcpy(&send[4], &type, 4);
-            if (sz != 0)
-            {
-                memcpy(&send[8], &data[0], sz);
-            }
+            memcpy(&send[8], &data[0], sz);
         
         #ifdef _WIN32
 
-            long long cur_ptr = 0;
+            int cur_ptr = 0;
+            bytes_written = 0;
             while (cur_ptr < send.size())
             {
-                success = WriteFile(handle_pipe_, &send[cur_ptr], static_cast<int>(send.size()- cur_ptr), &bytes_written, nullptr);
+                success = WriteFile(handle_pipe_, &send[0 + cur_ptr], send.size() - cur_ptr, &bytes_written, nullptr);
                 if (!success)
                 {
+                    Close();
                     return false;
                 }
                 cur_ptr += bytes_written;
             }
+
     
         #elif __linux__
 
@@ -305,22 +270,19 @@ namespace pm
                 
                 if (bytes_written == -1)
                 {
-                    //std::cout << "Send failed in line 346 client.cpp" << std::endl;
-                    PipelineClient::Close();
+                    Close();
                     return false;
                 }
 
                 cur_ptr += bytes_written;
             }
-            //std::cout << "Send Oke" << std::endl;
 
         #endif
 
         return true;
-
     }
 
-    void PipelineClient::Close()
+    void Pipeline::Close()
     {
         #ifdef _WIN32
             if (handle_pipe_ != nullptr)
@@ -330,24 +292,24 @@ namespace pm
                 handle_pipe_ = nullptr;
             }
         #elif __linux__
-            if (fd_send_ != -1)
+            if (fd_send_ != 0 && fd_send_ != -1)
             {
                 close(fd_send_);
                 fd_send_ = -1;
             }
-            if (fd_recv_ != -1)
+            if (fd_recv_ != 0 && fd_recv_ != -1)
             {
                 close(fd_recv_);
                 fd_recv_ = -1;
             }
+            connected_ = false;
             fd_send_ = -1;
             fd_recv_ = -1;
-            connected_ = false;
         #endif
     }
 
-    PipelineClient::~PipelineClient()
+    Pipeline::~Pipeline()
     {
-        PipelineClient::Close();
+        Close();
     }
 }

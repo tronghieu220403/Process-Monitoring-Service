@@ -30,13 +30,6 @@ namespace pm
 
     }
 
-    void CTA::AddToStartup()
-    {
-        StartUpProgram startup = StartUpProgram();
-        startup.SetThisProgram();
-        startup.Register();
-    }
-
     void CTA::UpdateConfig()
     {
         #ifdef _WIN32

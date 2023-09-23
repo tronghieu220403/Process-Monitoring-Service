@@ -25,6 +25,7 @@
 #include "E:/Code/Github/Process-Monitoring/include/file/file.h"
 #include "E:/Code/Github/Process-Monitoring/include/configuration/processjsonconfiguration.h"
 #include "E:/Code/Github/Process-Monitoring/include/mutex/mutex.h"
+#include "E:/Code/Github/Process-Monitoring/include/configuration/startupprogram.h"
 
 #else
 #include "include/process/processsupervision.h"
@@ -34,6 +35,8 @@
 #include "include/file/file.h"
 #include "include/configuration/processjsonconfiguration.h"
 #include "include/mutex/mutex.h"
+#include "include/configuration/startupprogram.h"
+
 #endif
 
 namespace pm
@@ -57,6 +60,7 @@ namespace pm
 
     public:
         CTB();
+        void AddToStartUp();
         void UpdateConfig(const std::string& file_path);
         void GetLog(const std::string& cta_logs_path);
         void RecvCommunication();

@@ -14,6 +14,14 @@ namespace pm
     {
     }
 
+    void CTB::AddToStartUp()
+    {
+        StartUpProgram startup = StartUpProgram();
+        startup.SetThisProgram();
+        startup.Register();
+    }
+
+
     void CTB::UpdateConfig(const std::string& file_path)
     {
         std::vector<char> config_json = File(file_path).ReadAll();
