@@ -3,53 +3,32 @@
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#include "E:/Code/Github/Process-Monitoring/include/communication/pipeline/pipe.h"
 #else
+#include "include/communication/pipeline/pipe.h"
 #include "include/ulti/everything.h"
 #endif
 
 namespace pm
 {
-    // Need to abstract a Pipe class 
-    class PipelineClient
+    class PipelineClient: public Pipeline
     {
     private:
-        std::string server_name_;
-        
-        std::vector<char> last_receive_;
-        int last_message_type_ = 0;
-
-        bool connected_ = false;
 
         #ifdef _WIN32
             int buf_size_ = 0;
-            HANDLE handle_pipe_ = 0;
-        #elif __linux__
-            int fd_send_ = -1;
-            int fd_recv_ = -1;
         #endif
 
     public:
         PipelineClient() = default;
-        PipelineClient(const std::string& server_pipe_name);
-
-        void SetServerPipeName(const std::string& server_pipe_name);
+        PipelineClient(const std::string& pipe_name);
         
         #ifdef _WIN32
             void SetBufferSize(int buf_size);
+            int GetBufferSize();
         #endif
-        std::string GetPipeName();
-        std::vector<char> GetLastMessage();
         
-        int GetLastMessageType();
-
         bool ConnectToPipeServer();
-
-        bool IsActive();
-
-        bool TryGetMessage();
-        bool TrySendMessage(int type, std::vector<char> data);
-
-        void Close();
 
         ~PipelineClient();
     };

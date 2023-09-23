@@ -11,62 +11,31 @@
 
 namespace pm
 {
-    PipelineClient::PipelineClient(const std::string& server_pipe_name)
+    PipelineClient::PipelineClient(const std::string& pipe_name)
     {
-        server_name_ = server_pipe_name;
+        Pipeline::SetPipelineName(pipe_name);
     };
 
-    void PipelineClient::SetServerPipeName(const std::string& server_pipe_name)
-    {
-        server_name_ = server_pipe_name;
-    }
-
 #ifdef _WIN32
+
     void PipelineClient::SetBufferSize(int buf_size)
     {
         buf_size_ = buf_size;
     }
+
+    int PipelineClient::GetBufferSize()
+    {
+        return buf_size_;
+    }
+
 #endif
-    std::string PipelineClient::GetPipeName()
-    {
-        return server_name_;
-    }
-
-    std::vector<char> PipelineClient::GetLastMessage()
-    {
-        return last_receive_;
-    }
-
-    int PipelineClient::GetLastMessageType()
-    {
-        return last_message_type_;
-    }
-
-    bool PipelineClient::IsActive()
-    {
-        #ifdef _WIN32
-            if (handle_pipe_ == nullptr || connected_ == false)
-            {
-                return false;
-            }
-        #elif __linux__
-            if (fd_recv_ == 0 || fd_send_ == 0 || fd_recv_ == -1 || fd_send_ == -1 || connected_ == false)
-            {
-                Close();
-                return false;
-            }
-        #endif
-
-        return true;
-
-    }
 
     bool PipelineClient::ConnectToPipeServer()
     {
         #ifdef _WIN32
-            std::string server_pipe = R"(\\.\pipe\)" + server_name_;
+            std::string server_pipe = R"(\\.\pipe\)" + Pipeline::GetPipelineName();
 
-            handle_pipe_ = CreateFile(
+            HANDLE handle_pipe = CreateFile(
                 (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
                 GENERIC_READ |  // read and write access 
                 GENERIC_WRITE,
@@ -76,276 +45,41 @@ namespace pm
                 0,              // default attributes 
                 nullptr);          // no template file 
 
-            if (handle_pipe_ != INVALID_HANDLE_VALUE)
+            if (handle_pipe != INVALID_HANDLE_VALUE)
             {
-                connected_ = true;
-                return true;
-            }
-            int err = GetLastError();
-            if (err != ERROR_PIPE_BUSY)
-            {
-                connected_ = false;
-                return false;
-            }
-            if (!WaitNamedPipe((std::wstring(server_name_.begin(), server_name_.end())).data(), 0))
-            {
-                connected_ = false;
-                return false;
+                Pipeline::SetPipelineHandle(handle_pipe);
+                Pipeline::SetConnectStatus(true);
             }
 
+            #ifdef _DEBUG
+            /*
+                int err = GetLastError();
+                if (err != ERROR_PIPE_BUSY)
+                {
+                    Pipeline::SetConnectStatus(false);
+                }
+            */
+            #endif
+
         #elif __linux__
+
+            int fd_recv = -1;
+            int fd_send = -1;
 
             std::string client_recv = "/tmp/" + server_name_ + "serversend";
-
-            fd_recv_ = open(client_recv.data(), O_RDONLY);
-
             std::string client_send = "/tmp/" + server_name_ + "serverrecv";
 
-            fd_send_ = open(client_send.data(), O_WRONLY);
+            fd_recv = open(client_recv.data(), O_RDONLY);
+            fd_send = open(client_send.data(), O_WRONLY);
             
-            if (fd_send_ < 0 || fd_recv_ < 0)
-            {
-                Close();
-                return false;
-            }
-
-            //std::cout << "fd_send_: " << fd_send_ << ", fd_recv_: " << fd_recv_ << std::endl;
+            Pipeline::SetConnect(int fd_send, int fd_recv);
 
         #endif
-        connected_ = true;
-        return true;
+
+        return Pipeline::IsActive();
         
     }
-
-    bool PipelineClient::TryGetMessage()
-    {
-        int success = 0;
-        std::vector<char> cur_receive_;
-        cur_receive_.clear();
-        int type = 0;
-
-        #ifdef _WIN32
-            if (handle_pipe_ == nullptr || connected_ == false)
-            {
-                return false;
-            }
-            DWORD bytes_read = 0;
-
-            int n_bytes = 0;
-            int cur_ptr = 0;
-            while(cur_ptr < 4)
-            {
-                success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
-                if (!success)
-                {   
-                    if (GetLastError() == ERROR_BROKEN_PIPE)
-                    {
-                        Close();
-                        return false;
-                    }
-                }
-                cur_ptr += bytes_read;
-            }
-            
-            cur_ptr = 0;
-            bytes_read = 0;
-            while(cur_ptr < 4)
-            {
-                success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
-                if (!success)
-                {   
-                    if (GetLastError() == ERROR_BROKEN_PIPE)
-                    {
-                        Close();
-                        return false;
-                    }
-                }
-                cur_ptr += bytes_read;
-            }
-
-            cur_receive_.resize(n_bytes);
-            cur_ptr = 0;
-
-            while (cur_ptr < n_bytes)
-            {
-                success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, nullptr);
-                if (!success)
-                {
-                    if (GetLastError() == ERROR_BROKEN_PIPE)
-                    {
-                        Close();
-                        return false;
-                    }
-                }
-                cur_ptr += bytes_read;
-            }
-
-        #elif __linux__
-
-            //std::cout << "Receiving..." << std::endl;
-
-            if (fd_recv_ == -1 || fd_recv_ == -1 || connected_ == false)
-            {
-                //std::cout << "Recv false in line 227 client.cpp" << std::endl;
-                Pipeline::Close();
-                return false;
-            }
-
-            int n_bytes = 0;
-            int cur_ptr = 0;
-
-            while(cur_ptr < 4)
-            {
-                success = read(fd_recv_, &n_bytes + cur_ptr, sizeof(int) - cur_ptr);
-                if (success == -1)
-                {
-                    Close();
-                    //std::cout << "Recv false in line 243 client.cpp" << std::endl;perror("");
-                    return false;
-                }
-                cur_ptr += success;
-            }
-            
-            //std::cout << n_bytes << std::endl;
-
-            cur_ptr = 0;
-            
-            while(cur_ptr < 4)
-            {
-                success = read(fd_recv_, &type + cur_ptr, sizeof(int) - cur_ptr);
-                if (success == -1)
-                {
-                    //std::cout << "Recv false in line 257 client.cpp" << std::endl;perror("");
-                    Close();
-                    return false;
-                }
-                cur_ptr += success;
-            }
-
-            //std::cout << type << std::endl;
-
-            cur_receive_.resize(n_bytes);
-            cur_ptr = 0;
-
-            while(cur_ptr < n_bytes)
-            {
-                success = read(fd_recv_, &cur_receive_[cur_ptr], n_bytes - cur_ptr);
-                if (success == -1)
-                {
-                    //std::cout << "Recv false in line 274 client.cpp" << std::endl;perror("");
-                    Close();
-                    return false;
-                }
-                cur_ptr += success;
-            }
-
-        #endif
-
-        last_receive_ = cur_receive_;
-        last_message_type_ = type;
-
-        return true;
-    }
-
-
-    bool PipelineClient::TrySendMessage(int type, std::vector<char> data)
-    {
-        // Write the reply to the pipe. 
-        #ifdef _WIN32
-            if (handle_pipe_ == nullptr || connected_ == false)
-            {
-                return false;
-            }
-        #elif __linux__
-
-            if (fd_send_ < 0 || connected_ == false)
-            {
-                return false;
-            }
-
-        #endif
-
-            unsigned long bytes_written = 0;
-            int success = 0;
-            std::vector<char> send;
-
-            #ifdef _WIN32
-                if (data.size() > buf_size_){
-                    return false;
-                }
-            #endif
-            long long sz = data.size();
-            send.resize(static_cast<long long>(4 + 4) + sz);
-            memcpy(&send[0], &sz, 4);
-            memcpy(&send[4], &type, 4);
-            if (sz != 0)
-            {
-                memcpy(&send[8], &data[0], sz);
-            }
-        
-        #ifdef _WIN32
-
-            long long cur_ptr = 0;
-            while (cur_ptr < send.size())
-            {
-                success = WriteFile(handle_pipe_, &send[cur_ptr], static_cast<int>(send.size()- cur_ptr), &bytes_written, nullptr);
-                if (!success)
-                {
-                    return false;
-                }
-                cur_ptr += bytes_written;
-            }
     
-        #elif __linux__
-
-            int cur_ptr = 0;
-            while (cur_ptr < send.size())
-            {
-                bytes_written = write(fd_send_, &send[0 + cur_ptr], send.size() - cur_ptr);
-                
-                if (bytes_written == -1)
-                {
-                    //std::cout << "Send failed in line 346 client.cpp" << std::endl;
-                    PipelineClient::Close();
-                    return false;
-                }
-
-                cur_ptr += bytes_written;
-            }
-            //std::cout << "Send Oke" << std::endl;
-
-        #endif
-
-        return true;
-
-    }
-
-    void PipelineClient::Close()
-    {
-        #ifdef _WIN32
-            if (handle_pipe_ != nullptr)
-            {
-                CloseHandle(handle_pipe_);
-                connected_ = false;
-                handle_pipe_ = nullptr;
-            }
-        #elif __linux__
-            if (fd_send_ != -1)
-            {
-                close(fd_send_);
-                fd_send_ = -1;
-            }
-            if (fd_recv_ != -1)
-            {
-                close(fd_recv_);
-                fd_recv_ = -1;
-            }
-            fd_send_ = -1;
-            fd_recv_ = -1;
-            connected_ = false;
-        #endif
-    }
-
     PipelineClient::~PipelineClient()
     {
         PipelineClient::Close();

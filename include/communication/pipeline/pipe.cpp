@@ -27,27 +27,43 @@ namespace pm
 #endif
 
 
-    void Pipeline::SetPipeName(const std::string& pipe_name)
+    void Pipeline::SetPipelineName(const std::string& pipe_name)
     {
         name_ = pipe_name;
     }
 
+    void Pipeline::SetConnectStatus(bool status)
+    {
+        connected_ = status;
+    }
+
     #ifdef _WIN32
-        void Pipeline::SetConnect(HANDLE handle_pipe)
+        void Pipeline::SetPipelineHandle(HANDLE handle_pipe)
         {
             handle_pipe_ = handle_pipe;
-            connected_ = true;
         }
     #elif __linux__
+
         void Pipeline::SetConnect(int fd_send, int fd_recv)
         {
             fd_send_ = fd_send;
             fd_recv_ = fd_recv;
-            connected_ = true;
+            SetConnectStatus(true);
         }
+
+        void Pipeline::SetFdSend(int fd_send)
+        {
+            fd_send_ = fd_send;
+        }
+
+        void Pipeline::SetFdRecv(int fd_recv)
+        {
+            fd_recv_ = fd_recv;
+        }
+
     #endif
 
-    std::string Pipeline::GetPipeName()
+    std::string Pipeline::GetPipelineName()
     {
         return name_;
     }
@@ -128,7 +144,6 @@ namespace pm
             bytes_read = 0;
             while(cur_ptr < 4)
             {
-                
                 success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, NULL);
                 if (!success && bytes_read == 0)
                 {   

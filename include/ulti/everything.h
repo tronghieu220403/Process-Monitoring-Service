@@ -90,6 +90,17 @@
 
 namespace pm
 {
+
+    inline std::string WStrToStr(const std::wstring& w_str)
+    {
+        return std::string(w_str.begin(), w_str.end());
+    }
+
+    inline std::wstring StrToWStr(const std::string& str)
+    {
+        return std::wstring(str.begin(), str.end());
+    }
+
     inline std::string CharVectorToString(std::vector<char> v)
     {
         return std::string(v.begin(), v.end());

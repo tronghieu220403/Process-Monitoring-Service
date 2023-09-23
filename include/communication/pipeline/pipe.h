@@ -1,5 +1,5 @@
-#ifndef PROCESSMONITORING_COMMUNICATION_PIPELINE_SERVER_H_
-#define PROCESSMONITORING_COMMUNICATION_PIPELINE_SERVER_H_
+#ifndef PROCESSMONITORING_COMMUNICATION_PIPELINE_PIPE_H_
+#define PROCESSMONITORING_COMMUNICATION_PIPELINE_PIPE_H_
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
@@ -20,7 +20,7 @@ namespace pm
 
         private:
             #ifdef _WIN32
-                HANDLE handle_pipe_ = 0;
+                HANDLE handle_pipe_ = INVALID_HANDLE_VALUE;
             #elif __linux__
                 int fd_send_ = -1;
                 int fd_recv_ = -1;
@@ -33,17 +33,20 @@ namespace pm
                 Pipeline(int fd_send, int fd_recv);
             #endif
 
-            void SetPipeName(const std::string& pipe_name);
+            void SetPipelineName(const std::string& pipe_name);
+            void SetConnectStatus(bool status);
             #ifdef _WIN32
-                void SetConnect(HANDLE handle_pipe);
+                void SetPipelineHandle(HANDLE handle_pipe);
             #elif __linux__
                 void SetConnect(int fd_send, int fd_recv);
+                void SetFdSend(int fd_send);
+                void SetFdRecv(int fd_recv);
             #endif
 
-            std::string GetPipeName();
+            std::string GetPipelineName();
             std::vector<char> GetLastMessage();
             int GetLastMessageType();
-            
+
             #ifdef _WIN32
                 HANDLE GetHandle();
             #elif __linux__
