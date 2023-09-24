@@ -17,18 +17,28 @@ namespace pm
         log_path.resize(1000);
         GetCurrentDir(&log_path[0], 1000);
         log_path.resize(strlen(&log_path[0]));
-#ifdef _WIN32
-        log_path.push_back('\\');
-#elif __linux__
-        log_path.push_back('/');
-#endif
+        #ifdef _WIN32
+                log_path.push_back('\\');
+        #elif __linux__
+                log_path.push_back('/');
+        #endif
+
         for (std::string log_name = "pm_logs.log"; char c : log_name)
         {
             log_path.push_back(c);
         }
-            v_log_path_ = log_path;
 
+        v_log_path_ = log_path;
     }
+
+#ifdef _WIN32
+    CTA::CTA(std::shared_ptr<ServiceEvent> event):
+       event_(event) 
+    {
+        CTA();
+        event_ = event;
+    }
+#endif
 
     void CTA::UpdateConfig()
     {
@@ -164,7 +174,7 @@ namespace pm
         server = PipelineServer("processmonitoringpipe");
         #ifdef _WIN32
             server.SetMaxConnection(1);
-            server.SetBufferSize(10000);
+            server.SetBufferSize(10000000);
         #endif
         while(true)
         {

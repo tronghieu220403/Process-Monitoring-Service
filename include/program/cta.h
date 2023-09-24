@@ -23,6 +23,7 @@
 #include "include/communication/pipeline/server.h"
 #include "include/mutex/mutex.h"
 #include "include/file/file.h"
+#include "include/service/serviceevent.h"
 
 #endif
 
@@ -35,13 +36,24 @@ namespace pm
         std::string log_info_;
         PipelineServer server;
         
+        #ifdef _WIN32
+            std::shared_ptr<ServiceEvent> event_;
+        #endif
+
         bool new_log_ = false;
         std::vector<char> v_log_path_;
         NamedMutex cta_log_mutex_;
         NamedMutex inner_mutex_;
         NamedMutex config_mutex_;
+
     public:
+
         CTA();
+        
+        #ifdef _WIN32
+            CTA(std::shared_ptr<ServiceEvent> event);
+        #endif
+
         void UpdateConfig();
         void Monitoring();
         void RecvCommunication();

@@ -87,6 +87,7 @@
         "numbers": "cpp",
         "valarray": "cpp",
         "any": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "xstddef": "cpp"
     }
 }

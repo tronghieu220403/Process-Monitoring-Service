@@ -91,6 +91,13 @@
 namespace pm
 {
 
+    inline void WriteDebug(std::string s)
+    {
+        std::ofstream outfile("C:\\ggez.txt", std::ios_base::app);
+        outfile << s << "\n";
+        outfile.close();
+    }
+
     inline std::string WStrToStr(const std::wstring& w_str)
     {
         return std::string(w_str.begin(), w_str.end());

@@ -1,0 +1,31 @@
+#ifdef _VISUAL_STUDIO_WORKSPACE
+#include "serviceevent.h"
+#else
+#include "include/service/serviceevent.h"
+#endif // _VISUAL_STUDIO_WORKSPACE
+
+namespace pm
+{
+    
+    void ServiceEvent::Close()
+    {
+        if (stop_event_ != INVALID_HANDLE_VALUE && stop_event_ != nullptr)
+        {
+            CloseHandle(stop_event_);
+        }
+        if (pause_event_ != INVALID_HANDLE_VALUE && pause_event_ != nullptr)
+        {
+            CloseHandle(pause_event_);
+        }
+        if (pause_handled_ != INVALID_HANDLE_VALUE && pause_handled_ != nullptr)
+        {
+            CloseHandle(pause_handled_);
+        }
+        if (stop_handled_ != INVALID_HANDLE_VALUE && stop_handled_ != nullptr)
+        {
+            CloseHandle(stop_handled_);
+        }
+
+    }   
+
+}
