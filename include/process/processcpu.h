@@ -2,7 +2,7 @@
 #define PROCESSMONITORING_PROCESS_PROCESSCPU_H_
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
+#include "ulti/everything.h"
 #else
 #include "include/ulti/everything.h"
 #endif

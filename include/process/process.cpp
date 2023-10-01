@@ -1,8 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "process.h"
-#else
-#include "include/process/process.h"
-#endif
 
 namespace pm
 {

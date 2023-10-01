@@ -1,9 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "ctb.h"
-#else
-#include "include/program/ctb.h"
-#endif // _VISUAL_STUDIO_WORKSPACE
-
 namespace pm
 {
 

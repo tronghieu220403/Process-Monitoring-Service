@@ -1,12 +1,7 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSDISK_H_
 #define PROCESSMONITORING_PROCESS_PROCESSDISK_H_
 
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
-#else
-#include "include/ulti/everything.h"
-#endif
+#include "ulti/everything.h"
 
 namespace pm
 {

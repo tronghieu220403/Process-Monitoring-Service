@@ -1,25 +1,11 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSSUPERVISION_H_
 #define PROCESSMONITORING_PROCESS_PROCESSSUPERVISION_H_
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
-#else
-#include "include/ulti/everything.h"
-#endif
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
-#include "E:/Code/Github/Process-Monitoring/include/process/processcontroller.h"
-#include "E:/Code/Github/Process-Monitoring/include/logs/processlogger.h"
-#include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
-#else
-#include "include/process/processinfo.h"
-#include "include/process/processcontroller.h"
-#include "include/logs/processlogger.h"
-#include "include/ulti/collections.h"
-
-#endif
-
+#include "ulti/everything.h"
+#include "process/processinfo.h"
+#include "process/processcontroller.h"
+#include "logs/processlogger.h"
+#include "ulti/collections.h"
 
 namespace pm
 {

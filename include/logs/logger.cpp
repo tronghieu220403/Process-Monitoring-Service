@@ -1,9 +1,5 @@
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "logger.h"
-#else
-#include "include/logs/logger.h"
-#endif
 
 namespace pm
 {

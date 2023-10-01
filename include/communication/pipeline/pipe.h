@@ -1,11 +1,7 @@
 #ifndef PROCESSMONITORING_COMMUNICATION_PIPELINE_PIPE_H_
 #define PROCESSMONITORING_COMMUNICATION_PIPELINE_PIPE_H_
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
-#else
-#include "include/ulti/everything.h"
-#endif
+#include "ulti/everything.h"
 
 namespace pm
 {

@@ -1,25 +1,13 @@
 #ifndef PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 #define PROCESSMONITORING_PROCESS_PROCESSINFO_H_
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
-#else
-#include "include/ulti/everything.h"
-#endif
+#include "ulti/everything.h"
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-    #include "E:/Code/Github/Process-Monitoring/include/process/processmem.h"
-    #include "E:/Code/Github/Process-Monitoring/include/process/processcpu.h"
-    #include "E:/Code/Github/Process-Monitoring/include/process/processdisk.h"
-    #include "E:/Code/Github/Process-Monitoring/include/process/processnetwork.h"
-    #include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
-#else
-    #include "include/process/processmem.h"
-    #include "include/process/processcpu.h"
-    #include "include/process/processdisk.h"
-    #include "include/process/processnetwork.h"
-    #include "include/ulti/collections.h"
-#endif
+    #include "process/processmem.h"
+    #include "process/processcpu.h"
+    #include "process/processdisk.h"
+    #include "process/processnetwork.h"
+    #include "ulti/collections.h"
 
 namespace pm
 {

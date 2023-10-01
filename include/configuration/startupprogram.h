@@ -2,21 +2,8 @@
 #ifndef PROCESSMONITORING_CONFIGURATION_STARTUPROGRAM_H_
 #define PROCESSMONITORING_CONFIGURATION_STARTUPROGRAM_H_
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
-#else
-#include "include/ulti/everything.h"
-#endif
-
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/file/file.h"
-
-#else
-
-#include "include/file/file.h"
-
-#endif
+#include "ulti/everything.h"
+#include "file/file.h"
 
 namespace pm
 {

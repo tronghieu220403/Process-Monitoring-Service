@@ -11,33 +11,15 @@
 #define _UNICODE
 #endif
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
-#else
-#include "include/ulti/everything.h"
-#endif
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/process/processsupervision.h"
-#include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
-#include "E:/Code/Github/Process-Monitoring/include/registry/registry.h"
-#include "E:/Code/Github/Process-Monitoring/include/communication/pipeline/client.h"
-#include "E:/Code/Github/Process-Monitoring/include/file/file.h"
-#include "E:/Code/Github/Process-Monitoring/include/configuration/processjsonconfiguration.h"
-#include "E:/Code/Github/Process-Monitoring/include/mutex/mutex.h"
-#include "E:/Code/Github/Process-Monitoring/include/configuration/startupprogram.h"
-
-#else
-#include "include/process/processsupervision.h"
-#include "include/ulti/collections.h"
-#include "include/registry/registry.h"
-#include "include/communication/pipeline/client.h"
-#include "include/file/file.h"
-#include "include/configuration/processjsonconfiguration.h"
-#include "include/mutex/mutex.h"
-#include "include/configuration/startupprogram.h"
-
-#endif
+#include "ulti/everything.h"
+#include "process/processsupervision.h"
+#include "ulti/collections.h"
+#include "registry/registry.h"
+#include "communication/pipeline/client.h"
+#include "file/file.h"
+#include "configuration/processjsonconfiguration.h"
+#include "mutex/mutex.h"
+#include "configuration/startupprogram.h"
 
 namespace pm
 {

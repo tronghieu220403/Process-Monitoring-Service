@@ -1,9 +1,4 @@
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "processcpu.h"
-#else
-#include "include/process/processcpu.h"
-#endif
 
 
 namespace pm

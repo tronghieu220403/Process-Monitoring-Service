@@ -1,9 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "cta.h"
-#else
-#include "include/program/cta.h"
-#endif // _VISUAL_STUDIO_WORKSPACE
-
 
 namespace pm
 {

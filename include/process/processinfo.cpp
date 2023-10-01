@@ -1,9 +1,4 @@
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "processinfo.h"
-#else
-#include "include/process/processinfo.h"
-#endif
 
 
 namespace pm

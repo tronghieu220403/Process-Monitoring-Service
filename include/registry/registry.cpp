@@ -1,10 +1,6 @@
 #ifdef _WIN32
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "registry.h"
-#else
-#include "include/registry/registry.h"
-#endif
 
 namespace pm
 {

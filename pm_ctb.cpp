@@ -1,17 +1,8 @@
 #ifndef PROCESSMONITORING_PROCESSMONITORING
 #define PROCESSMONITORING_PROCESSMONITORING
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "include/program/cta.h"
-#else
-#include "include/program/cta.h"
-#endif
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "include/program/ctb.h"
-#else
-#include "include/program/ctb.h"
-#endif
+#include "program/cta.h"
+#include "program/ctb.h"
 
 #define _CTB
 

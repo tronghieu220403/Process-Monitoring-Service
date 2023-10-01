@@ -1,8 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "mutex.h"
-#else
-#include "include/mutex/mutex.h"
-#endif
 
 namespace pm
 {

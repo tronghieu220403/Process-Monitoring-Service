@@ -1,8 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "serviceevent.h"
-#else
-#include "include/service/serviceevent.h"
-#endif // _VISUAL_STUDIO_WORKSPACE
 
 namespace pm
 {

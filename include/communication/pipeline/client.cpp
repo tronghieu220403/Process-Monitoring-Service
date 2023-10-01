@@ -1,13 +1,4 @@
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-
 #include "client.h"
-
-#else
-
-#include "include/communication/pipeline/client.h"
-
-#endif
 
 namespace pm
 {

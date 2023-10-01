@@ -1,8 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "service.h"
-#else
-#include "include/service/servicecontrol.h"
-#endif // _VISUAL_STUDIO_WORKSPACE
 
 namespace pm
 {

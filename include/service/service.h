@@ -2,18 +2,8 @@
 #ifndef PROCESSMONITORING_SERVICE_SERVICE_H_
 #define PROCESSMONITORING_SERVICE_SERVICE_H_
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
-#else
-#include "include/ulti/everything.h"
-#endif
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/collections.h"
-#else
-
-#include "include/ulti/collections.h"
-#endif
+#include "ulti/everything.h"
+#include "ulti/collections.h"
 
 namespace pm
 {

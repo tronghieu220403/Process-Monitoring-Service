@@ -5,10 +5,6 @@
 #ifndef PROCESSMONITORING_ULTI_COLLECTIONS_H_
 #define PROCESSMONITORING_ULTI_COLLECTIONS_H_
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#pragma once
-#endif
-
 namespace pm
 {
     struct MonitoringComponent

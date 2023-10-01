@@ -1,13 +1,6 @@
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "file.h"
-#else
-#include "include/file/file.h"
-#endif
 
-
-
-// how to ?
 namespace pm
 {
     File::File(std::string file_path):

@@ -12,17 +12,8 @@
 #define _UNICODE
 #endif
 
-#ifdef _VISUAL_STUDIO_WORKSPACE
-#include "E:/Code/Github/Process-Monitoring/include/ulti/everything.h"
-#else
-#include "include/ulti/everything.h"
-#endif
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
-    #include "E:/Code/Github/Process-Monitoring/include/process/processinfo.h"
-#else
-    #include "include/process/processinfo.h"
-#endif
+#include "ulti/everything.h"
+#include "process/processinfo.h"
 
 namespace pm
 {

@@ -1,10 +1,4 @@
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "processnetwork.h"
-#else
-#include "include/process/processnetwork.h"
-#endif
-
 
 namespace pm
 {

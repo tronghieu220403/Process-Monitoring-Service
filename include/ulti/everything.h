@@ -1,8 +1,5 @@
 #ifdef _VISUAL_STUDIO_WORKSPACE
 #pragma once
-#endif
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
 
@@ -59,7 +56,7 @@
 
 #ifdef __linux__
 
-#include "include/nlohmann/json.hpp"
+#include "nlohmann/json.hpp"
 
 #endif // __linux__
 

@@ -1,10 +1,4 @@
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "processmem.h"
-#else
-#include "include/process/processmem.h"
-#endif
-
 
 namespace pm
 {

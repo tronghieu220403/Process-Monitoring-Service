@@ -1,10 +1,4 @@
-
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "processjsonconfiguration.h"
-#else
-#include "include/configuration/processjsonconfiguration.h"
-#endif
-
 
 namespace pm
 {

@@ -1,9 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "server.h"
-#else
-#include "include/communication/pipeline/pipe.h"
-#endif // _VISUAL_STUDIO_WORKSPACE
-
 
 namespace pm
 {

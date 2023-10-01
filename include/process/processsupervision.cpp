@@ -1,12 +1,5 @@
-    #ifdef _VISUAL_STUDIO_WORKSPACE
-
+    
 #include "processsupervision.h"
-
-#else
-
-#include "include/process/processsupervision.h"
-
-#endif //  
 
 namespace pm
 {

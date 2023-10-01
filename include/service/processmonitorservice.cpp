@@ -1,8 +1,4 @@
-#ifdef _VISUAL_STUDIO_WORKSPACE
 #include "processmonitorservice.h"
-#else
-#include "include/service/processmonitorservice.h"
-#endif // _VISUAL_STUDIO_WORKSPACE
 
 namespace pm
 {
