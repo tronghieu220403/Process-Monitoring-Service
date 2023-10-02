@@ -86,6 +86,12 @@ namespace pm
     {
         CTA::UpdateConfig();
 
+        #ifdef _WIN32
+
+        
+
+        #elif _linux__
+
         long long cnt = 0;
         std::string log;
 
@@ -118,6 +124,8 @@ namespace pm
             }
             inner_mutex_.Unlock();
         }
+
+        #endif
     }
 
     void CTA::RecvCommunication()
