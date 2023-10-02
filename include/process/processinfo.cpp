@@ -47,7 +47,7 @@ namespace pm
 
         #endif
 
-        return memory_usage_.UpdateAttributes();
+        return memory_usage_.UpdateAttributes(); // ?
     };
 
     double ProcessInfo::UpdateDiskUsage()
