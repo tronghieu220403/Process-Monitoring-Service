@@ -16,6 +16,7 @@ namespace pm
     {
     private:
         int pid_ = 0;
+        std::string process_name_;
         time_t time_ = 0;
         ProcessMemoryStats memory_usage_{};
         ProcessCpuStats cpu_usage_{};
@@ -23,12 +24,6 @@ namespace pm
         ProcessNetworkStats network_usage_{};
 
         MonitoringComponent last_usage_;
-
-        #ifdef _WIN32
-            HANDLE process_handle_;
-        #elif __linux__
-
-        #endif
 
         time_t UpdateTime();
         double UpdateCpuUsage();
@@ -39,11 +34,7 @@ namespace pm
     public:
 
         ProcessInfo() = default;
-        #ifdef _WIN32
-            explicit ProcessInfo(HANDLE process_handle_);
-        #elif __linux__
-            explicit ProcessInfo(int pid);
-        #endif
+        explicit ProcessInfo(std::string& p_name, int pid);
 
         int GetPid() const;
                 

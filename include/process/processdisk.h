@@ -9,31 +9,47 @@ namespace pm
     {
     
     private:
+
+        int pid_ = 0;
+
         #ifdef _WIN32
-            FILETIME last_time_;
-            HANDLE process_handle_;
+            FILETIME last_retrieve_time_ = { 0 };
+            unsigned long long io_size_in_byte_ = 0;
+
         #elif __linux__
-            int pid_;
-            clock_t last_time_;
+            clock_t last_time_ = 0;
+            double last_io_ = 0;
+            double last_speed_ = 0;
         #endif
-        
-        unsigned long long last_io_;
 
-        double last_speed_ = 0;
-
-    public:
         static int num_processors_;
 
+
+    public:
+
         ProcessDiskStats();
+
+        explicit ProcessDiskStats(int pid);
+
+        void SetPid(int pid);
+        int GetPid() const;
+
         #ifdef _WIN32
-            explicit ProcessDiskStats(HANDLE p_handle);
+
+            void SetIoSizeInByte(unsigned long long io_size_in_byte_);
+            unsigned long long GetIoSizeInByte();
+            double GetIoSizeInMb();
+
+            void SetLastRetrieveTime(FILETIME time);
+            FILETIME GetLastRetrieveTime() const;
         #elif __linux__
-            explicit ProcessDiskStats(int pid);
+
+            double GetCurrentCounter();
+            double GetCurrentSpeed();
+            double GetSpeed();
+
         #endif
 
-        unsigned long long GetCurrentCounter();
-        double GetCurrentSpeed();
-        double GetLastSpeed();
 
     };
 }

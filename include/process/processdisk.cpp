@@ -5,34 +5,14 @@ namespace pm
 
 ProcessDiskStats::ProcessDiskStats()
 {
-    #ifdef _WIN32
-        ZeroMemory(&last_time_, sizeof(FILETIME));
-        ZeroMemory(&process_handle_, sizeof(HANDLE));
-    #elif __linux__
-
-    #endif
 
 };
 
-#ifdef _WIN32
-ProcessDiskStats::ProcessDiskStats(HANDLE p_handle)
-{
-        ZeroMemory(&last_time_, sizeof(FILETIME));
-        ZeroMemory(&process_handle_, sizeof(HANDLE));
-
-        if (GetProcessId(p_handle) == NULL)
-        {
-            return;
-        }
-        process_handle_ = p_handle;
-        last_io_ = GetCurrentCounter();
-        GetSystemTimeAsFileTime(&last_time_);
-}
-#endif
-
-#ifdef __linux__
 ProcessDiskStats::ProcessDiskStats(int pid)
 {
+    #ifdef _WIN32
+    pid_ = pid;
+    #elif __linux__
     if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
     {
         return;
@@ -43,96 +23,94 @@ ProcessDiskStats::ProcessDiskStats(int pid)
     
     //Get time here
     last_time_ = clock();
+    #endif
 }
-#endif
 
+void ProcessDiskStats::SetPid(int pid)
+{
+    pid_ = pid;
+}
+
+int ProcessDiskStats::GetPid() const
+{
+    return pid_;
+}
+
+#ifdef _WIN32
+
+void ProcessDiskStats::SetIoSizeInByte(unsigned long long io_size_in_byte_)
+{
+    io_size_in_byte_ = io_size_in_byte;
+}
+
+unsigned long long ProcessDiskStats::GetIoSizeInByte()
+{
+    return io_size_in_byte_;
+}
+
+double ProcessDiskStats::GetIoSizeInMb()
+{
+    return double(io_size_in_byte_) / (1024 * 1024);
+}
+
+void ProcessDiskStats::SetLastRetrieveTime(FILETIME time)
+{
+    last_retrieve_time_ = time;
+}
+
+FILETIME ProcessDiskStats::GetLastRetrieveTime() const
+{
+    return last_retrieve_time_;
+}
+
+#elif __linux__
 
 unsigned long long ProcessDiskStats::GetCurrentCounter()
 {
+    if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+    {
+        return 0;
+    }
 
-    #ifdef _WIN32
+    std::ifstream file("/proc/" + std::to_string(pid_) + "/io");
+    std::string line;
 
-        IO_COUNTERS now_io_counter;
+    unsigned long long r;
+    unsigned long long w;
 
-        if (GetProcessId(process_handle_) == NULL)
+    while(getline(file, line))
+    {
+        if (line.find("read_bytes") == 0)
         {
-            return 0;
+            std::stringstream s(line);
+            std::string name;
+            s >> name >> r;
         }
-
-        GetProcessIoCounters(process_handle_, &now_io_counter);
-
-        return now_io_counter.ReadTransferCount + now_io_counter.WriteTransferCount + 
-        now_io_counter.OtherTransferCount;
-
-        
-    #elif __linux__
-
-        if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+        if (line.find("write_bytes") == 0)
         {
-            return 0;
+            std::stringstream s(line);
+            std::string name;
+            s >> name >> w;
+            break;
         }
-
-        std::ifstream file("/proc/" + std::to_string(pid_) + "/io");
-        std::string line;
-
-        unsigned long long r;
-        unsigned long long w;
-
-        while(getline(file, line))
-        {
-            if (line.find("read_bytes") == 0)
-            {
-                std::stringstream s(line);
-                std::string name;
-                s >> name >> r;
-            }
-            if (line.find("write_bytes") == 0)
-            {
-                std::stringstream s(line);
-                std::string name;
-                s >> name >> w;
-                break;
-            }
-        }
-        return r + w;
-        
-    #endif
+    }
+    return r + w;
 }
 
-
-double ProcessDiskStats::GetCurrentSpeed()
+unsigned long long ProcessDiskStats::GetCurrentSpeed()
 {
-    double speed;
 
-    #ifdef _WIN32
+    clock_t now_time;
 
-        FILETIME now_time;
+    if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+    {
+        last_speed_ = 0;
+        return 0;
+    }
 
-        if (GetProcessId(process_handle_) == NULL)
-        {
-            last_speed_ = 0;
-            return 0;
-        }
+    now_time = clock();
 
-        GetSystemTimeAsFileTime(&now_time);
-
-        double time_range_in_sec = static_cast<double>(now_time.dwLowDateTime - last_time_.dwLowDateTime) / 10000000;
-
-    #elif __linux__
-        
-        clock_t now_time;
-
-        if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
-        {
-            last_speed_ = 0;
-            return 0;
-        }
-
-        now_time = clock();
-
-        double time_range_in_sec = (double)(now_time - last_time_) / CLOCKS_PER_SEC;
-
-    #endif
+    double time_range_in_sec = (double)(now_time - last_time_) / CLOCKS_PER_SEC;
 
     unsigned long long cur_io = GetCurrentCounter();
 
@@ -147,22 +125,16 @@ double ProcessDiskStats::GetCurrentSpeed()
     return last_speed_;
 };
 
-double ProcessDiskStats::GetLastSpeed()
+unsigned long long ProcessDiskStats::GetSpeed()
 {
-    #ifdef _WIN32
-        if (GetProcessId(process_handle_) == NULL)
-        {
-            last_speed_ = 0;
-        }
-    #elif __linux__
-        if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
-        {
-            last_speed_ = 0;
-        }
-    #endif
+    if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+    {
+        last_speed_ = 0;
+    }
 
     return last_speed_;
 };
+#endif
 
 
 }

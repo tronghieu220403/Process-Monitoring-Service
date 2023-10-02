@@ -4,42 +4,16 @@
 namespace pm
 {
 
-#ifdef _WIN32
-    ProcessInfo::ProcessInfo(HANDLE process_handle)
+    ProcessInfo::ProcessInfo(std::string p_name, int pid)
     {
-        #ifdef _WIN32
-            pid_ = GetProcessId(process_handle);
-            if (pid_ == NULL)
-            {
-                process_handle_ = nullptr;
-                return;
-            }
-            else
-            {
-                process_handle_ = process_handle;
-            }
-        #elif __linux__
-    
-        #endif
-
-        memory_usage_ = ProcessMemoryStats(process_handle_);
-        cpu_usage_ = ProcessCpuStats(process_handle_);
-        disk_usage_ = ProcessDiskStats(process_handle_);
-        network_usage_ = ProcessNetworkStats(process_handle_);
-        UpdateTime();
-    };
-#elif __linux__
-
-    ProcessInfo::ProcessInfo(int pid)
-    {
+        process_name_ = p_name;
+        pid_ = pid;
         memory_usage_ = ProcessMemoryStats(pid);
         cpu_usage_ = ProcessCpuStats(pid);
         disk_usage_ = ProcessDiskStats(pid);
         network_usage_ = ProcessNetworkStats(pid);
         UpdateTime();
     };
-
-#endif
 
     time_t ProcessInfo::UpdateTime()
     {

@@ -10,29 +10,39 @@ namespace pm
     class ProcessNetworkStats
     {
     private:
-        #ifdef _WIN32
-            HANDLE process_handle_ = nullptr;
-        #elif __linux__
-            int pid_ = 0;
-        #endif
+        int pid_ = 0;
 
+        #ifdef _WIN32
+            FILETIME last_retrieve_time_;
+            unsigned long long io_size_in_byte_ = 0;
+        #elif __linux__
         long long last_data_recv_ = 0;
         long long last_data_sent_ = 0;
         double last_speed_ = 0;
-        
+        #endif
     public:
         ProcessNetworkStats();
         
-        #ifdef _WIN32
-            explicit ProcessNetworkStats(HANDLE p_handle);
-            ProcessNetworkStats(const HANDLE& process_handle_, long long last_data_recv_, long long last_data_sent_, double last_speed_);
-        #elif __linux__
-            explicit ProcessNetworkStats(int pid);
-        #endif
+        explicit ProcessNetworkStats(int pid);
 
-        double GetCurrentSpeed();
-        double GetLastSpeed();
-        
+        void SetPid(int pid);
+        int GetPid() const;
+
+        #ifdef _WIN32
+
+            void SetIoSizeInByte(unsigned long long io_size_in_byte_);
+            unsigned long long GetIoSizeInByte();
+            double GetIoSizeInMb();
+
+            void SetLastRetrieveTime(FILETIME time);
+            FILETIME GetLastRetrieveTime() const;
+
+        #elif __linux__
+
+            double GetCurrentSpeed();
+            double GetLastSpeed();
+
+        #endif
     };
 
 }

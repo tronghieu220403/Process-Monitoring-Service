@@ -5,54 +5,40 @@ namespace pm
 
     ProcessMemoryStats::ProcessMemoryStats() = default;
 
-#ifdef _WIN32
-    ProcessMemoryStats::ProcessMemoryStats(HANDLE p_handle)
-    {
-        if (GetProcessId(p_handle) == NULL)
-        {
-            last_mem_ = 0;
-            return;
-        }
-
-        process_handle_ = p_handle;
-    };
-
-    ProcessMemoryStats::ProcessMemoryStats(const HANDLE process_handle, double last_mem)
-        : process_handle_(process_handle), last_mem_(last_mem){}
-
-#elif __linux__
     ProcessMemoryStats::ProcessMemoryStats(int pid)
     {
-        if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
-        {
-            pid_ = 0;
-            return;
-        }
-        pid_ = pid;
+        #ifdef _WIN32
+            pid_ = pid;
+        #elif __linux__
+
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
+            {
+                pid_ = 0;
+                return;
+            }
+            pid_ = pid;
+        #endif
     };
 
-#endif
+    unsigned long long ProcessMemoryStats::GetMemoryUsage()
+    {
+        return mem_usage_;
+    }
 
-    double ProcessMemoryStats::GetCurrentUsage()
+    void SetMemoryUsage(unsigned long long mem_usage)
+    {
+        mem_usage_ = mem_usage;
+    }
+
+    double ProcessMemoryStats::UpdateAttributes()
     {
         #ifdef _WIN32
             
-            if (GetProcessId(process_handle_) == NULL)
-            {
-                last_mem_ = 0;
-                return last_mem_;
-            }
-
-            PROCESS_MEMORY_COUNTERS_EX pmc{};
-
-            GetProcessMemoryInfo(process_handle_, (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-            last_mem_ = double(pmc.WorkingSetSize) / (1024 * 1024);
-            return last_mem_;
         #elif __linux__
             
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
             {
-                last_mem_ = 0;
+                mem_usage_ = 0;
                 return 0;
             }
 
@@ -65,31 +51,14 @@ namespace pm
                 {
                     std::stringstream s(line);
                     std::string ss;
-                    s >> ss >> last_mem_;
+                    s >> ss >> mem_usage_;
                     break;
                 }
             }
             file.close();
-            last_mem_ /= 1024;
+            mem_usage_ /= 1024;
         #endif
-            return last_mem_;
-    }
-
-    double ProcessMemoryStats::GetLastUsage()
-    {
-        #ifdef _WIN32
-            if (GetProcessId(process_handle_) == NULL)
-            {
-                last_mem_ = 0;
-            }
-        #elif __linux__
-            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
-            {
-                last_mem_ = 0;
-            }
-        #endif
-
-        return last_mem_;
+            return mem_usage_;
     }
 
 }
