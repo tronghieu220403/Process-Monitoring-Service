@@ -24,6 +24,12 @@
     #include <strsafe.h>
     #include <tchar.h>
     #include <Windows.h>
+    #include <Shlobj.h>
+    #include <wmistr.h>
+    #include <evntrace.h>
+    #include <evntcons.h>
+    #include <comutil.h>
+    #include <wbemidl.h>
 
     #include <winrt/windows.foundation.collections.h>
     #include <winrt/windows.data.json.h>
@@ -53,6 +59,8 @@
 #include <filesystem>
 #include <thread>
 #include <functional>
+#include <chrono>
+#include <deque>
 
 #ifdef __linux__
 
@@ -61,9 +69,10 @@
 #endif // __linux__
 
 #ifdef _VISUAL_STUDIO_WORKSPACE
-#define _CRT_SECURE_NO_DEPRECATE
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "iphlpapi.lib")
+#pragma comment(lib, "Shell32.lib")  // For IsUserAnAdmin function
+#pragma comment(lib, "comsupp.lib")  // For _bstr_t class
 #endif
 
 
