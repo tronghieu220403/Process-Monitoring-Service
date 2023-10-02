@@ -20,12 +20,22 @@ namespace pm
         #endif
     };
 
-    unsigned long long ProcessMemoryStats::GetMemoryUsage()
+    int ProcessMemoryStats::GetPid() const
+    {
+        return pid_;
+    }
+
+    void ProcessMemoryStats::SetPid(int pid)
+    {
+        pid_ = pid;
+    }
+
+    unsigned long long ProcessMemoryStats::GetMemoryUsage() const
     {
         return mem_usage_;
     }
 
-    void SetMemoryUsage(unsigned long long mem_usage)
+    void ProcessMemoryStats::SetMemoryUsage(unsigned long long mem_usage)
     {
         mem_usage_ = mem_usage;
     }

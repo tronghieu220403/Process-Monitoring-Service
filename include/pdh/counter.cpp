@@ -2,17 +2,22 @@
 
 namespace pm
 {
-    Counter::Counter(std::string& p_name, std::string type, HQUERY query)
-        : p_name_(p_name), type_(type), query_(query), h_counter_(0)
+    Counter::Counter(std::string& p_name,int pid, std::string type)
+        : p_name_(p_name),pid_(pid), type_(type), h_counter_(0)
     {
+        size_t idx = p_name_.rfind(".exe");
+        if (idx != std::string::npos && idx == p_name_.length() - 4)
+        {
+            p_name_.erase(idx, 4);
+        }
     }
 
     bool Counter::AddCounter()
     {
-        std::string cmd = "\\Process V2(" + p_name_ + ")" + "\\" + type_;
+        std::string cmd = "\\Process V2(" + p_name_ + ":" + std::to_string(pid_) + ")" + "\\" + type_;
         std::wstring w_cmd(cmd.begin(), cmd.end());
 
-        PDH_STATUS status = PdhAddCounter(query_, w_cmd.data(), NULL, &h_counter_);
+        PDH_STATUS status = PdhAddCounter(query_.GetHQuery(), w_cmd.data(), NULL, &h_counter_);
 
         if (ERROR_SUCCESS != status)
         {
@@ -43,5 +48,17 @@ namespace pm
         return pdh_value.doubleValue;
     }
 
+    void Counter::CloseCounter()
+    {
+        if (h_counter_ != nullptr && h_counter_ != INVALID_HANDLE_VALUE)
+        {
+            PdhRemoveCounter(h_counter_);
+        }
+        return;
+    }
 
+    Counter::~Counter()
+    {
+        CloseCounter();
+    }
 }

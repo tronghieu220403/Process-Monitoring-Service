@@ -14,20 +14,19 @@ namespace pm
     
     private:
 
+        int pid_;
+
         double last_usage_percent_ = 0;
-        int num_processors_ = 0;
 
         #ifdef _WIN32
-            HANDLE process_handle_ = nullptr;
-
+            FILETIME last_retrieved_time_;
+            inline static int num_processors_ = 0;
         #elif __linux__
-            int pid_;
+            unsigned long long last_process_cpu_unit_;
+            unsigned long long last_system_cpu_unit_;
 
         #endif
 
-        unsigned long long last_process_cpu_unit_;
-        
-        unsigned long long last_system_cpu_unit_;
 
     public:
 
@@ -37,20 +36,23 @@ namespace pm
 
         ProcessCpuStats& operator=(const ProcessCpuStats& pcs);
 
-
-        #ifdef _WIN32
-            explicit ProcessCpuStats(HANDLE p_handle);
-        #elif __linux__
-            explicit ProcessCpuStats(int pid);
-        #endif
-
-        unsigned long long GetClockCycle();
-
-        double GetCurrentUsage();
-        double GetLastUsage();
+        explicit ProcessCpuStats(int pid);
 
         static int GetNumberOfProcessors();
-        unsigned long long GetSystemClockCycle();
+
+        void UpdateAttributes();
+        double GetLastUsagePercentage();
+        
+        #ifdef _WIN32
+            FILETIME GetLastRetrievedTime();
+        #elif __linux__
+
+            unsigned long long GetClockCycle();
+            unsigned long long GetSystemClockCycle();
+
+        #endif
+
+
 
     };
 }

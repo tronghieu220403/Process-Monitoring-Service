@@ -32,7 +32,7 @@ int ProcessNetworkStats::GetPid() const
 
 #ifdef _WIN32
 
-void ProcessNetworkStats::SetIoSizeInByte(unsigned long long io_size_in_byte_)
+void ProcessNetworkStats::SetIoSizeInByte(unsigned long long io_size_in_byte)
 {
     io_size_in_byte_ = io_size_in_byte;
 }

@@ -5,24 +5,35 @@
 #include "ulti/everything.h"
 #include "ulti/collections.h"
 
+#include "pdh/query.h"
+
 namespace pm
 {
     class Counter
     {
     private:
+        inline static Query query_;
+
+        int pid_;
+
         std::string p_name_;
-        HQUERY query_;
+
         std::string type_;
+
         HCOUNTER h_counter_;
         
     public:
 
         Counter() = default;
-        Counter(std::string& p_name, std::string type, HQUERY query);
+        Counter(std::string& p_name, int pid, std::string type);
 
         bool AddCounter();
 
         double GetValue();
+
+        void CloseCounter();
+
+        ~Counter();
     };
 }
 

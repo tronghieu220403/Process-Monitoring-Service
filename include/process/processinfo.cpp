@@ -4,7 +4,7 @@
 namespace pm
 {
 
-    ProcessInfo::ProcessInfo(std::string p_name, int pid)
+    ProcessInfo::ProcessInfo(std::string& p_name, int pid)
     {
         process_name_ = p_name;
         pid_ = pid;
@@ -29,38 +29,31 @@ namespace pm
     double ProcessInfo::UpdateCpuUsage()
     {
         #ifdef _WIN32
-            if (GetProcessId(process_handle_) == NULL)
-            {
-                return 0;
-            }
+
         #elif __linux__
 
         #endif
-        
-        return cpu_usage_.GetCurrentUsage();
+
+        cpu_usage_.UpdateAttributes();
+
+        return cpu_usage_.GetLastUsagePercentage();
     };
 
     double ProcessInfo::UpdateMemoryUsage()
     {
         #ifdef _WIN32
-            if (GetProcessId(process_handle_) == NULL)
-            {
-                return 0;
-            }
+
         #elif __linux__
 
         #endif
 
-        return memory_usage_.GetCurrentUsage();
+        return memory_usage_.UpdateAttributes();
     };
 
     double ProcessInfo::UpdateDiskUsage()
     {
         #ifdef _WIN32
-            if (GetProcessId(process_handle_) == NULL)
-            {
-                return 0;
-            }
+
         #elif __linux__
 
         #endif
@@ -71,10 +64,7 @@ namespace pm
     double ProcessInfo::UpdateNetworkUsage()
     {
         #ifdef _WIN32
-            if (GetProcessId(process_handle_) == NULL)
-            {
-                return 0;
-            }
+
         #elif __linux__
 
         #endif

@@ -18,7 +18,10 @@ namespace pm
         
         explicit ProcessMemoryStats(int pid);
 
-        unsigned long long GetMemoryUsage();
+        int GetPid() const;
+        void SetPid(int pid);
+        
+        unsigned long long GetMemoryUsage() const;
         void SetMemoryUsage(unsigned long long mem_usage);
 
         double UpdateAttributes();
