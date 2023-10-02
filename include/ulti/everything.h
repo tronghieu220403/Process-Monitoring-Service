@@ -23,8 +23,11 @@
     #include <direct.h>
     #include <strsafe.h>
     #include <tchar.h>
+    #include <locale.h>
     #include <Windows.h>
     #include <Shlobj.h>
+    #include <Pdh.h>
+    #include <PdhMsg.h>
     #include <wmistr.h>
     #include <evntrace.h>
     #include <evntcons.h>
@@ -73,6 +76,7 @@
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "Shell32.lib")  // For IsUserAnAdmin function
 #pragma comment(lib, "comsupp.lib")  // For _bstr_t class
+#pragma comment(lib,"Pdh.lib")
 #endif
 
 
