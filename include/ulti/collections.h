@@ -15,6 +15,13 @@ namespace pm
         double network_usage = 0;
     };
 
+	struct IoInfo
+	{
+		FILETIME ms_time = {0};
+		unsigned long long size = 0;
+		long long process_id = 0;
+	};
+
     enum class ProcessLoggerType
     {
         kProcessLoggerCpu,

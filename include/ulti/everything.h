@@ -99,7 +99,7 @@ namespace pm
 
     inline void WriteDebug(std::string s)
     {
-        std::ofstream outfile("C:\\ggez.txt", std::ios_base::app);
+        std::ofstream outfile("C:\\debug.txt", std::ios_base::app);
         outfile << s << "\n";
         outfile.close();
     }

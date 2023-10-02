@@ -12,7 +12,7 @@ namespace pm
         std::string mutex_name_;
 
         #ifdef _WIN32
-            HANDLE handle_mutex_;
+            HANDLE handle_mutex_ = nullptr;
         #elif __linux__
             sem_t *p_sema_;
             sem_t sema_;
