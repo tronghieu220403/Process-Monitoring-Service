@@ -12,16 +12,22 @@ namespace pm
         return query_;
     }
 
+    FILETIME Query::GetUpdateTime() const
+    {
+        return update_time_;
+    }
 
     void Query::Update()
     {
         PdhCollectQueryData(query_);
+        GetSystemTimeAsFileTime(&update_time_);
     }
 
     void Query::Close()
     {
         PdhCloseQuery(query_);
     }
+
 
     bool Query::Open()
     {

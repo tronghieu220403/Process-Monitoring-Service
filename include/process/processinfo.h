@@ -42,6 +42,9 @@ namespace pm
 #elif _WIN32
     void UpdateDiskUsage();
     void UpdateNetworkUsage();
+    void UpdateCpuUsage();
+    void UpdateMemoryUsage();
+
 #endif
     public:
 

@@ -22,7 +22,18 @@ namespace pm
     
     ProcessMemoryStats::ProcessMemoryStats(std::string &p_name, int pid):
         pid_(pid), process_name_(p_name)
-    {};
+        #ifdef _WIN32
+        , counter_(Counter(process_name_, pid, "Working Set - Private"))
+        #endif
+
+    {
+        #ifdef _WIN32
+
+ 
+        #elif __linux__
+
+        #endif
+    };
 
     int ProcessMemoryStats::GetPid() const
     {
@@ -34,20 +45,31 @@ namespace pm
         pid_ = pid;
     }
 
-    unsigned long long ProcessMemoryStats::GetMemoryUsage() const
+    double ProcessMemoryStats::GetMemoryUsage() const
     {
         return mem_usage_;
     }
 
-    void ProcessMemoryStats::SetMemoryUsage(unsigned long long mem_usage)
+    void ProcessMemoryStats::SetMemoryUsage(double mem_usage)
     {
         mem_usage_ = mem_usage;
     }
 
-    double ProcessMemoryStats::UpdateAttributes()
+    FILETIME ProcessMemoryStats::GetLastRetrievedTime()
+    {
+        return last_retrieved_time_;
+    }
+
+    void ProcessMemoryStats::SetLastRetrievedTime(FILETIME time)
+    {
+        last_retrieved_time_ = time;
+    }
+
+    void ProcessMemoryStats::UpdateAttributes()
     {
         #ifdef _WIN32
-            
+            SetLastRetrievedTime(Counter::GetLastQueryTime());
+            SetMemoryUsage(counter_.GetValue() / (1024 * 1024));
         #elif __linux__
             
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
@@ -70,9 +92,8 @@ namespace pm
                 }
             }
             file.close();
-            mem_usage_ /= 1024;
+            mem_usage_ /= 1024 * 1024;
         #endif
-            return mem_usage_;
     }
 
 }

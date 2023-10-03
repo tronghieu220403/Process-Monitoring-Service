@@ -28,11 +28,12 @@ namespace pm
         Counter(std::string& p_name, int pid, std::string type);
 
         static void UpdateQuery();
+        static FILETIME GetLastQueryTime();
 
         bool AddCounter();
 
         double GetValue();
-
+        
         void CloseCounter();
 
         ~Counter();

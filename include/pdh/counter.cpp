@@ -53,6 +53,11 @@ namespace pm
         return pdh_value.doubleValue;
     }
 
+    FILETIME Counter::GetLastQueryTime()
+    {
+        return query_.GetUpdateTime();
+    }
+
     void Counter::CloseCounter()
     {
         if (h_counter_ != nullptr && h_counter_ != INVALID_HANDLE_VALUE)

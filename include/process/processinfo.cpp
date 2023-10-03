@@ -85,6 +85,16 @@ namespace pm
         
     }
 
+    void ProcessInfo::UpdateCpuUsage()
+    {
+
+    }
+
+    void ProcessInfo::UpdateMemoryUsage()
+    {
+        
+    }
+
 
 #endif
 

@@ -5,27 +5,16 @@ namespace pm
 {
     ProcessCpuStats::ProcessCpuStats()
     {
-        #ifdef _WIN32
-
-            if (num_processors_ == 0)
-            {
-                num_processors_ = GetNumberOfProcessors();
-            }
-
-        #elif __linux__
-
-        #endif
     };
 
-    ProcessCpuStats::ProcessCpuStats(const ProcessCpuStats& pcs) = default;
-
-    ProcessCpuStats& ProcessCpuStats::operator=(const ProcessCpuStats& pcs) = default;
-
-    ProcessCpuStats::ProcessCpuStats(int pid)
+    ProcessCpuStats::ProcessCpuStats(std::string& process_name, int pid):
+        pid_(pid), process_name_(process_name)
+        #ifdef _WIN32
+        , counter_(Counter(process_name_, pid_, "% Processor Time"))
+        #endif
     {
         #ifdef _WIN32
 
-        pid_ = pid;
 
         #elif __linux__
         if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
@@ -34,17 +23,13 @@ namespace pm
             return;
         }
 
-        pid_ = pid;
-
-        num_processors_ = GetNumberOfProcessors();
-
         last_process_cpu_unit_ = GetSystemClockCycle();
 
         last_system_cpu_unit_ = GetClockCycle();
         #endif
     }
 
-
+#ifdef _WIN32
     int ProcessCpuStats::GetNumberOfProcessors()
     {
         #ifdef _WIN32
@@ -71,6 +56,7 @@ namespace pm
 
         #endif
     }
+#endif
 
 #ifdef __linux__
 
@@ -148,7 +134,8 @@ namespace pm
         double percent = 0.0;
 
         #ifdef _WIN32
-            GetSystemTimeAsFileTime(&last_retrieved_time_);
+            SetLastRetrievedTime(Counter::GetLastQueryTime());
+            SetLastUsagePercentage(counter_.GetValue());
         #elif __linux__
 
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
@@ -182,12 +169,17 @@ namespace pm
 
             last_system_cpu_unit_ = now_system_cpu_unit;
 
-            last_usage_percent_ = percent;
+            last_usage_percentage_ = percent;
 
         #endif
 
         return;
-    };
+    }
+
+    void ProcessCpuStats::SetLastUsagePercentage(double last_usage_percentage)
+    {
+        last_usage_percentage_ = last_usage_percentage;
+    }
 
     double ProcessCpuStats::GetLastUsagePercentage()
     {
@@ -200,7 +192,7 @@ namespace pm
             }
         #endif
 
-        return last_usage_percent_;
+        return last_usage_percentage_;
     }
 
 #ifdef _WIN32
@@ -208,6 +200,12 @@ namespace pm
     {
         return last_retrieved_time_;
     }
+
+    void ProcessCpuStats::SetLastRetrievedTime(FILETIME time)
+    {
+        last_retrieved_time_ = time;
+    }
+
 #endif
 
 }

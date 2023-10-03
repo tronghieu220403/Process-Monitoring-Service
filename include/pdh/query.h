@@ -11,6 +11,7 @@ namespace pm
     {
     private:
         HQUERY query_;
+        FILETIME update_time_;
     public:
 
         Query();
@@ -20,6 +21,8 @@ namespace pm
         explicit Query(Query& q) = delete;
         explicit Query(Query&& q) = delete;
         Query operator=(Query const& q) = delete;
+
+        void GetUpdateTime() const;
 
         bool Open();
         void Update();
