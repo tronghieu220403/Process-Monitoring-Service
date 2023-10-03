@@ -120,7 +120,6 @@ namespace pm
         while (true)
         {
             Sleep(500);
-            inner_mutex_.Lock();
 
             std::vector<IoInfo> disk_data = KernelConsumer::GetNetworkIoSharedVector();
 
@@ -147,6 +146,8 @@ namespace pm
                     }
                 }
             }
+
+            inner_mutex_.Lock();
 
             inner_mutex_.Unlock();
         }

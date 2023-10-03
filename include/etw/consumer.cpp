@@ -252,7 +252,6 @@ namespace pm
         network_mutex_.Lock();
         network_io_vector_.push_back(io);
         network_mutex_.Unlock();
-        //std::cout << net_event.GetTransferSize() << std::endl;
         return VOID();
     }
     

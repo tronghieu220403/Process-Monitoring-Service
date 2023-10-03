@@ -5,26 +5,33 @@ namespace pm
 
 	ProcessController::ProcessController(const std::string& name)
 	{
-        SetHandle(name);
-		#ifdef _WIN32	
-			//p_info_ = ProcessInfo(process_handle_);
-		#endif // DEBUG
+		this->Process::SetName(name);
+        SetHandle();
 	}
 
 	ProcessController::ProcessController(const ProcessController& pc):p_info_(pc.p_info_)
 	{
-        SetHandle(pc.Process::GetName());
+		this->Process::SetName(pc.GetName());
+        SetHandle();
 	}
 
 	ProcessController& ProcessController::operator=(const ProcessController& pc)
 	{
 		this->p_info_ = pc.p_info_;
-		this->SetHandle(pc.Process::GetName());
+		this->Process::SetName(pc.GetName());
+		this->SetHandle();
 		return *this;
 	}
 
-	bool ProcessController::SetHandle(int pid)
+	bool ProcessController::SetHandle()
 	{
+		Process::SetPid(FindProcessIdByName(Process::GetName()));
+		int pid = Process::GetPid();
+		if (pid == 0)
+		{
+			return false;
+		}
+
 		bool success = true;
 		#ifdef _WIN32
 			process_handle_ = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
@@ -51,18 +58,6 @@ namespace pm
 		return success;
 
 	}
-
-	bool ProcessController::SetHandle(const std::string& name){
-		Process::SetName(static_cast<std::string>(name));
-		Process::SetPid(FindProcessIdByName(GetName()));
-		int pid = Process::GetPid();
-		if (pid == 0)
-		{
-			return false;
-		}
-
-		return SetHandle(pid);
-	};
 
 	bool ProcessController::IsExists()
 	{
@@ -111,7 +106,8 @@ namespace pm
             }
             else 
             {
-                return SetHandle(Process::GetName());
+				Close();
+                return SetHandle();
             }
         #elif __linux__
 			return false;

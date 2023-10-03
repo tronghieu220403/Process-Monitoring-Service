@@ -13,10 +13,10 @@ namespace pm
 
 		std::shared_ptr<ProcessInfo> p_info_;
 
+		bool SetHandle();
+
 		#ifdef _WIN32
 			HANDLE process_handle_ = nullptr;
-        	bool SetHandle(int pid);
-			bool SetHandle(const std::string& name);
 		#elif __linux__
 
 		#endif
@@ -35,7 +35,6 @@ namespace pm
         int GetPid() override;
 
 		std::shared_ptr<ProcessInfo> GetProcessInfo() const;
-
 
 		bool TryFindHandle();
 
