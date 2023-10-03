@@ -115,6 +115,10 @@ namespace pm
     {
         CTA::UpdateConfig();
 
+        // Cần viết lại hàm UpdateProcessStats() và UpdateAttributes()
+        // Cần viết lại hàm ghi log
+        // Cần viết lại hàm gửi nhận/log
+
         #ifdef _WIN32
 
         while (true)
@@ -151,19 +155,6 @@ namespace pm
 
             inner_mutex_.Unlock();
         }
-
-        // Ý tưởng là phân tích từng cái một (cpu, process, disk, net), ghi log riêng chứ không ghép hết vào như cách cũ.
-        
-        // Muốn thế thì ở class ProcessInfo, các phần update cần có thêm thời gian ghi log, ý tưởng là thêm 4 mục thời gian ghi log vào pm::MonitoringComponent
-
-        // Sẽ có một deque chung dùng shared_ptr để lưu các sự kiện ETW đã rút gọn, sau đó ở CTA sẽ vét deque đó và phân vào các process. 
-
-        // Mỗi pm::ProcessSupervision khi được update stat bằng UpdateProcessStats(), mỗi net và disk cần vét sạch InfoIo của nó và ghi ra một vector kết quả vector< pair<time, value> >
-
-        // pm::ProcessSupervision mỗi lần check log bằng CheckProcessStats(), cần check hết sạch vector< pair<time, value> > của net và disk.
-
-        // pm::ProcessNetworkStats và pm::ProcessDiskStats cần thêm 1 deque lưu lại các sự kiện pm::IoInfo để phân tích lúc dùng UpdateAttributes()
-
         #elif _linux__
 
         long long cnt = 0;
