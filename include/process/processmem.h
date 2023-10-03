@@ -12,11 +12,13 @@ namespace pm
 
         int pid_ = 0;
         double mem_usage_ = 0;
+        std::string process_name_;
         
     public:
         ProcessMemoryStats();
         
         explicit ProcessMemoryStats(int pid);
+        explicit ProcessMemoryStats(std::string& p_name, int pid);
 
         int GetPid() const;
         void SetPid(int pid);

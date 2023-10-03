@@ -32,32 +32,29 @@ int ProcessNetworkStats::GetPid() const
 
 #ifdef _WIN32
 
-void ProcessNetworkStats::SetIoSizeInByte(unsigned long long io_size_in_byte)
-{
-    io_size_in_byte_ = io_size_in_byte;
-}
+    void ProcessNetworkStats::AddData(FILETIME time, unsigned long long data)
+    {
+        UsageIoData& last_io_data = io_deque_.back();
+        if (last_io_data.time.dwHighDateTime == time.dwHighDateTime && last_io_data.time.dwLowDateTime == time.dwLowDateTime)
+        {
+            
+        }
+    }
 
-unsigned long long ProcessNetworkStats::GetIoSizeInByte()
-{
-    return io_size_in_byte_;
-}
+    bool ProcessNetworkStats::HasData() const
+    {
+        return io_deque_.size() > 1;
+    }
 
-double ProcessNetworkStats::GetIoSizeInMb()
-{
-    return double(io_size_in_byte_) / (1024 * 1024);
-}
+    UsageIoData ProcessNetworkStats::GetFirstIoData()
+    {
+        return io_deque_.front();
+    }
 
-
-void ProcessNetworkStats::SetLastRetrieveTime(FILETIME time)
-{
-    last_retrieve_time_ = time;
-}
-
-FILETIME ProcessNetworkStats::GetLastRetrieveTime() const
-{
-    return last_retrieve_time_;
-}
-
+    void ProcessNetworkStats::DeleteFirstIodata()
+    {
+        io_deque_.pop_front();
+    }
 
 #elif __linux__
 

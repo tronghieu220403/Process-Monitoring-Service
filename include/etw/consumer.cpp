@@ -57,24 +57,24 @@ namespace pm
         return pointer_size_;
     }
 
-    void KernelConsumer::SetDiskIoSharedDeque(std::shared_ptr< std::deque<IoInfo> >& disk_io)
+    void KernelConsumer::SetDiskIoSharedVector(std::shared_ptr< std::vector<IoInfo> >& disk_io)
     {
-        disk_io_deque_ = disk_io;
+        disk_io_vector_ = disk_io;
     }
 
-    std::shared_ptr<std::deque<IoInfo>> &KernelConsumer::GetDiskIoSharedDeque()
+    std::shared_ptr<std::vector<IoInfo>> KernelConsumer::GetDiskIoSharedVector()
     {
-        return disk_io_deque_;
+        return disk_io_vector_;
     }
 
-    void KernelConsumer::SetNetworkIoSharedDeque(std::shared_ptr< std::deque<IoInfo> >& network_io)
+    void KernelConsumer::SetNetworkIoSharedVector(std::shared_ptr< std::vector<IoInfo> >& network_io)
     {
-        network_io_deque_ = network_io;
+        network_io_vector_ = network_io;
     }
 
-    std::shared_ptr<std::deque<IoInfo>> &KernelConsumer::GetNetworkIoSharedDeque()
+    std::shared_ptr<std::vector<IoInfo>> KernelConsumer::GetNetworkIoSharedVector()
     {
-        return network_io_deque_;    
+        return network_io_vector_;
     }
 
     ULONG WINAPI KernelConsumer::ProcessBuffer(PEVENT_TRACE_LOGFILE p_buffer)
@@ -133,21 +133,21 @@ namespace pm
 
             std::transform(guid.begin(), guid.end(), guid.begin(), ::toupper);
 
-            if (guid == EventType().kThread)
+            if (guid == EventType::kThread)
             {
                 if (type == 1 || type == 2 || type == 3 || type == 4)
                 {
                     ProcessThread(event);
                 }
             }
-            else if (guid == EventType().kDiskIo)
+            else if (guid == EventType::kDiskIo)
             {
                 if (type == 10 || type == 11)
                 {
                     ProcessDiskIo(event);
                 }
             }
-            else if ((guid == EventType().kTcpip) || (guid == EventType().kUdpip))
+            else if ((guid == EventType::kTcpip) || (guid == EventType::kUdpip))
             {
                 if (type == 10 || type == 11 || type == 26 || type == 27)
                 {
@@ -226,7 +226,7 @@ namespace pm
         io.ms_time = disk_io_event.GetFileTime();
 
         disk_io_mutex_.Lock();
-        disk_io_deque_->push_back(io);
+        disk_io_vector_->push_back(io);
         disk_io_mutex_.Unlock();
 
         return VOID();
@@ -242,7 +242,7 @@ namespace pm
         io.ms_time = net_event.GetFileTime();
         
         network_mutex_.Lock();
-        network_io_deque_->push_back(io);
+        network_io_vector_->push_back(io);
         network_mutex_.Unlock();
         //std::cout << net_event.GetTransferSize() << std::endl;
         return VOID();

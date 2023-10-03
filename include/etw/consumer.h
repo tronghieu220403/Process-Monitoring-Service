@@ -29,8 +29,8 @@ namespace pm
 
 		inline static std::vector<int> thread_;
 
-		inline static std::shared_ptr< std::deque<IoInfo> > disk_io_deque_ = std::make_shared<std::deque<IoInfo>>();
-		inline static std::shared_ptr< std::deque<IoInfo> > network_io_deque_ = std::make_shared<std::deque<IoInfo>>();
+		inline static std::shared_ptr< std::vector<IoInfo> > disk_io_vector_ = std::make_shared<std::vector<IoInfo>>();
+		inline static std::shared_ptr< std::vector<IoInfo> > network_io_vector_ = std::make_shared<std::vector<IoInfo>>();
 
 	public:
 		KernelConsumer();
@@ -41,11 +41,11 @@ namespace pm
 		static void SetPointerSize(int pointer_size);
 		static int GetPointerSize();
 
-		static void SetDiskIoSharedDeque(std::shared_ptr< std::deque<IoInfo> >& disk_io);
-		static std::shared_ptr< std::deque<IoInfo> >& GetDiskIoSharedDeque();
+		static void SetDiskIoSharedVector(std::shared_ptr< std::vector<IoInfo> >& disk_io);
+		static std::shared_ptr<std::vector<IoInfo>> GetDiskIoSharedVector() const;
 
-		static void SetNetworkIoSharedDeque(std::shared_ptr< std::deque<IoInfo> >& network_io);
-		static std::shared_ptr< std::deque<IoInfo> >& GetNetworkIoSharedDeque();
+		static void SetNetworkIoSharedVector(std::shared_ptr< std::vector<IoInfo> >& network_io);
+		static std::shared_ptr<std::vector<IoInfo>> GetNetworkIoSharedVector() const;
 
 		static ULONG WINAPI ProcessBuffer(PEVENT_TRACE_LOGFILE p_buffer);
 		static VOID WINAPI ProcessEvent(PEVENT_TRACE p_event);

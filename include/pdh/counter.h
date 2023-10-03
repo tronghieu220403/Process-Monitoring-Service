@@ -27,6 +27,8 @@ namespace pm
         Counter() = default;
         Counter(std::string& p_name, int pid, std::string type);
 
+        static void UpdateQuery();
+
         bool AddCounter();
 
         double GetValue();

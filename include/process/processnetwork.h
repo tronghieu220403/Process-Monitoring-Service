@@ -3,7 +3,7 @@
 #define PROCESSMONITORING_PROCESS_PROCESSNETWORK_H_
 
 #include "ulti/everything.h"
-
+#include "ulti/collections.h"
 
 namespace pm
 {
@@ -13,8 +13,7 @@ namespace pm
         int pid_ = 0;
 
         #ifdef _WIN32
-            FILETIME last_retrieve_time_;
-            unsigned long long io_size_in_byte_ = 0;
+        std::deque<IoInfo> io_deque_;
         #elif __linux__
         long long last_data_recv_ = 0;
         long long last_data_sent_ = 0;
@@ -30,13 +29,10 @@ namespace pm
 
         #ifdef _WIN32
 
-            void SetIoSizeInByte(unsigned long long io_size_in_byte_);
-            unsigned long long GetIoSizeInByte();
-            double GetIoSizeInMb();
-
-            void SetLastRetrieveTime(FILETIME time);
-            FILETIME GetLastRetrieveTime() const;
-
+            void AddData(FILETIME time, unsigned long long data);
+            bool HasData() const;
+            IoInfo GetFirstIoData();
+            void DeleteFirstIodata();
         #elif __linux__
 
             double GetCurrentSpeed();

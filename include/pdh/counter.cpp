@@ -12,6 +12,11 @@ namespace pm
         }
     }
 
+    void Counter::UpdateQuery()
+    {
+        query_.Update();
+    }
+
     bool Counter::AddCounter()
     {
         std::string cmd = "\\Process V2(" + p_name_ + ":" + std::to_string(pid_) + ")" + "\\" + type_;

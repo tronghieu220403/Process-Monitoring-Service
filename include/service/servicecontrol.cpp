@@ -1,4 +1,4 @@
-#include "service.h"
+#include "servicecontrol.h"
 
 namespace pm
 {

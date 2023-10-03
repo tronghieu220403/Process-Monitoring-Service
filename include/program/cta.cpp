@@ -7,6 +7,10 @@ namespace pm
         cta_log_mutex_(NamedMutex("pm_cta_logs")),
         config_mutex_(NamedMutex("config_reg")),
         inner_mutex_(NamedMutex(""))
+        #ifdef _WIN32
+            , network_mutex_(NamedMutex(""))
+            , disk_io_mutex_(NamedMutex("disk_io_mutex"))
+        #endif
     {
         std::vector<char> log_path;
         log_path.resize(1000);
@@ -28,11 +32,48 @@ namespace pm
 
 #ifdef _WIN32
     CTA::CTA(std::shared_ptr<ServiceEvent> event):
-       event_(event) 
+       event_(event)
     {
-        CTA();
-        event_ = event;
+        this->CTA::CTA();
     }
+
+    void CTA::SetDiskIoVector(std::shared_ptr<std::vector<IoInfo>> io_info)
+    {
+        disk_io_vector_ = io_info;
+    }
+    
+    std::shared_ptr<std::deque<IoInfo>> CTA::GetDiskIoVector() const
+    {
+        return disk_io_vector_;
+    }
+
+    void CTA::SetNetworkIoVector(std::shared_ptr<std::vector<IoInfo>> io_info)
+    {
+        network_io_vector_ = io_info;
+    }
+
+    std::shared_ptr<std::deque<IoInfo>> CTA::GetNetworkIoVector() const
+    {
+        return network_io_vector_;
+    }
+
+    void CTA::AddIoData(int type, IoInfo io)
+    {
+        if (type == IoType::DISK_IO)
+        {
+            disk_io_vector_->push_back(io);
+        }
+        else if (type == IoType::NETWORK_IO)
+        {
+            network_io_vector_->push_back(io);
+        }
+    }
+
+    void CTA::CopyData()
+    {
+
+    }
+
 #endif
 
     void CTA::UpdateConfig()
@@ -92,7 +133,7 @@ namespace pm
         
         // Muốn thế thì ở class ProcessInfo, các phần update cần có thêm thời gian ghi log, ý tưởng là thêm 4 mục thời gian ghi log vào pm::MonitoringComponent
 
-        // Sẽ có một deque chung dùng shared_ptr để lưu các sự kiện ETW đã rút gọn, sau đó ở CTA sẽ vét deque đó và phân vào các process.
+        // Sẽ có một deque chung dùng shared_ptr để lưu các sự kiện ETW đã rút gọn, sau đó ở CTA sẽ vét deque đó và phân vào các process. 
 
         // Mỗi pm::ProcessSupervision khi được update stat bằng UpdateProcessStats(), mỗi net và disk cần vét sạch InfoIo của nó và ghi ra một vector kết quả vector< pair<time, value> >
 

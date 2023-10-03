@@ -18,7 +18,10 @@ namespace pm
             }
             pid_ = pid;
         #endif
-    };
+    }
+    ProcessMemoryStats::ProcessMemoryStats(std::string &p_name, int pid):
+        pid_(pid), process_name_(p_name)
+    {};
 
     int ProcessMemoryStats::GetPid() const
     {

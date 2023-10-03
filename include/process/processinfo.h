@@ -8,7 +8,9 @@
     #include "process/processdisk.h"
     #include "process/processnetwork.h"
     #include "ulti/collections.h"
-
+#ifdef _WIN32
+    #include "pdh/counter.h"
+#endif
 namespace pm
 {
 
@@ -17,7 +19,12 @@ namespace pm
     private:
         int pid_ = 0;
         std::string process_name_;
-        time_t time_ = 0;
+
+        #ifdef __linux__
+            time_t time_ = 0;
+        #elif _WIN32
+
+        #endif
         ProcessMemoryStats memory_usage_{};
         ProcessCpuStats cpu_usage_{};
         ProcessDiskStats disk_usage_{};
@@ -37,8 +44,9 @@ namespace pm
         explicit ProcessInfo(std::string& p_name, int pid);
 
         int GetPid() const;
-                
-        time_t GetTime() const;
+        #ifdef __linux__
+            time_t GetTime() const;
+        #endif
         double GetCpuUsage() const;
         double GetMemoryUsage() const;
         double GetDiskUsage() const;

@@ -30,16 +30,6 @@ namespace pm
         StartServiceCtrlDispatcher(DispatchTable);
     }
 
-    struct ServiceEvent
-    {
-        public: 
-            HANDLE stop_event_ = nullptr;
-            HANDLE pause_event_ = nullptr;
-            HANDLE continue_event_ = nullptr;
-
-            void Close();
-    };
-
     void ServiceEvent::Close()
     {
         if (stop_event_ != INVALID_HANDLE_VALUE && stop_event_ != nullptr)

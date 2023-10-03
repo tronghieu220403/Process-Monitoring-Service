@@ -12,6 +12,7 @@ namespace pm
     {
         #ifdef _WIN32
         Close();
+        mutex_name_ = mutex_name;
         _SECURITY_ATTRIBUTES sec;
         sec.nLength = sizeof(_SECURITY_ATTRIBUTES);
         sec.bInheritHandle = TRUE;
@@ -23,6 +24,7 @@ namespace pm
                         );
         #elif __linux__
         Close();
+        mutex_name_ = mutex_name;
         p_sema_ = &sema_;
         if (mutex_name.size() != 0)
         {
