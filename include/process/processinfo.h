@@ -10,6 +10,7 @@
     #include "ulti/collections.h"
 #ifdef _WIN32
     #include "pdh/counter.h"
+    #include "etw/consumer.h"
 #endif
 namespace pm
 {
@@ -25,19 +26,23 @@ namespace pm
         #elif _WIN32
 
         #endif
-        ProcessMemoryStats memory_usage_{};
-        ProcessCpuStats cpu_usage_{};
-        ProcessDiskStats disk_usage_{};
-        ProcessNetworkStats network_usage_{};
+        std::shared_ptr<ProcessMemoryStats> memory_usage_stats;
+        std::shared_ptr<ProcessCpuStats> cpu_usage_stats;
+        std::shared_ptr<ProcessDiskStats> disk_usage_stats;
+        std::shared_ptr<ProcessNetworkStats> network_usage_stats;
 
         MonitoringComponent last_usage_;
 
-        time_t UpdateTime();
-        double UpdateCpuUsage();
-        double UpdateMemoryUsage();
-        double UpdateDiskUsage();
-        double UpdateNetworkUsage();
-
+#if __linux__
+    time_t UpdateTime();
+    double UpdateCpuUsage();
+    double UpdateMemoryUsage();
+    double UpdateDiskUsage();
+    double UpdateNetworkUsage();
+#elif _WIN32
+    void UpdateDiskUsage();
+    void UpdateNetworkUsage();
+#endif
     public:
 
         ProcessInfo() = default;
@@ -47,6 +52,12 @@ namespace pm
         #ifdef __linux__
             time_t GetTime() const;
         #endif
+
+        std::shared_ptr<ProcessMemoryStats> GetMemoryUsageStats() const;
+        std::shared_ptr<ProcessCpuStats> GetCpuUsageStats() const;
+        std::shared_ptr<ProcessDiskStats> GetDiskUsageStats() const;
+        std::shared_ptr<ProcessNetworkStats> GetNetworkUsageStats() const;
+
         double GetCpuUsage() const;
         double GetMemoryUsage() const;
         double GetDiskUsage() const;

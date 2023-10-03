@@ -58,13 +58,13 @@ namespace pm
     void NetworkEvent::UpdateAttributes()
     {
         unsigned long long transfer_size = 0;
-        int process_id = 0;
+        int pid = 0;
 
         memcpy(&transfer_size, this->Event::GetPEventData() + GetTransferSizeOffset(), GetTransferSizeLength());
         SetTransferSize(transfer_size);
 
-        memcpy(&process_id, this->Event::GetPEventData() + GetProcessIdOffset(), GetProcessIdLength());
-        SetProcessId(process_id);
+        memcpy(&pid, this->Event::GetPEventData() + GetProcessIdOffset(), GetProcessIdLength());
+        SetProcessId(pid);
 
     }
 
@@ -78,9 +78,9 @@ namespace pm
         return transfer_size_;
     }
 
-    void NetworkEvent::SetProcessId(int process_id)
+    void NetworkEvent::SetProcessId(int pid)
     {
-        process_id_ = process_id;
+        process_id_ = pid;
     }
     
     int NetworkEvent::GetProcessId() const

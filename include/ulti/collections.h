@@ -47,9 +47,9 @@ namespace pm
 
 	struct IoInfo
 	{
-		FILETIME ms_time = {0};
+		FILETIME filetime = {0};
 		unsigned long long size = 0;
-		long long process_id = 0;
+		long long pid = 0;
 	};
 
     struct ServiceEvent

@@ -38,30 +38,62 @@ int ProcessDiskStats::GetPid() const
 
 #ifdef _WIN32
 
-void ProcessDiskStats::SetIoSizeInByte(unsigned long long io_size_in_byte_)
-{
-    io_size_in_byte_ = io_size_in_byte;
-}
+    void ProcessDiskStats::AddData(FILETIME time, unsigned long long data)
+    {
+        UsageIoData io_data;
+        SYSTEMTIME last_io_st;
+        SYSTEMTIME st;
 
-unsigned long long ProcessDiskStats::GetIoSizeInByte()
-{
-    return io_size_in_byte_;
-}
+        if (io_deque_.size() == 0)
+        {
+            io_data.data = data;
+            io_data.time = time;
+            io_deque_.push_back(io_data);
+            return;
+        }
+        UsageIoData& last_io_data = io_deque_.back();
+        FileTimeToSystemTime(&time, &st);
+        FileTimeToSystemTime(&last_io_data.time, &last_io_st);
+        unsigned long long last_ym = last_io_st.wYear * 12 + last_io_st.wMonth;
+        unsigned long long data_ym = st.wYear * 12 + st.wMonth;
+        unsigned long long last_dhms = last_io_st.wDay * 3600 * 12 + last_io_st.wHour * 3600 + last_io_st.wMinute * 60 + last_io_st.wSecond;
+        unsigned long long data_dhms = last_io_st.wDay * 3600 * 12 + last_io_st.wHour * 3600 + last_io_st.wMinute * 60 + last_io_st.wSecond;
+        if (last_ym == data_ym)
+        {
+            if (last_dhms == data_dhms)
+            {
+                last_io_data.data += data;
+            }
+            else if (last_dhms < data_dhms)
+            {
+                io_data.data = data;
+                io_data.time = time;
+                io_deque_.push_back(io_data);
+            }
+        }
+        else if (last_ym < data_ym)
+        {
+            io_data.data = data;
+            io_data.time = time;
+            io_deque_.push_back(io_data);
+        }
+    }
 
-double ProcessDiskStats::GetIoSizeInMb()
-{
-    return double(io_size_in_byte_) / (1024 * 1024);
-}
+    bool ProcessDiskStats::HasData() const
+    {
+        return io_deque_.size() > 1;
+    }
 
-void ProcessDiskStats::SetLastRetrieveTime(FILETIME time)
-{
-    last_retrieve_time_ = time;
-}
+    UsageIoData ProcessDiskStats::GetFrontIoData()
+    {
+        return io_deque_.front();
+    }
 
-FILETIME ProcessDiskStats::GetLastRetrieveTime() const
-{
-    return last_retrieve_time_;
-}
+    void ProcessDiskStats::DeleteFrontIodata()
+    {
+        io_deque_.pop_front();
+    }
+
 
 #elif __linux__
 

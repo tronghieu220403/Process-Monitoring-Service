@@ -8,12 +8,20 @@ namespace pm
     {
         process_name_ = p_name;
         pid_ = pid;
-        memory_usage_ = ProcessMemoryStats(p_name, pid); // need update
-        cpu_usage_ = ProcessCpuStats(pid); // need update
-        disk_usage_ = ProcessDiskStats(pid); // need update
-        network_usage_ = ProcessNetworkStats(pid);
+        memory_usage_stats = std::make_shared<ProcessMemoryStats>(p_name, pid); // need update
+        cpu_usage_stats = std::make_shared<ProcessCpuStats>(pid); // need update
+        disk_usage_stats = std::make_shared<ProcessDiskStats>(pid); // need update
+        network_usage_stats = std::make_shared<ProcessNetworkStats>(pid);
+        #ifdef __linux__
         UpdateTime();
+        #endif
     };
+
+    int ProcessInfo::GetPid() const
+    {
+        return pid_;
+    };
+
 
 #ifdef __linux__
     time_t ProcessInfo::UpdateTime()
@@ -21,12 +29,6 @@ namespace pm
         this->time_ = time(0);
         return time_;
     }
-#endif
-
-    int ProcessInfo::GetPid() const
-    {
-        return pid_;
-    };
 
     double ProcessInfo::UpdateCpuUsage()
     {
@@ -36,9 +38,9 @@ namespace pm
 
         #endif
 
-        cpu_usage_.UpdateAttributes();
+        cpu_usage_stats.UpdateAttributes();
 
-        return cpu_usage_.GetLastUsagePercentage();
+        return cpu_usage_stats.GetLastUsagePercentage();
     };
 
     double ProcessInfo::UpdateMemoryUsage()
@@ -49,7 +51,7 @@ namespace pm
 
         #endif
 
-        return memory_usage_.UpdateAttributes(); // ?
+        return memory_usage_stats.UpdateAttributes(); // ?
     };
 
     double ProcessInfo::UpdateDiskUsage()
@@ -57,10 +59,9 @@ namespace pm
         #ifdef _WIN32
 
         #elif __linux__
-
+            return disk_usage_stats.GetCurrentSpeed();
         #endif
 
-        return disk_usage_.GetCurrentSpeed();
     };
 
     double ProcessInfo::UpdateNetworkUsage()
@@ -68,11 +69,24 @@ namespace pm
         #ifdef _WIN32
 
         #elif __linux__
-
+            return network_usage_stats.GetCurrentSpeed();
         #endif
 
-        return network_usage_.GetCurrentSpeed();
     };
+#elif _WIN32
+
+    void ProcessInfo::UpdateDiskUsage()
+    {
+
+    }
+
+    void ProcessInfo::UpdateNetworkUsage()
+    {
+        
+    }
+
+
+#endif
 
     void ProcessInfo::UpdateAttributes()
     {
@@ -84,6 +98,7 @@ namespace pm
         last_usage_.network_usage.data = UpdateNetworkUsage();
         #elif _WIN32
             Counter::UpdateQuery();
+
         #endif
     }
 
@@ -93,6 +108,26 @@ namespace pm
         return time_;
     }
 #endif
+
+    std::shared_ptr<ProcessMemoryStats> ProcessInfo::GetMemoryUsageStats() const
+    {
+        return memory_usage_stats;
+    }
+
+    std::shared_ptr<ProcessCpuStats> ProcessInfo::GetCpuUsageStats() const
+    {
+        return cpu_usage_stats;
+    }
+
+    std::shared_ptr<ProcessDiskStats> ProcessInfo::GetDiskUsageStats() const
+    {
+        return disk_usage_stats;
+    }
+
+    std::shared_ptr<ProcessNetworkStats> ProcessInfo::GetNetworkUsageStats() const
+    {
+        return network_usage_stats;
+    }
 
     double ProcessInfo::GetCpuUsage() const
     {

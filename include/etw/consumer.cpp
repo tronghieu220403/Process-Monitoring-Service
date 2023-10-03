@@ -57,24 +57,32 @@ namespace pm
         return pointer_size_;
     }
 
-    void KernelConsumer::SetDiskIoSharedVector(std::shared_ptr< std::vector<IoInfo> >& disk_io)
+    void KernelConsumer::SetDiskIoSharedVector(std::vector<IoInfo>& disk_io)
     {
         disk_io_vector_ = disk_io;
     }
 
-    std::shared_ptr<std::vector<IoInfo>> KernelConsumer::GetDiskIoSharedVector()
+    std::vector<IoInfo> KernelConsumer::GetDiskIoSharedVector()
     {
-        return disk_io_vector_;
+        disk_io_mutex_.Lock();
+        std::vector<IoInfo> output = disk_io_vector_;
+        ResetDiskIoSharedVector();
+        disk_io_mutex_.Unlock();
+        return output;
     }
 
-    void KernelConsumer::SetNetworkIoSharedVector(std::shared_ptr< std::vector<IoInfo> >& network_io)
+    void KernelConsumer::SetNetworkIoSharedVector(std::vector<IoInfo>& network_io)
     {
         network_io_vector_ = network_io;
     }
 
-    std::shared_ptr<std::vector<IoInfo>> KernelConsumer::GetNetworkIoSharedVector()
+    std::vector<IoInfo> KernelConsumer::GetNetworkIoSharedVector()
     {
-        return network_io_vector_;
+        network_mutex_.Lock();
+        std::vector<IoInfo> output = network_io_vector_;
+        ResetNetworkIoSharedVector();
+        network_mutex_.Unlock();
+        return output;
     }
 
     ULONG WINAPI KernelConsumer::ProcessBuffer(PEVENT_TRACE_LOGFILE p_buffer)
@@ -191,7 +199,7 @@ namespace pm
 
         int type = thread_event.GetType();
         int thread_id = thread_event.GetThreadId();
-        int process_id = thread_event.GetProcessId();
+        int pid = thread_event.GetProcessId();
 
         if (thread_id + 1 >= thread_.size())
         {
@@ -202,7 +210,7 @@ namespace pm
         if (thread_event.GetType() == 1 || thread_event.GetType() == 3)
         {
             // push data to a shared pointer pointer vector
-            thread_[thread_id] = process_id;
+            thread_[thread_id] = pid;
         }
         // Thread end
         else 
@@ -221,12 +229,12 @@ namespace pm
         DiskIoEvent disk_io_event(event, GetPointerSize());
         //std::cout << diskio_event.GetTransferSize() << std::endl;
         struct IoInfo io;
-        io.process_id = thread_[disk_io_event.GetThreadId()];
+        io.pid = thread_[disk_io_event.GetThreadId()];
         io.size = disk_io_event.GetTransferSize();
-        io.ms_time = disk_io_event.GetFileTime();
+        io.filetime = disk_io_event.GetFileTime();
 
         disk_io_mutex_.Lock();
-        disk_io_vector_->push_back(io);
+        disk_io_vector_.push_back(io);
         disk_io_mutex_.Unlock();
 
         return VOID();
@@ -237,12 +245,12 @@ namespace pm
         NetworkEvent net_event(event, GetPointerSize());
         
         struct IoInfo io;
-        io.process_id = net_event.GetProcessId();
+        io.pid = net_event.GetProcessId();
         io.size = net_event.GetTransferSize();
-        io.ms_time = net_event.GetFileTime();
+        io.filetime = net_event.GetFileTime();
         
         network_mutex_.Lock();
-        network_io_vector_->push_back(io);
+        network_io_vector_.push_back(io);
         network_mutex_.Unlock();
         //std::cout << net_event.GetTransferSize() << std::endl;
         return VOID();

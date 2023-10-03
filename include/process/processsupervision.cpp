@@ -39,22 +39,22 @@ namespace pm
 
     void ProcessSupervision::SetMaxCpuUsage(float max_cpu_usage)
     {
-        max_usage_.cpu_usage = max_cpu_usage;
+        max_usage_.cpu_usage.data = max_cpu_usage;
     }
 
     void ProcessSupervision::SetMaxMemUsage(double max_mem_usage)
     {
-        max_usage_.mem_usage = max_mem_usage;
+        max_usage_.mem_usage.data = max_mem_usage;
     }
 
     void ProcessSupervision::SetMaxDiskUsage(float max_disk_usage)
     {
-        max_usage_.disk_usage = max_disk_usage;
+        max_usage_.disk_usage.data = max_disk_usage;
     }
 
     void ProcessSupervision::SetMaxNetworkUsage(float max_network_usage)
     {
-        max_usage_.network_usage = max_network_usage;
+        max_usage_.network_usage.data = max_network_usage;
     }
 
     std::shared_ptr<ProcessController>& ProcessSupervision::GetProcessController()
@@ -72,35 +72,38 @@ namespace pm
         return max_usage_;
     }
     
-
     void ProcessSupervision::UpdateProcessStats()
     {
         if (process_controller_->IsExists() == false)
         {
             process_controller_->TryFindHandle();
         }
-        process_controller_->GetProcessInfo().UpdateAttributes();
+        process_controller_->GetProcessInfo()->UpdateAttributes();
     }
 
     void ProcessSupervision::CheckProcessStats()
     {
-        ProcessInfo const& p_info = process_controller_->GetProcessInfo();
-        if (p_info.GetCpuUsage() > max_usage_.cpu_usage)
+        #ifdef __linux__
+        std::shared_ptr<ProcessInfo> p_info = process_controller_->GetProcessInfo();
+        if (p_info->GetCpuUsage() > max_usage_.cpu_usage.data)
         {
             Alert(ProcessLoggerType::kProcessLoggerCpu);
         }
-        if (p_info.GetMemoryUsage() > max_usage_.mem_usage)
+        if (p_info->GetMemoryUsage() > max_usage_.mem_usage.data)
         {
             Alert(ProcessLoggerType::kProcessLoggerMem);
         }
-        if (p_info.GetDiskUsage() > max_usage_.disk_usage)
+        if (p_info->GetDiskUsage() > max_usage_.disk_usage.data)
         {
             Alert(ProcessLoggerType::kProcessLoggerDisk);
         }
-        if (p_info.GetNetworkUsage() > max_usage_.network_usage)
+        if (p_info->GetNetworkUsage() > max_usage_.network_usage.data)
         {
             Alert(ProcessLoggerType::kProcessLoggerNet);
         }
+        #elif _WIN32
+
+        #endif
     }
 
     void ProcessSupervision::Alert(ProcessLoggerType type)

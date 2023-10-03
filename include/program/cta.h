@@ -10,6 +10,7 @@
 #include "mutex/mutex.h"
 #include "file/file.h"
 #include "service/serviceevent.h"
+#include "etw/consumer.h"
 
 namespace pm
 {
@@ -25,8 +26,8 @@ namespace pm
             std::deque<IoInfo> disk_io_deque_;
             std::deque<IoInfo> network_io_deque_;
 
-            std::shared_ptr<std::deque<IoInfo>> disk_io_vector_;
-            std::shared_ptr<std::deque<IoInfo>> network_io_vector_;
+            std::vector<IoInfo> disk_io_vector_;
+            std::vector<IoInfo> network_io_vector_;
 
             NamedMutex network_mutex_;
             NamedMutex disk_io_mutex_;
@@ -35,7 +36,7 @@ namespace pm
 
         bool new_log_ = false;
         std::vector<char> v_log_path_;
-        
+
         NamedMutex cta_log_mutex_;
         NamedMutex inner_mutex_;
         NamedMutex config_mutex_;
@@ -48,13 +49,12 @@ namespace pm
         #ifdef _WIN32
         CTA(std::shared_ptr<ServiceEvent> event);
 
-        void SetDiskIoVector(std::shared_ptr< std::vector<IoInfo>> io_info);
-        std::shared_ptr< std::deque<IoInfo> > GetDiskIoVector() const;
+        void SetDiskIoVector(std::vector<IoInfo> io_info);
+        std::vector<IoInfo> GetDiskIoVector() const;
 
-        void SetNetworkIoVector(std::shared_ptr<std::vector<IoInfo>> io_info);
-        std::shared_ptr< std::deque<IoInfo> > GetNetworkIoVector() const;
+        void SetNetworkIoVector(std::vector<IoInfo> io_info);
+        std::vector<IoInfo> GetNetworkIoVector() const;
 
-        void AddIoData(int type, IoInfo io);
         void CopyData();
 
         #endif

@@ -30,6 +30,7 @@ namespace pm
         StartServiceCtrlDispatcher(DispatchTable);
     }
 
+
     void ServiceEvent::Close()
     {
         if (stop_event_ != INVALID_HANDLE_VALUE && stop_event_ != nullptr)

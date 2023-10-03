@@ -7,7 +7,7 @@ namespace pm
 	{
         SetHandle(name);
 		#ifdef _WIN32	
-			p_info_ = ProcessInfo(process_handle_);
+			//p_info_ = ProcessInfo(process_handle_);
 		#endif // DEBUG
 	}
 
@@ -34,7 +34,7 @@ namespace pm
 			}
 			else 
 			{
-				p_info_ = ProcessInfo(process_handle_);
+				p_info_ = std::make_shared<ProcessInfo>(Process::GetName(), pid);
 				success = true;
 			}
 		#elif __linux__
@@ -44,7 +44,7 @@ namespace pm
                 return false;
             }
 
-			p_info_ = ProcessInfo(pid);
+			p_info_ = std::make_shared<ProcessInfo>(Process::GetName(), pid);
 
 		#endif
 		
@@ -97,7 +97,7 @@ namespace pm
 
 	}
 
-	ProcessInfo& ProcessController::GetProcessInfo()
+	std::shared_ptr<ProcessInfo> ProcessController::GetProcessInfo() const
 	{
 		return p_info_;
 	}

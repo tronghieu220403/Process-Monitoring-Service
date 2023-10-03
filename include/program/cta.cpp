@@ -37,36 +37,24 @@ namespace pm
         this->CTA::CTA();
     }
 
-    void CTA::SetDiskIoVector(std::shared_ptr<std::vector<IoInfo>> io_info)
+    void CTA::SetDiskIoVector(std::vector<IoInfo> io_info)
     {
         disk_io_vector_ = io_info;
     }
     
-    std::shared_ptr<std::deque<IoInfo>> CTA::GetDiskIoVector() const
+    std::vector<IoInfo> CTA::GetDiskIoVector() const
     {
         return disk_io_vector_;
     }
 
-    void CTA::SetNetworkIoVector(std::shared_ptr<std::vector<IoInfo>> io_info)
+    void CTA::SetNetworkIoVector(std::vector<IoInfo> io_info)
     {
         network_io_vector_ = io_info;
     }
 
-    std::shared_ptr<std::deque<IoInfo>> CTA::GetNetworkIoVector() const
+    std::vector<IoInfo> CTA::GetNetworkIoVector() const
     {
         return network_io_vector_;
-    }
-
-    void CTA::AddIoData(int type, IoInfo io)
-    {
-        if (type == IoType::DISK_IO)
-        {
-            disk_io_vector_->push_back(io);
-        }
-        else if (type == IoType::NETWORK_IO)
-        {
-            network_io_vector_->push_back(io);
-        }
     }
 
     void CTA::CopyData()
@@ -128,6 +116,40 @@ namespace pm
         CTA::UpdateConfig();
 
         #ifdef _WIN32
+
+        while (true)
+        {
+            Sleep(500);
+            inner_mutex_.Lock();
+
+            std::vector<IoInfo> disk_data = KernelConsumer::GetNetworkIoSharedVector();
+
+            std::vector<IoInfo> net_data = KernelConsumer::GetNetworkIoSharedVector();
+
+            for (auto &data: disk_data)
+            {
+                for (auto& ps: process_)
+                {
+                    if (ps.GetProcessController()->GetPid() == data.pid)
+                    {
+                        ps.GetProcessController()->GetProcessInfo()->GetNetworkUsageStats()->AddData(data.filetime, data.size);
+                    }
+                }
+            }
+
+            for (auto &data: net_data)
+            {
+                for (auto& ps: process_)
+                {
+                    if (ps.GetProcessController()->GetPid() == data.pid)
+                    {
+                        ps.GetProcessController()->GetProcessInfo()->GetNetworkUsageStats()->AddData(data.filetime, data.size);
+                    }
+                }
+            }
+
+            inner_mutex_.Unlock();
+        }
 
         // Ý tưởng là phân tích từng cái một (cpu, process, disk, net), ghi log riêng chứ không ghép hết vào như cách cũ.
         

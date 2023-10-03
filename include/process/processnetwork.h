@@ -13,7 +13,7 @@ namespace pm
         int pid_ = 0;
 
         #ifdef _WIN32
-        std::deque<IoInfo> io_deque_;
+        std::deque<UsageIoData> io_deque_;
         #elif __linux__
         long long last_data_recv_ = 0;
         long long last_data_sent_ = 0;
@@ -31,8 +31,9 @@ namespace pm
 
             void AddData(FILETIME time, unsigned long long data);
             bool HasData() const;
-            IoInfo GetFirstIoData();
-            void DeleteFirstIodata();
+            UsageIoData GetFrontIoData();
+            void DeleteFrontIodata();
+
         #elif __linux__
 
             double GetCurrentSpeed();

@@ -2,6 +2,7 @@
 #define PROCESSMONITORING_PROCESS_PROCESSDISK_H_
 
 #include "ulti/everything.h"
+#include "ulti/collections.h"
 
 namespace pm
 {
@@ -13,9 +14,7 @@ namespace pm
         int pid_ = 0;
 
         #ifdef _WIN32
-            FILETIME last_retrieve_time_ = { 0 };
-            unsigned long long io_size_in_byte_ = 0;
-
+            std::deque<UsageIoData> io_deque_;
         #elif __linux__
             clock_t last_time_ = 0;
             double last_io_ = 0;
@@ -36,12 +35,11 @@ namespace pm
 
         #ifdef _WIN32
 
-            void SetIoSizeInByte(unsigned long long io_size_in_byte_);
-            unsigned long long GetIoSizeInByte();
-            double GetIoSizeInMb();
+            void AddData(FILETIME time, unsigned long long data);
+            bool HasData() const;
+            UsageIoData GetFrontIoData();
+            void DeleteFrontIodata();
 
-            void SetLastRetrieveTime(FILETIME time);
-            FILETIME GetLastRetrieveTime() const;
         #elif __linux__
 
             double GetCurrentCounter();
