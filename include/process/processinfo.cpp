@@ -107,8 +107,10 @@ namespace pm
         last_usage_.disk_usage.data = UpdateDiskUsage();
         last_usage_.network_usage.data = UpdateNetworkUsage();
         #elif _WIN32
-            Counter::UpdateQuery();
-
+            UpdateDiskUsage();
+            UpdateNetworkUsage();
+            UpdateCpuUsage();
+            UpdateMemoryUsage();
         #endif
     }
 

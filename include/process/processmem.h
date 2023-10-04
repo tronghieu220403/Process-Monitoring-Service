@@ -31,8 +31,10 @@ namespace pm
         void SetMemoryUsage(double mem_usage);
 
         #ifdef _WIN32
-            FILETIME GetLastRetrievedTime();
+            FILETIME GetLastRetrievedTime() const;
             void SetLastRetrievedTime(FILETIME time);
+
+            UsageData GetMemoryUsageData() const;
         #endif
 
         void UpdateAttributes();

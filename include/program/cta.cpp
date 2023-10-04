@@ -7,10 +7,6 @@ namespace pm
         cta_log_mutex_(NamedMutex("pm_cta_logs")),
         config_mutex_(NamedMutex("config_reg")),
         inner_mutex_(NamedMutex(""))
-        #ifdef _WIN32
-            , network_mutex_(NamedMutex(""))
-            , disk_io_mutex_(NamedMutex("disk_io_mutex"))
-        #endif
     {
         std::vector<char> log_path;
         log_path.resize(1000);
@@ -35,31 +31,6 @@ namespace pm
        event_(event)
     {
         this->CTA::CTA();
-    }
-
-    void CTA::SetDiskIoVector(std::vector<IoInfo> io_info)
-    {
-        disk_io_vector_ = io_info;
-    }
-    
-    std::vector<IoInfo> CTA::GetDiskIoVector() const
-    {
-        return disk_io_vector_;
-    }
-
-    void CTA::SetNetworkIoVector(std::vector<IoInfo> io_info)
-    {
-        network_io_vector_ = io_info;
-    }
-
-    std::vector<IoInfo> CTA::GetNetworkIoVector() const
-    {
-        return network_io_vector_;
-    }
-
-    void CTA::CopyData()
-    {
-
     }
 
 #endif
@@ -121,6 +92,8 @@ namespace pm
 
         #ifdef _WIN32
 
+        std::string log;
+
         while (true)
         {
             Sleep(500);
@@ -128,6 +101,8 @@ namespace pm
             std::vector<IoInfo> disk_data = KernelConsumer::GetNetworkIoSharedVector();
 
             std::vector<IoInfo> net_data = KernelConsumer::GetNetworkIoSharedVector();
+            
+            Counter::UpdateQuery();
 
             for (auto &data: disk_data)
             {
@@ -150,6 +125,17 @@ namespace pm
                     }
                 }
             }
+
+            for (auto& ps : process_)
+            {
+                ps.CheckProcessStats();
+                if ((ps.GetProcessLogger()->GetMessage()).size() != 0)
+                {
+                    log.append(ps.GetProcessLogger()->GetMessage());
+                    ps.GetProcessLogger()->SetMessage("");
+                }
+            }
+
 
             inner_mutex_.Lock();
 

@@ -38,7 +38,11 @@ namespace pm
 
         void UpdateProcessStats();
         void CheckProcessStats();
-        void Alert(ProcessLoggerType type);
+        #ifdef _WIN32
+            void Alert(ProcessLoggerType type, UsageData usage_data);
+        #elif __linux__
+            void Alert(ProcessLoggerType type);
+        #endif
     };
 }
 

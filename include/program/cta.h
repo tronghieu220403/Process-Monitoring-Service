@@ -11,6 +11,7 @@
 #include "file/file.h"
 #include "service/serviceevent.h"
 #include "etw/consumer.h"
+#include "pdh/counter.h"
 
 namespace pm
 {
@@ -23,14 +24,6 @@ namespace pm
         
         #ifdef _WIN32
             std::shared_ptr<ServiceEvent> event_;
-            std::deque<IoInfo> disk_io_deque_;
-            std::deque<IoInfo> network_io_deque_;
-
-            std::vector<IoInfo> disk_io_vector_;
-            std::vector<IoInfo> network_io_vector_;
-
-            NamedMutex network_mutex_;
-            NamedMutex disk_io_mutex_;
 
         #endif
 
@@ -48,14 +41,6 @@ namespace pm
         
         #ifdef _WIN32
         CTA(std::shared_ptr<ServiceEvent> event);
-
-        void SetDiskIoVector(std::vector<IoInfo> io_info);
-        std::vector<IoInfo> GetDiskIoVector() const;
-
-        void SetNetworkIoVector(std::vector<IoInfo> io_info);
-        std::vector<IoInfo> GetNetworkIoVector() const;
-
-        void CopyData();
 
         #endif
 

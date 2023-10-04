@@ -22,7 +22,7 @@ namespace pm
         explicit Query(Query&& q) = delete;
         Query operator=(Query const& q) = delete;
 
-        void GetUpdateTime() const;
+        FILETIME GetUpdateTime() const;
 
         bool Open();
         void Update();

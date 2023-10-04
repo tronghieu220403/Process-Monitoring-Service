@@ -135,7 +135,7 @@ namespace pm
 
         #ifdef _WIN32
             SetLastRetrievedTime(Counter::GetLastQueryTime());
-            SetLastUsagePercentage(counter_.GetValue());
+            SetLastUsagePercentage(counter_.GetValue() / num_processors_);
         #elif __linux__
 
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
@@ -181,7 +181,7 @@ namespace pm
         last_usage_percentage_ = last_usage_percentage;
     }
 
-    double ProcessCpuStats::GetLastUsagePercentage()
+    double ProcessCpuStats::GetLastUsagePercentage() const
     {
         #ifdef _WIN32
 
@@ -196,7 +196,7 @@ namespace pm
     }
 
 #ifdef _WIN32
-    FILETIME ProcessCpuStats::GetLastRetrievedTime()
+    FILETIME ProcessCpuStats::GetLastRetrievedTime() const
     {
         return last_retrieved_time_;
     }
@@ -204,6 +204,14 @@ namespace pm
     void ProcessCpuStats::SetLastRetrievedTime(FILETIME time)
     {
         last_retrieved_time_ = time;
+    }
+
+    UsageData ProcessCpuStats::GeCpuUsageData() const
+    {
+        UsageData usage_data;
+        usage_data.time = GetLastRetrievedTime();
+        usage_data.data - GetLastUsagePercentage();
+        return usage_data;
     }
 
 #endif

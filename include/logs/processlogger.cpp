@@ -30,6 +30,8 @@ namespace pm
     }
 
 
+#ifdef __linux__
+
     std::string ProcessLogger::GetAlert(ProcessLoggerType type)
     {
         std::stringstream ss;
@@ -47,8 +49,7 @@ namespace pm
         int sec = time_struct->tm_sec;
         ss << year << "-" << month << "-" << day << " " << hour << ":" << min << ":" << sec << ",";
         
-        int pid = process_controller_->GetPid();
-        ss << pid << "," << process_controller_->GetName() << ",";
+        ss << process_controller_->GetPid() << "," << process_controller_->GetName() << ",";
         if (type == ProcessLoggerType::kProcessLoggerCpu)
         {
             ss << "CPU,";
@@ -77,5 +78,47 @@ namespace pm
         return ss.str();
     }
 
+#elif _WIN32
+
+    std::string ProcessLogger::GetAlert(ProcessLoggerType type, UsageData usage_data)
+    {
+        SYSTEMTIME st;
+        FileTimeToSystemTime(&usage_data.time, &st);
+
+        int day = st.wDay;
+        int month = st.wMonth; // Month is 0 - 11, add 1 to get a jan-dec 1-12 concept
+        int year = st.wYear; // Year is # years since 1900
+        int hour = st.wHour;
+        int min = st.wMinute;
+        int sec = st.wSecond;
+
+        std::stringstream ss;
+        ss << year << "-" << month << "-" << day << " " << hour << ":" << min << ":" << sec << ",";
+
+        ss << process_controller_->GetPid() << "," << process_controller_->GetName() << ",";
+
+        if (type == ProcessLoggerType::kProcessLoggerCpu)
+        {
+            ss << "CPU," << usage_data.data << "%";
+        }
+        else if (type == ProcessLoggerType::kProcessLoggerMem)
+        {
+            ss << "Memory," << usage_data.data << "MB";
+        }
+        else if (type == ProcessLoggerType::kProcessLoggerDisk)
+        {
+            ss << "Disk," << usage_data.data << "MB";
+        }
+        else if (type == ProcessLoggerType::kProcessLoggerNet)
+        {
+            ss << "Network," << usage_data.data << "KB";
+        }
+        ss << "\n";
+        return ss.str();
+
+
+    }
+
+#endif
 }
 

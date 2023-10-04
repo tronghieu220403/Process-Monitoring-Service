@@ -30,13 +30,6 @@ namespace pm
         double data;
     };
 
-
-    struct UsageIoData
-    {
-        FILETIME time;
-        unsigned long long data;
-    };
-
     struct MonitoringComponent
     {
         UsageData cpu_usage = {0};

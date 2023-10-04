@@ -24,7 +24,11 @@ namespace pm
 
         void SetProcessController(const std::shared_ptr<ProcessController>& pc);
 
-        std::string GetAlert(ProcessLoggerType type);
+        #ifdef _WIN32
+            std::string GetAlert(ProcessLoggerType type, UsageData usage_data);
+        #elif __linux__
+            std::string GetAlert(ProcessLoggerType type);
+        #endif
 
         bool operator==(const ProcessLogger& other) = delete;
         ~ProcessLogger() final = default;

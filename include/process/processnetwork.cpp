@@ -34,7 +34,7 @@ int ProcessNetworkStats::GetPid() const
 
     void ProcessNetworkStats::AddData(FILETIME time, unsigned long long data)
     {
-        UsageIoData io_data;
+        UsageData io_data;
         SYSTEMTIME last_io_st;
         SYSTEMTIME st;
 
@@ -45,7 +45,7 @@ int ProcessNetworkStats::GetPid() const
             io_deque_.push_back(io_data);
             return;
         }
-        UsageIoData& last_io_data = io_deque_.back();
+        UsageData& last_io_data = io_deque_.back();
         FileTimeToSystemTime(&time, &st);
         FileTimeToSystemTime(&last_io_data.time, &last_io_st);
         unsigned long long last_ym = last_io_st.wYear * 12 + last_io_st.wMonth;
@@ -56,18 +56,18 @@ int ProcessNetworkStats::GetPid() const
         {
             if (last_dhms == data_dhms)
             {
-                last_io_data.data += data;
+                last_io_data.data += (double)data;
             }
             else if (last_dhms < data_dhms)
             {
-                io_data.data = data;
+                io_data.data = (double)data;
                 io_data.time = time;
                 io_deque_.push_back(io_data);
             }
         }
         else if (last_ym < data_ym)
         {
-            io_data.data = data;
+            io_data.data = (double)data;
             io_data.time = time;
             io_deque_.push_back(io_data);
         }
@@ -78,9 +78,12 @@ int ProcessNetworkStats::GetPid() const
         return io_deque_.size() > 1;
     }
 
-    UsageIoData ProcessNetworkStats::GetFrontIoData()
+    UsageData ProcessNetworkStats::GetFrontIoDataInKb()
     {
-        return io_deque_.front();
+        UsageData usage_data;
+        usage_data.time = io_deque_.front().time;
+        usage_data.data = (double)(io_deque_.front().data) / 1024;
+        return usage_data;
     }
 
     void ProcessNetworkStats::DeleteFrontIodata()

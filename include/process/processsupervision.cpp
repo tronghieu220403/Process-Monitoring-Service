@@ -102,13 +102,21 @@ namespace pm
             Alert(ProcessLoggerType::kProcessLoggerNet);
         }
         #elif _WIN32
-
+            std::shared_ptr<ProcessInfo> p_info = process_controller_->GetProcessInfo();
+            
         #endif
     }
 
+#ifdef __linux__
     void ProcessSupervision::Alert(ProcessLoggerType type)
     {
         process_logger_->AddMessage(process_logger_->GetAlert(type));
     }
+#elif _WIN32
+    void ProcessSupervision::Alert(ProcessLoggerType type, UsageData usage_data)
+    {
+        process_logger_->AddMessage(process_logger_->GetAlert(type, usage_data));
+    }
 
+#endif
 }

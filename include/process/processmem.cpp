@@ -55,7 +55,7 @@ namespace pm
         mem_usage_ = mem_usage;
     }
 
-    FILETIME ProcessMemoryStats::GetLastRetrievedTime()
+    FILETIME ProcessMemoryStats::GetLastRetrievedTime() const
     {
         return last_retrieved_time_;
     }
@@ -63,6 +63,14 @@ namespace pm
     void ProcessMemoryStats::SetLastRetrievedTime(FILETIME time)
     {
         last_retrieved_time_ = time;
+    }
+
+    UsageData ProcessMemoryStats::GetMemoryUsageData() const
+    {
+        UsageData usage_data;
+        usage_data.time = GetLastRetrievedTime();
+        usage_data.data - GetMemoryUsage();
+        return usage_data;
     }
 
     void ProcessMemoryStats::UpdateAttributes()

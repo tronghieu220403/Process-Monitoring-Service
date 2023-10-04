@@ -14,7 +14,7 @@ namespace pm
         int pid_ = 0;
 
         #ifdef _WIN32
-            std::deque<UsageIoData> io_deque_;
+            std::deque<UsageData> io_deque_;
         #elif __linux__
             clock_t last_time_ = 0;
             double last_io_ = 0;
@@ -37,7 +37,7 @@ namespace pm
 
             void AddData(FILETIME time, unsigned long long data);
             bool HasData() const;
-            UsageIoData GetFrontIoData();
+            UsageData GetFrontIoDataInMb();
             void DeleteFrontIodata();
 
         #elif __linux__

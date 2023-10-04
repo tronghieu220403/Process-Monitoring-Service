@@ -43,12 +43,13 @@ namespace pm
         void UpdateAttributes();
 
         void SetLastUsagePercentage(double last_usage_percentage);
-        double GetLastUsagePercentage();
+        double GetLastUsagePercentage() const;
         
         #ifdef _WIN32
-            FILETIME GetLastRetrievedTime();
+            FILETIME GetLastRetrievedTime() const;
             void SetLastRetrievedTime(FILETIME time);
 
+            UsageData GeCpuUsageData() const;
         #elif __linux__
 
             unsigned long long GetClockCycle();
