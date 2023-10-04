@@ -87,14 +87,13 @@ namespace pm
 
     void ProcessInfo::UpdateCpuUsage()
     {
-
+        GetCpuUsageStats()->UpdateAttributes();
     }
 
     void ProcessInfo::UpdateMemoryUsage()
     {
-        
+        GetMemoryUsageStats()->UpdateAttributes();
     }
-
 
 #endif
 
@@ -140,31 +139,33 @@ namespace pm
     {
         return network_usage_stats;
     }
-
+    
+#ifdef __linux__
     double ProcessInfo::GetCpuUsage() const
     {
-        return last_usage_.cpu_usage.data;
+        return last_usage_.cpu_usage;
     }
 
     double ProcessInfo::GetMemoryUsage() const
     {
-        return last_usage_.mem_usage.data;
+        return last_usage_.mem_usage;
     }
 
     double ProcessInfo::GetDiskUsage() const
     {
-        return last_usage_.disk_usage.data;
+        return last_usage_.disk_usage;
     }
 
     double ProcessInfo::GetNetworkUsage() const
     {
-        return last_usage_.network_usage.data;
+        return last_usage_.network_usage;
     }
 
     MonitoringComponent ProcessInfo::GetUsage() const
     {
         return last_usage_;
     }
+#endif
 
 }
 

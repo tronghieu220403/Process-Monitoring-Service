@@ -23,6 +23,7 @@ namespace pm
 
         #ifdef __linux__
             time_t time_ = 0;
+            MonitoringComponent last_usage_;
         #elif _WIN32
 
         #endif
@@ -31,21 +32,6 @@ namespace pm
         std::shared_ptr<ProcessDiskStats> disk_usage_stats;
         std::shared_ptr<ProcessNetworkStats> network_usage_stats;
 
-        MonitoringComponent last_usage_;
-
-#if __linux__
-    time_t UpdateTime();
-    double UpdateCpuUsage();
-    double UpdateMemoryUsage();
-    double UpdateDiskUsage();
-    double UpdateNetworkUsage();
-#elif _WIN32
-    void UpdateDiskUsage();
-    void UpdateNetworkUsage();
-    void UpdateCpuUsage();
-    void UpdateMemoryUsage();
-
-#endif
     public:
 
         ProcessInfo() = default;
@@ -61,12 +47,26 @@ namespace pm
         std::shared_ptr<ProcessDiskStats> GetDiskUsageStats() const;
         std::shared_ptr<ProcessNetworkStats> GetNetworkUsageStats() const;
 
+#if __linux__
+    time_t UpdateTime();
+    double UpdateCpuUsage();
+    double UpdateMemoryUsage();
+    double UpdateDiskUsage();
+    double UpdateNetworkUsage();
+#elif _WIN32
+    void UpdateDiskUsage();
+    void UpdateNetworkUsage();
+    void UpdateCpuUsage();
+    void UpdateMemoryUsage();
+#endif
+
+#ifdef __linux__
         double GetCpuUsage() const;
         double GetMemoryUsage() const;
         double GetDiskUsage() const;
         double GetNetworkUsage() const;
         MonitoringComponent GetUsage() const;
-
+#endif
         void UpdateAttributes();
     };
 }

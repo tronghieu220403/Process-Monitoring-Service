@@ -32,10 +32,10 @@ namespace pm
 
     struct MonitoringComponent
     {
-        UsageData cpu_usage = {0};
-        UsageData mem_usage = {0};
-        UsageData disk_usage = {0};
-        UsageData network_usage = {0};
+        double cpu_usage = 0;
+        double mem_usage = 0;
+        double disk_usage = 0;
+        double network_usage = 0;
     };
 
 	struct IoInfo

@@ -39,22 +39,22 @@ namespace pm
 
     void ProcessSupervision::SetMaxCpuUsage(float max_cpu_usage)
     {
-        max_usage_.cpu_usage.data = max_cpu_usage;
+        max_usage_.cpu_usage = max_cpu_usage;
     }
 
     void ProcessSupervision::SetMaxMemUsage(double max_mem_usage)
     {
-        max_usage_.mem_usage.data = max_mem_usage;
+        max_usage_.mem_usage = max_mem_usage;
     }
 
     void ProcessSupervision::SetMaxDiskUsage(float max_disk_usage)
     {
-        max_usage_.disk_usage.data = max_disk_usage;
+        max_usage_.disk_usage = max_disk_usage;
     }
 
     void ProcessSupervision::SetMaxNetworkUsage(float max_network_usage)
     {
-        max_usage_.network_usage.data = max_network_usage;
+        max_usage_.network_usage = max_network_usage;
     }
 
     std::shared_ptr<ProcessController>& ProcessSupervision::GetProcessController()
@@ -85,25 +85,57 @@ namespace pm
     {
         #ifdef __linux__
         std::shared_ptr<ProcessInfo> p_info = process_controller_->GetProcessInfo();
-        if (p_info->GetCpuUsage() > max_usage_.cpu_usage.data)
+        if (p_info->GetCpuUsage() > max_usage_.cpu_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerCpu);
         }
-        if (p_info->GetMemoryUsage() > max_usage_.mem_usage.data)
+        if (p_info->GetMemoryUsage() > max_usage_.mem_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerMem);
         }
-        if (p_info->GetDiskUsage() > max_usage_.disk_usage.data)
+        if (p_info->GetDiskUsage() > max_usage_.disk_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerDisk);
         }
-        if (p_info->GetNetworkUsage() > max_usage_.network_usage.data)
+        if (p_info->GetNetworkUsage() > max_usage_.network_usage)
         {
             Alert(ProcessLoggerType::kProcessLoggerNet);
         }
         #elif _WIN32
             std::shared_ptr<ProcessInfo> p_info = process_controller_->GetProcessInfo();
             
+            UsageData mem_usage = p_info->GetMemoryUsageStats()->GetMemoryUsageData();
+            if (mem_usage.data > max_usage_.mem_usage)
+            {
+                Alert(ProcessLoggerType::kProcessLoggerMem, mem_usage);
+            }
+
+            UsageData cpu_usage = p_info->GetMemoryUsageStats()->GetMemoryUsageData();
+            if (cpu_usage.data > max_usage_.cpu_usage)
+            {
+                Alert(ProcessLoggerType::kProcessLoggerCpu, cpu_usage);
+            }
+
+            while(p_info->GetDiskUsageStats()->HasData())
+            {
+                UsageData disk_usage = p_info->GetDiskUsageStats()->GetFrontIoDataInMb();
+                p_info->GetDiskUsageStats()->DeleteFrontIodata();
+                if (disk_usage.data > max_usage_.disk_usage)
+                {
+                    Alert(ProcessLoggerType::kProcessLoggerDisk, disk_usage);
+                }
+            }
+
+            while(p_info->GetNetworkUsageStats()->HasData())
+            {
+                UsageData network_usage = p_info->GetNetworkUsageStats()->GetFrontIoDataInKb();
+                p_info->GetNetworkUsageStats()->DeleteFrontIodata();
+                if (network_usage.data > max_usage_.network_usage)
+                {
+                    Alert(ProcessLoggerType::kProcessLoggerNet, network_usage);
+                }
+            }
+
         #endif
     }
 
@@ -117,6 +149,5 @@ namespace pm
     {
         process_logger_->AddMessage(process_logger_->GetAlert(type, usage_data));
     }
-
 #endif
 }
