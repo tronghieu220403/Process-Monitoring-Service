@@ -25,7 +25,8 @@ namespace pm
 
 	bool ProcessController::SetHandle()
 	{
-		Process::SetPid(FindProcessIdByName(Process::GetName()));
+		std::string name = Process::GetName();
+		Process::SetPid(FindProcessIdByName(name));
 		int pid = Process::GetPid();
 		if (pid == 0)
 		{
@@ -41,7 +42,7 @@ namespace pm
 			}
 			else 
 			{
-				p_info_ = std::make_shared<ProcessInfo>(Process::GetName(), pid);
+				p_info_ = std::make_shared<ProcessInfo>(name, pid);
 				success = true;
 			}
 		#elif __linux__
@@ -51,7 +52,7 @@ namespace pm
                 return false;
             }
 
-			p_info_ = std::make_shared<ProcessInfo>(Process::GetName(), pid);
+			p_info_ = std::make_shared<ProcessInfo>(name, pid);
 
 		#endif
 		

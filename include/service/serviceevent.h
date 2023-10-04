@@ -7,7 +7,7 @@
 
 namespace pm
 {
-    struct ServiceEvent
+    class ServiceEvent
     {
         public: 
             HANDLE stop_event_ = nullptr;
