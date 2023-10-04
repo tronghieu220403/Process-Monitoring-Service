@@ -29,8 +29,8 @@ namespace pm
 
 		inline static std::vector<int> thread_;
 
-		static std::vector<IoInfo> disk_io_vector_;
-		static std::vector<IoInfo> network_io_vector_;
+		inline static std::vector<IoInfo> disk_io_vector_;
+		inline static std::vector<IoInfo> network_io_vector_;
 
 	public:
 		KernelConsumer();

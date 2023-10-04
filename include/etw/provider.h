@@ -13,7 +13,8 @@ namespace pm
 	{
 	private:
 		TRACEHANDLE session_handle_ = NULL;
-		EVENT_TRACE_PROPERTIES session_properties_ = { 0 };
+		int buffer_size_ = sizeof(EVENT_TRACE_PROPERTIES) + sizeof(KERNEL_LOGGER_NAME) * 2;
+		EVENT_TRACE_PROPERTIES* session_properties_;
 
 	public:
 
@@ -25,10 +26,11 @@ namespace pm
     	TRACEHANDLE GetSessionHandle() const;
 		void SetSessionHandle(TRACEHANDLE session_handle);
 		EVENT_TRACE_PROPERTIES GetSessionProperties() const;
-		void SetSessionProperties(EVENT_TRACE_PROPERTIES p_session_properties);
 
 		ULONG BeginTrace();
 		ULONG CloseTrace();
+
+		~KernelProvider();
 	};
 
 }

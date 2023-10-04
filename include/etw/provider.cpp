@@ -5,23 +5,27 @@ namespace pm
 
     KernelProvider::KernelProvider()
     {
-        ZeroMemory(&session_properties_, sizeof(session_properties_));
-        session_properties_.Wnode.BufferSize = sizeof(session_properties_);
-        session_properties_.Wnode.Flags = WNODE_FLAG_TRACED_GUID;
-        session_properties_.Wnode.ClientContext = 1; //QPC clock resolution
-        session_properties_.Wnode.Guid = SystemTraceControlGuid;
-        session_properties_.LogFileMode = EVENT_TRACE_REAL_TIME_MODE;
+        session_properties_ = (EVENT_TRACE_PROPERTIES*)malloc(buffer_size_);
+        ZeroMemory(session_properties_, sizeof(EVENT_TRACE_PROPERTIES));
+        session_properties_->Wnode.BufferSize = buffer_size_;
+        session_properties_->Wnode.Flags = WNODE_FLAG_TRACED_GUID;
+        session_properties_->Wnode.ClientContext = 2; //System clock resolution
+        session_properties_->Wnode.Guid = SystemTraceControlGuid;
+        session_properties_->LogFileMode = EVENT_TRACE_REAL_TIME_MODE;
+        session_properties_->MaximumFileSize = 0;
+        session_properties_->LoggerNameOffset = 0;
+
     }
 
     KernelProvider::KernelProvider(ULONG flags)
     {
-        KernelProvider();
+        this->KernelProvider::KernelProvider();
         SetFlags(flags);
     }
 
     void KernelProvider::SetFlags(ULONG flags)
     {
-        session_properties_.EnableFlags = flags;
+        session_properties_->EnableFlags = flags;
     }
 
 
@@ -34,21 +38,16 @@ namespace pm
     }
 
     EVENT_TRACE_PROPERTIES KernelProvider::GetSessionProperties() const {
-        return session_properties_;
+        EVENT_TRACE_PROPERTIES session_properties;
+        memcpy(&session_properties, session_properties_, sizeof(session_properties));
+        return session_properties;
     }
-
-
-    void KernelProvider::SetSessionProperties(EVENT_TRACE_PROPERTIES p_session_properties) {
-        session_properties_ = p_session_properties;
-    }
-
-
 
     ULONG KernelProvider::BeginTrace()
 	{
         ULONG status = ERROR_SUCCESS;
 
-        status = StartTrace((PTRACEHANDLE)&session_handle_, KERNEL_LOGGER_NAME, &session_properties_);
+        status = StartTrace((PTRACEHANDLE)&session_handle_, KERNEL_LOGGER_NAME, session_properties_);
 
         return status;
 
@@ -59,11 +58,20 @@ namespace pm
         ULONG status = ERROR_SUCCESS;
         if (session_handle_ != NULL)
         {
-            status = ControlTrace(session_handle_, KERNEL_LOGGER_NAME, &session_properties_, EVENT_TRACE_CONTROL_STOP);
+            status = ControlTrace(session_handle_, KERNEL_LOGGER_NAME, session_properties_, EVENT_TRACE_CONTROL_STOP);
             session_handle_ = NULL;
         }
 
-        session_properties_ = { 0 };
         return status;
 	}
+
+    KernelProvider::~KernelProvider()
+    {
+        CloseTrace();
+        if (session_properties_ != nullptr)
+        {
+            free(session_properties_);
+            session_properties_ = 0;
+        }
+    }
 }
