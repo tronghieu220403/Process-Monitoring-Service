@@ -166,6 +166,7 @@ namespace pm
             return;
         }
 
+        /*
         while (WaitForSingleObject(control_event_.stop_event_, 0) != WAIT_OBJECT_0)
         {        
             WriteDebug("OKE");
@@ -176,7 +177,7 @@ namespace pm
 
             }
         }
-
+        */
     }
 
 

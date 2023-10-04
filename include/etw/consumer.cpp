@@ -66,7 +66,7 @@ namespace pm
     {
         disk_io_mutex_.Lock();
         std::vector<IoInfo> output = disk_io_vector_;
-        ResetDiskIoSharedVector();
+        disk_io_vector_.clear();
         disk_io_mutex_.Unlock();
         return output;
     }
@@ -80,7 +80,7 @@ namespace pm
     {
         network_mutex_.Lock();
         std::vector<IoInfo> output = network_io_vector_;
-        ResetNetworkIoSharedVector();
+        network_io_vector_.clear();
         network_mutex_.Unlock();
         return output;
     }
