@@ -41,11 +41,11 @@ namespace pm
 		static void SetPointerSize(int pointer_size);
 		static int GetPointerSize();
 
-		static void SetDiskIoSharedVector(std::vector<IoInfo>& disk_io);
-		static std::vector<IoInfo> GetDiskIoSharedVector();
-
 		static void SetNetworkIoSharedVector(std::vector<IoInfo>& network_io);
 		static std::vector<IoInfo> GetNetworkIoSharedVector();
+
+		static void SetDiskIoSharedVector(std::vector<IoInfo>& disk_io);
+		static std::vector<IoInfo> GetDiskIoSharedVector();
 
 		static ULONG WINAPI ProcessBuffer(PEVENT_TRACE_LOGFILE p_buffer);
 		static VOID WINAPI ProcessEvent(PEVENT_TRACE p_event);

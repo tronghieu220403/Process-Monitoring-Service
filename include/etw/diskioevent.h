@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef PROCESSMONITORING_ETW_DISKIOEVENT_
-#define PROCESSMONITORING_ETW_DISKIOEVENT_
+#ifndef PROCESSMONITORING_ETW_DISKIOEVENT_H_
+#define PROCESSMONITORING_ETW_DISKIOEVENT_H_
 
 #include "etw/event.h"
 #include "etw/wmieventclass.h"
