@@ -108,24 +108,8 @@ namespace pm
         return true;
     }
 
-    #ifdef _DEBUG
-        int cnt = 0;
-        int cnt_over_time = 0;
-        long long old_time_global = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()).count();
-        long long new_time;
-    #endif
-
     VOID WINAPI KernelConsumer::ProcessEvent(PEVENT_TRACE p_event)
     {
-        using namespace std;
-        #ifdef _DEBUG   
-        long long old_time =
-            std::chrono::duration_cast<std::chrono::nanoseconds>(
-                std::chrono::system_clock::now().time_since_epoch()).count();
-        #endif
-
-        return;
 
         if (IsEqualGUID(p_event->Header.Guid, EventTraceGuid) &&
             p_event->Header.Class.Type == EVENT_TRACE_TYPE_INFO)
@@ -164,30 +148,7 @@ namespace pm
             }
             
         }
-        
-        #ifdef _DEBUG
-        new_time = (std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::system_clock::now().time_since_epoch())).count();
-
-        if (new_time - old_time > 1000000000 / 25000)
-        {
-            cnt_over_time++;
-        }
-
-        cnt++;
-        if (new_time - old_time_global > (long long)1000000000 * 10)
-        {
-            std::ofstream ff("time.txt", std::ios_base::app);
-            ff << cnt_over_time << " " << cnt << std::endl;
-            cout << cnt_over_time << " " << cnt << std::endl;
-
-            ff.close();
-            old_time_global = new_time;
-            cnt = 0;
-            cnt_over_time = 0;
-        }
-        #endif
-        
+                
         return;
     }
 
@@ -205,6 +166,8 @@ namespace pm
         {
             thread_.resize(thread_id + 1);
         }
+
+        WriteDebug(std::to_string(pid) + " " + std::to_string(thread_id));
         
         // Thread start
         if (thread_event.GetType() == 1 || thread_event.GetType() == 3)
@@ -229,6 +192,13 @@ namespace pm
         DiskIoEvent disk_io_event(event, GetPointerSize());
         //std::cout << diskio_event.GetTransferSize() << std::endl;
         struct IoInfo io;
+        if (disk_io_event.GetThreadId() > thread_.size() || thread_[disk_io_event.GetThreadId()] == 0)
+        {
+            std::ofstream outfile("thread_id.txt", std::ios_base::app);
+            outfile << disk_io_event.GetThreadId() << "\n";
+            outfile.close();
+            return;
+        }
         io.pid = thread_[disk_io_event.GetThreadId()];
         io.size = disk_io_event.GetTransferSize();
         io.filetime = disk_io_event.GetFileTime();
@@ -243,7 +213,7 @@ namespace pm
     VOID WINAPI KernelConsumer::ProcessNetwork(Event event)
     {
         NetworkEvent net_event(event, GetPointerSize());
-        
+
         struct IoInfo io;
         io.pid = net_event.GetProcessId();
         io.size = net_event.GetTransferSize();

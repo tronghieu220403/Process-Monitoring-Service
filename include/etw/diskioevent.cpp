@@ -41,7 +41,7 @@ namespace pm
 
         if (GetThreadIdOffset() == -1 || GetThreadIdLength() == -1)
         {
-            std::pair<int, int> prop_info =  WmiEventClass(EventType().kDiskIo, Event::GetVersion(), Event::GetType(), pointer_size).GetPropertyInfo(L"TransferSize");
+            std::pair<int, int> prop_info =  WmiEventClass(EventType().kDiskIo, Event::GetVersion(), Event::GetType(), pointer_size).GetPropertyInfo(L"IssuingThreadId");
             if (prop_info.first != -1 && prop_info.second != 0)
             {
                 SetThreadIdOffset(prop_info.first);
