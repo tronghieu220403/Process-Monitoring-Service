@@ -1,8 +1,8 @@
 #include "serviceevent.h"
 
+/*
 namespace pm
 {
-    
     void ServiceEvent::Close()
     {
         if (stop_event_ != INVALID_HANDLE_VALUE && stop_event_ != nullptr)
@@ -25,3 +25,4 @@ namespace pm
     }   
 
 }
+*/

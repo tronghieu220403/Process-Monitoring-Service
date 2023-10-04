@@ -19,7 +19,7 @@ namespace pm
             exit(0);
         }
 
-        SetEvent(control_event_.stop_event_);
+        //SetEvent(control_event_.stop_event_);
 
         // Do something here while pending
 
@@ -56,13 +56,14 @@ namespace pm
             exit(0);
         }
 
-        SetEvent(control_event_.pause_event_);
-
+        //SetEvent(control_event_.pause_event_);
+        /*
         while(WaitForSingleObject(control_event_.pause_event_, 10) == WAIT_OBJECT_0)
         {
 
         }
-
+        */
+       
         // Do something here while pending
 
         // End of pending
@@ -99,7 +100,7 @@ namespace pm
             exit(0);
         }
 
-        ResetEvent(control_event_.pause_event_);
+        //ResetEvent(control_event_.pause_event_);
         // Do something here while pending
 
         // End of pending
@@ -208,13 +209,13 @@ namespace pm
             goto EXIT;
         }
 
-        control_event_.stop_event_ = CreateEvent (NULL, TRUE, FALSE, NULL);
-        control_event_.stop_handled_ = CreateEvent (NULL, TRUE, FALSE, NULL);
+        //control_event_.stop_event_ = CreateEvent (NULL, TRUE, FALSE, NULL);
+        //control_event_.stop_handled_ = CreateEvent (NULL, TRUE, FALSE, NULL);
 
-        control_event_.pause_event_ = CreateEvent (NULL, TRUE, FALSE, NULL);
-        control_event_.pause_handled_ = CreateEvent (NULL, TRUE, FALSE, NULL);
+        //control_event_.pause_event_ = CreateEvent (NULL, TRUE, FALSE, NULL);
+        //control_event_.pause_handled_ = CreateEvent (NULL, TRUE, FALSE, NULL);
 
-        if (control_event_.stop_event_ == nullptr || control_event_.pause_event_ == nullptr || control_event_.pause_handled_ == nullptr)
+        //if (control_event_.stop_event_ == nullptr || control_event_.pause_event_ == nullptr || control_event_.pause_handled_ == nullptr)
         {
             service_status_.dwControlsAccepted = 0;
             service_status_.dwCurrentState = SERVICE_STOPPED;
@@ -252,7 +253,7 @@ namespace pm
 
     void ProcessMonitoringService::Close()
     {
-        control_event_.Close();
+        //control_event_.Close();
         if (status_handle_ != INVALID_HANDLE_VALUE && status_handle_ != nullptr)
         {
             CloseHandle(status_handle_);

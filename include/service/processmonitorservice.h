@@ -8,14 +8,13 @@
 
 namespace pm
 {
-
     class ProcessMonitoringService
     {
     private:
 
         inline static SERVICE_STATUS service_status_ = {0};
         inline static SERVICE_STATUS_HANDLE status_handle_ = nullptr;
-        inline static ServiceEvent control_event_ = ServiceEvent();
+        //inline static ServiceEvent control_event_ = ServiceEvent();
 
     public:
         inline static const std::wstring kName = L"ProcessMonitoringService";
