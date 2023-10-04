@@ -166,21 +166,20 @@ namespace pm
         {
             thread_.resize(thread_id + 1);
         }
-
-        WriteDebug(std::to_string(pid) + " " + std::to_string(thread_id));
         
         // Thread start
         if (thread_event.GetType() == 1 || thread_event.GetType() == 3)
         {
             // push data to a shared pointer pointer vector
             thread_[thread_id] = pid;
+            WriteDebug(std::to_string(pid) + " " + std::to_string(thread_id) + " create.");
         }
         // Thread end
         else 
         {
             // remove data from a shared pointer vector
             thread_[thread_id] = 0;
-
+            WriteDebug(std::to_string(pid) + " " + std::to_string(thread_id) + " end.");
         }
         //std::cout << thread_event.GetThreadId() << " " << thread_event.GetProcessId() << std::endl;
 
