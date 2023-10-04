@@ -27,7 +27,7 @@ namespace pm
 
         #endif
 
-        bool new_log_ = false;
+        std::deque<std::vector<char>> log_deque_;
         std::vector<char> v_log_path_;
 
         NamedMutex cta_log_mutex_;

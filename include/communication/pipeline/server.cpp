@@ -61,8 +61,8 @@ namespace pm
                 PIPE_ACCESS_DUPLEX,         // read/write access 
                 PIPE_TYPE_MESSAGE |         // message type pipe 
                 PIPE_READMODE_MESSAGE |     // message-read mode 
-                PIPE_NOWAIT,                // blocking mode: NON-BLOCKING
-                //PIPE_WAIT,                  // blocking mode: BLOCKING
+                //PIPE_NOWAIT,                // blocking mode: NON-BLOCKING
+                PIPE_WAIT,                  // blocking mode: BLOCKING
                 max_connection_,            // max. instances  
                 buf_size_ + 100,                  // output buffer size 
                 buf_size_ + 100,                  // input buffer size 

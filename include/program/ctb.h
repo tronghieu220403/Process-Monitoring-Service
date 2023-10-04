@@ -20,6 +20,7 @@
 #include "configuration/processjsonconfiguration.h"
 #include "mutex/mutex.h"
 #include "configuration/startupprogram.h"
+#include "logs/logger.h"
 
 namespace pm
 {
@@ -31,6 +32,8 @@ namespace pm
         NamedMutex cta_log_mutex_;
         NamedMutex config_mutex_;
         NamedMutex inner_mutex_;
+
+        Logger log;
 
         bool new_config_ = true;
 
@@ -44,7 +47,7 @@ namespace pm
         CTB();
         void AddToStartUp();
         void UpdateConfig(const std::string& file_path);
-        void GetLog(const std::string& cta_logs_path);
+        void WriteLog(const std::string& content);
         void RecvCommunication();
         void SendCommunication();
         void CommunicateWithCta();

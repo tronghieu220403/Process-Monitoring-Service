@@ -82,15 +82,10 @@ namespace pm
         inner_mutex_.Unlock();
     }
 
-    void CTB::GetLog(const std::string& cta_log_path)
+    void CTB::WriteLog(const std::string& content)
     {
-        std::string log_file_name = "pm_logs.log";
-        cta_log_mutex_.Lock();
-        auto ctb_log = File(log_file_name);
-        ctb_log.AppendFromFile(cta_log_path);
-        auto cta_log = File(cta_log_path);
-        cta_log.SelfDelete();
-        cta_log_mutex_.Unlock();
+        log.SetMessage(content);
+        log.WriteLog();
     }
 
     void CTB::RecvCommunication()
@@ -103,9 +98,7 @@ namespace pm
             }
             if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
             {
-                std::vector<char> v_msg = client.GetLastMessage();
-                std::string msg(v_msg.begin(), v_msg.end());
-                GetLog(msg);
+                WriteLog(CharVectorToString(client.GetLastMessage()));
             }
             Sleep(500);
         }

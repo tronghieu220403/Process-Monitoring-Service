@@ -8,6 +8,7 @@ namespace pm
         config_mutex_(NamedMutex("config_reg")),
         inner_mutex_(NamedMutex(""))
     {
+        /*
         std::vector<char> log_path;
         log_path.resize(1000);
         GetCurrentDir(&log_path[0], 1000);
@@ -24,6 +25,7 @@ namespace pm
         }
 
         v_log_path_ = log_path;
+        */
     }
 
 #ifdef _WIN32
@@ -86,22 +88,20 @@ namespace pm
     {
         CTA::UpdateConfig();
 
-        // Cần viết lại hàm UpdateProcessStats() và UpdateAttributes()
-        // Cần viết lại hàm ghi log
-        // Cần viết lại hàm gửi nhận/log
-
-        #ifdef _WIN32
-
         std::string log;
 
         while (true)
         {
-            Sleep(500);
+            long long start_time =
+                std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count();
 
             std::vector<IoInfo> disk_data = KernelConsumer::GetNetworkIoSharedVector();
 
             std::vector<IoInfo> net_data = KernelConsumer::GetNetworkIoSharedVector();
             
+            inner_mutex_.Lock();
+
             Counter::UpdateQuery();
 
             for (auto &data: disk_data)
@@ -135,48 +135,24 @@ namespace pm
                     ps.GetProcessLogger()->SetMessage("");
                 }
             }
-
-
-            inner_mutex_.Lock();
-
+            
             inner_mutex_.Unlock();
+
+            cta_log_mutex_.Lock();
+            log_deque_.push_back(StringToVectorChar(log));
+            log.clear();
+            cta_log_mutex_.Unlock();
+            
+            long long run_time =
+                std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count() - start_time;
+
+            if (run_time < 1000)
+            {
+                Sleep(1000 - run_time);
+            }
+
         }
-        #elif _linux__
-
-        long long cnt = 0;
-        std::string log;
-
-        while (true)
-        {
-            Sleep(500);
-            inner_mutex_.Lock();
-            for (auto& ps : process_)
-            {
-                ps.UpdateProcessStats();
-                ps.CheckProcessStats();
-                if ((ps.GetProcessLogger()->GetMessage()).size() != 0)
-                {
-                    log.append(ps.GetProcessLogger()->GetMessage());
-                    ps.GetProcessLogger()->SetMessage("");
-                }
-            }
-
-            if (log.size() > 100)
-            {
-                cta_log_mutex_.Lock();
-                Logger(log).WriteLog();
-                log.clear();
-                cta_log_mutex_.Unlock();
-            }
-            cnt++;
-            if (server.IsActive() && cnt % 10 == 0)
-            {
-                new_log_ = true;
-            }
-            inner_mutex_.Unlock();
-        }
-
-        #endif
     }
 
     void CTA::RecvCommunication()
@@ -205,21 +181,34 @@ namespace pm
     {
         while (true)
         {
-            if (new_log_ == true)
+            std::vector<char> v;
+            v.clear();
+            cta_log_mutex_.Lock();
+            if (log_deque_.size() > 0)
             {
-                inner_mutex_.Lock();
-                new_log_ = false;
-                inner_mutex_.Lock();
+                v = log_deque_.front();
+            }
+            cta_log_mutex_.Unlock();
+
+            if (v.size() > 0)
+            {
                 if (server.TrySendMessage(Command::CTA_SEND_LOGS, v_log_path_) == false)
                 {
                     return;
                 }
+                cta_log_mutex_.Lock();
+                log_deque_.pop_front();
+                cta_log_mutex_.Unlock();
             }
+
             if (!server.IsActive())
             {
                 return;
             }
-            Sleep(500);
+            if (log_deque_.size() == 0)
+            {
+                Sleep(100);
+            }
         }
     }
 

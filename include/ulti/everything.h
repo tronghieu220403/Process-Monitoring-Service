@@ -123,6 +123,11 @@ namespace pm
         return std::string(v.begin(), v.end());
     }
 
+    inline std::vector<char> StringToVectorChar(std::string s)
+    {
+        return std::vector<char>(s.begin(), s.end());
+    }
+
     #ifdef __linux__
         inline std::string GetCurrentUserPath()
         {
