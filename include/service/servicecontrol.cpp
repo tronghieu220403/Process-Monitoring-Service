@@ -41,7 +41,7 @@ namespace pm
 
         SC_HANDLE handle_service = CreateServiceW(h_services_control_manager_, w_name_.data(), w_name_.data(),
             SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
-            SERVICE_DEMAND_START, SERVICE_ERROR_NORMAL,
+            SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
             w_path_.data(), NULL, NULL, NULL, NULL, NULL);
 
 
