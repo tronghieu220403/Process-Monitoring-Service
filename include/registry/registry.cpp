@@ -80,7 +80,7 @@ namespace pm
 
         ret_code = RegQueryInfoKeyW(h_key_, NULL, NULL, NULL, NULL, NULL, NULL, &c_values, &cch_max_value, &cb_max_valuedata, NULL, NULL);
 
-        // std::osyncstream(std::cout) << cch_max_value << std::endl;
+        // // std::osyncstream(std::cout) << cch_max_value << std::endl;
 
         if (c_values)
         {

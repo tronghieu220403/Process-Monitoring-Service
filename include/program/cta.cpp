@@ -213,12 +213,12 @@ namespace pm
 
             if (v.size() > 0)
             {
-                 std::osyncstream(std::cout) << "Sending " << v.size() << std::endl;
+                 // std::osyncstream(std::cout) << "Sending " << v.size() << std::endl;
                 if (server.TrySendMessage(Command::CTA_SEND_LOGS, v) == false)
                 {
                     return;
                 }
-                 std::osyncstream(std::cout) << "Sent oke"  << std::endl;
+                 // std::osyncstream(std::cout) << "Sent oke"  << std::endl;
 
                 cta_log_mutex_.Lock();
                 log_deque_.pop_front();
@@ -231,7 +231,7 @@ namespace pm
             }
             if (log_deque_.size() == 0)
             {
-                Sleep(100);
+                Sleep(500);
             }
         }
     }
@@ -245,7 +245,7 @@ namespace pm
         #endif
         while(true)
         {
-             std::osyncstream(std::cout) << "Creating server" << std::endl;
+             // std::osyncstream(std::cout) << "Creating server" << std::endl;
             while(true)
             {
                 if (server.CreateServer() == true)
@@ -254,18 +254,18 @@ namespace pm
                 }
                 Sleep(1000);
             }
-             std::osyncstream(std::cout) << "Listening to client" << std::endl;
+             // std::osyncstream(std::cout) << "Listening to client" << std::endl;
             while (server.ListenToClient() == false){
                 Sleep(100);
             }
-             std::osyncstream(std::cout) << "Client connected!" << std::endl;
+             // std::osyncstream(std::cout) << "Client connected!" << std::endl;
 
             std::jthread recv(std::bind_front(&pm::CTA::RecvCommunication, this));
             std::jthread send(std::bind_front(&pm::CTA::SendCommunication, this));
             recv.join();
             send.join();
 
-             std::osyncstream(std::cout) << "Client disconnected!" << std::endl;
+             // std::osyncstream(std::cout) << "Client disconnected!" << std::endl;
 
             server.Close();
             Sleep(100);

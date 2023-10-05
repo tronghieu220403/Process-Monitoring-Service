@@ -764,10 +764,10 @@ namespace pm
                         std::wstring name = GetPropertyName(p_properties + p_property_index[i]);
 
                         GetEventPropertyValue(p_properties + p_property_index[i], data_size);
-                        // std::osyncstream(std::cout) << data_size << std::endl;
+                        // // std::osyncstream(std::cout) << data_size << std::endl;
                         if (data_size == 0)
                         {
-                             std::osyncstream(std::cout) << "Something is wrong" << std::endl;
+                             // std::osyncstream(std::cout) << "Something is wrong" << std::endl;
                             exit(0);
                         }
                         if (name == property_name)

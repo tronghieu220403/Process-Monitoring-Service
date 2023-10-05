@@ -98,7 +98,7 @@ namespace pm
             if (fd_recv_ == 0 || fd_send_ == 0 || fd_recv_ == -1 || fd_send_ == -1 || connected_ == false)
         #endif
             {
-                //Close();
+                Close();
                 return false;
             }
         return true;
@@ -122,68 +122,68 @@ namespace pm
             int cur_ptr = 0;
             while(cur_ptr < 4)
             {
-                std::osyncstream(std::cout) << "Start receiving" << std::endl;
+                // std::osyncstream(std::cout) << "Start receiving" << std::endl;
                 success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
                 if (!success && bytes_read == 0)
                 {   
                     DWORD error = GetLastError();
-                     std::osyncstream(std::cout) << error << std::endl;
+                     // std::osyncstream(std::cout) << error << std::endl;
                     if (error == ERROR_BROKEN_PIPE)
                     {
-                        //Close();
+                        Close();
                         return false;
                     }
                 }
                 cur_ptr += bytes_read;
             }
             
-             std::osyncstream(std::cout) << "Must receive: " << " " << n_bytes << std::endl;
+             // std::osyncstream(std::cout) << "Must receive: " << " " << n_bytes << std::endl;
 
             cur_ptr = 0;
             bytes_read = 0;
             while(cur_ptr < 4)
             {
-                std::osyncstream(std::cout) << "Start receiving" << std::endl;
+                // std::osyncstream(std::cout) << "Start receiving" << std::endl;
 
                 success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, NULL);
                 if (!success && bytes_read == 0)
                 {
                     DWORD error = GetLastError();
-                     std::osyncstream(std::cout) << error << std::endl;
+                     // std::osyncstream(std::cout) << error << std::endl;
                     if (error == ERROR_BROKEN_PIPE)
                     {
-                        //Close();
+                        Close();
                         return false;
                     }
                 }
                 cur_ptr += bytes_read;
             }
 
-             std::osyncstream(std::cout) << "Protocol: " << " " << type << std::endl;
+             // std::osyncstream(std::cout) << "Protocol: " << " " << type << std::endl;
 
             cur_receive_.resize(n_bytes);
             cur_ptr = 0;
 
             while (cur_ptr < n_bytes)
             {
-                std::osyncstream(std::cout) << "Start receiving" << std::endl;
+                // std::osyncstream(std::cout) << "Start receiving" << std::endl;
 
                 success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, nullptr);
 
                 if (!success && bytes_read == 0)
                 {
                     DWORD error = GetLastError();
-                     std::osyncstream(std::cout) << error << std::endl;
+                     // std::osyncstream(std::cout) << error << std::endl;
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
-                        //Close();
+                        Close();
                         return false;
                     }
                 }
                 cur_ptr += bytes_read;
             }
 
-             std::osyncstream(std::cout) << "Start receiving: " << std::endl;
+             // std::osyncstream(std::cout) << "Start receiving: " << std::endl;
 
         #elif __linux__
 
@@ -315,7 +315,7 @@ namespace pm
     void Pipeline::Close()
     {
         #ifdef _WIN32
-            if (handle_pipe_ != nullptr && handle_pipe_ != 0)
+            if (handle_pipe_ != nullptr && handle_pipe_ != (HANDLE)(-1))
             {
                 CloseHandle(handle_pipe_);
                 connected_ = false;

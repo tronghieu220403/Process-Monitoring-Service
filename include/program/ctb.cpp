@@ -92,14 +92,14 @@ namespace pm
     {
         while (true)
         {
-             std::osyncstream(std::cout) << "Receiving" << std::endl;
+             // std::osyncstream(std::cout) << "Receiving" << std::endl;
             if (client.TryGetMessage() == false)
             {
                 return;
             }
             if (client.GetLastMessageType() == Command::CTA_SEND_LOGS)
             {
-                 std::osyncstream(std::cout) << "Message received: " << client.GetLastMessage().size() << std::endl;
+                 // std::osyncstream(std::cout) << "Message received: " << client.GetLastMessage().size() << std::endl;
                 WriteLog(CharVectorToString(client.GetLastMessage()));
             }
             Sleep(500);
@@ -133,7 +133,7 @@ namespace pm
         client = PipelineClient("processmonitoringpipe");
         while(true)
         {
-             std::osyncstream(std::cout) << "Connecting" << std::endl;
+             // std::osyncstream(std::cout) << "Connecting" << std::endl;
             while(true)
             {
                 if (client.ConnectToPipeServer() == true)
@@ -142,12 +142,12 @@ namespace pm
                 }
                 Sleep(50);
             }
-             std::osyncstream(std::cout) << "Server connected" << std::endl;
+             // std::osyncstream(std::cout) << "Server connected" << std::endl;
             std::jthread recv(std::bind_front(&pm::CTB::RecvCommunication, this));
             std::jthread send(std::bind_front(&pm::CTB::SendCommunication, this));
             recv.join();
             send.join();
-            std::osyncstream(std::cout) << "Server disconnected" << std::endl;
+            // std::osyncstream(std::cout) << "Server disconnected" << std::endl;
             client.Close();
         }
     }
