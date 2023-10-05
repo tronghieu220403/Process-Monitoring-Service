@@ -6,18 +6,14 @@ namespace pm
 
     ProcessSupervision::ProcessSupervision() = default;
 
-    ProcessSupervision::ProcessSupervision(const std::string& name)
+    ProcessSupervision::ProcessSupervision(const std::string& name):
+        ProcessLogger(name), ProcessController(name)
     {
-        this->ProcessController::ProcessController(name);
-        this->ProcessLogger::ProcessLogger(name);
     }
 
     ProcessSupervision::ProcessSupervision(const std::string& name, const MonitoringComponent& max_usage):
-        max_usage_(max_usage)
+        max_usage_(max_usage), ProcessLogger(name), ProcessController(name)
     {
-        this->ProcessController::ProcessController(name);
-        this->ProcessLogger::ProcessLogger(name);
-        max_usage_ = max_usage;
     }
 
     void ProcessSupervision::SetMaxUsage(const MonitoringComponent& max_usage)

@@ -4,7 +4,17 @@
 
 namespace pm
 {
-    ProcessLogger::ProcessLogger(std::string& process_name):
+    std::string ProcessLogger::GetProcessName() const
+    {
+        return process_name_;
+    }
+
+    void ProcessLogger::SetProcessName(const std::string &name)
+    {
+        process_name_ = name;
+    }
+
+    ProcessLogger::ProcessLogger(const std::string& process_name):
         process_name_(process_name)
     {
         

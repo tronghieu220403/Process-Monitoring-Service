@@ -16,10 +16,12 @@ namespace pm
     public:
 
         ProcessLogger() = default;
+        explicit ProcessLogger(const std::string& process_name);
+
+        std::string GetProcessName() const;
+        void SetProcessName(const std::string& name);
 
         using Logger::SetMessage;
-
-        explicit ProcessLogger(std::string& process_name);
 
         std::string GetAlert(ProcessLoggerType type, UsageData usage_data);
 
