@@ -122,6 +122,7 @@ namespace pm
             int cur_ptr = 0;
             while(cur_ptr < 4)
             {
+                std::osyncstream(std::cout) << "Start reading" << std::endl;
                 success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
                 if (!success && bytes_read == 0)
                 {   
@@ -142,6 +143,8 @@ namespace pm
             bytes_read = 0;
             while(cur_ptr < 4)
             {
+                std::osyncstream(std::cout) << "Start receiving" << std::endl;
+
                 success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, NULL);
                 if (!success && bytes_read == 0)
                 {
@@ -163,6 +166,8 @@ namespace pm
 
             while (cur_ptr < n_bytes)
             {
+                std::osyncstream(std::cout) << "Start receiving" << std::endl;
+
                 success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, nullptr);
 
                 if (!success && bytes_read == 0)
@@ -178,7 +183,7 @@ namespace pm
                 cur_ptr += bytes_read;
             }
 
-             std::osyncstream(std::cout) << "Content: " << " " << type << std::endl;
+             std::osyncstream(std::cout) << "Start receiving: " << std::endl;
 
         #elif __linux__
 

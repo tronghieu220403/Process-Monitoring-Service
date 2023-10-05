@@ -144,9 +144,9 @@ namespace pm
             }
              std::osyncstream(std::cout) << "Server connected" << std::endl;
             std::jthread recv(std::bind_front(&pm::CTB::RecvCommunication, this));
-            std::jthread send(std::bind_front(&pm::CTB::SendCommunication, this));
+            //std::jthread send(std::bind_front(&pm::CTB::SendCommunication, this));
             recv.join();
-            send.join();
+            //send.join();
              std::osyncstream(std::cout) << "Server disconnected" << std::endl;
             client.Close();
         }

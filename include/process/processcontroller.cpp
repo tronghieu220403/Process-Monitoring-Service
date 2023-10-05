@@ -38,6 +38,7 @@ namespace pm
 			process_handle_ = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
 			if (process_handle_ == nullptr)
 			{
+				p_info_ = nullptr;
 				Process::SetPid(0);
 				success = false;
 			}
@@ -64,7 +65,7 @@ namespace pm
 	bool ProcessController::IsExists()
 	{
 		#ifdef _WIN32
-			int pid = GetPid();
+			int pid = this->Process::GetPid();
 			if (process_handle_ != (HANDLE)-1 && process_handle_ != 0 && GetProcessId(process_handle_) == pid && pid != 0)
 			{
 				return true;
