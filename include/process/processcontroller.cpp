@@ -66,7 +66,7 @@ namespace pm
 	{
 		#ifdef _WIN32
 			int pid = this->Process::GetPid();
-			if (process_handle_ != (HANDLE)-1 && process_handle_ != 0 && GetProcessId(process_handle_) == pid && pid != 0)
+			if (process_handle_ != 0 && GetProcessId(process_handle_) == pid && pid != 0)
 			{
 				return true;
 			}

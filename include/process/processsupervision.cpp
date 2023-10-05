@@ -87,7 +87,7 @@ namespace pm
                 return;
             }
             usage = p_info->GetMemoryUsageStats()->GetMemoryUsageData();
-            if (usage.data * 1000 > max_usage_.mem_usage)
+            if (usage.data > max_usage_.mem_usage)
             {
                 Alert(ProcessLoggerType::kProcessLoggerMem, usage);
             }

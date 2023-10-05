@@ -126,6 +126,7 @@ namespace pm
                     if (ps->GetPid() == data.pid)
                     {
                         ps->GetProcessInfo()->GetDiskUsageStats()->AddData(data.filetime, data.size);
+                        break;
                     }
                 }
             }
@@ -137,6 +138,7 @@ namespace pm
                     if (ps->GetPid() == data.pid)
                     {
                         ps->GetProcessInfo()->GetNetworkUsageStats()->AddData(data.filetime, data.size);
+                        break;
                     }
                 }
             }

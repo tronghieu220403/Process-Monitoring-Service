@@ -47,11 +47,12 @@ int ProcessNetworkStats::GetPid() const
         }
         UsageData& last_io_data = io_deque_.back();
         FileTimeToSystemTime(&time, &st);
+        unsigned long long data_ym = st.wYear * 12 + st.wMonth;
+        unsigned long long data_dhms = st.wDay * 3600 * 12 + st.wHour * 3600 + st.wMinute * 60 + st.wSecond;
+
         FileTimeToSystemTime(&last_io_data.time, &last_io_st);
         unsigned long long last_ym = last_io_st.wYear * 12 + last_io_st.wMonth;
-        unsigned long long data_ym = st.wYear * 12 + st.wMonth;
         unsigned long long last_dhms = last_io_st.wDay * 3600 * 12 + last_io_st.wHour * 3600 + last_io_st.wMinute * 60 + last_io_st.wSecond;
-        unsigned long long data_dhms = st.wDay * 3600 * 12 + st.wHour * 3600 + st.wMinute * 60 + st.wSecond;
         if (last_ym == data_ym)
         {
             if (last_dhms == data_dhms)
