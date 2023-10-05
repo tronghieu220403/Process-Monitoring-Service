@@ -108,9 +108,11 @@ namespace pm
 
     inline void WriteDebug(std::string s)
     {
-        std::ofstream outfile("C:\\Users\\hieu\\source\\repos\\Providerdebug.txt", std::ios_base::app);
+    #ifdef DEBUG
+        std::ofstream outfile("C:\\Users\\hieu\\source\\repos\\Provider\\debug.txt", std::ios_base::app);
         outfile << s << "\n";
         outfile.close();
+    #endif // DEBUG
     }
 
     inline std::string WStrToStr(const std::wstring& w_str)

@@ -151,6 +151,7 @@ namespace pm
 
     void ProcessMonitoringService::ProcessMonitoringWorkerFunction()
     {
+        WriteDebug("In worker");
         // Tell the services that the service is running.
         service_status_.dwCurrentState = SERVICE_RUNNING;
         service_status_.dwWin32ExitCode = 0;
