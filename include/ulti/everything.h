@@ -67,6 +67,7 @@
 #include <functional>
 #include <chrono>
 #include <deque>
+#include <syncstream>
 
 #ifdef __linux__
 

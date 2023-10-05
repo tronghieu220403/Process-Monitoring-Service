@@ -29,7 +29,9 @@ namespace pm
             HANDLE handle_pipe = CreateFile(
                 (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
                 GENERIC_READ |  // read and write access 
-                GENERIC_WRITE,
+                GENERIC_WRITE
+                | WRITE_DAC
+                ,
                 0,              // no sharing 
                 nullptr,           // default security attributes
                 OPEN_EXISTING,  // opens existing pipe 

@@ -192,7 +192,7 @@ namespace pm
     VOID WINAPI KernelConsumer::ProcessDiskIo(Event event)
     {
         DiskIoEvent disk_io_event(event, GetPointerSize());
-        //std::cout << diskio_event.GetTransferSize() << std::endl;
+        // std::osyncstream(std::cout) << diskio_event.GetTransferSize() << std::endl;
         struct IoInfo io;
         if (disk_io_event.GetThreadId() > thread_.size() || thread_[disk_io_event.GetThreadId()] == 0)
         {

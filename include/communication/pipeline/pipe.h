@@ -2,6 +2,7 @@
 #define PROCESSMONITORING_COMMUNICATION_PIPELINE_PIPE_H_
 
 #include "ulti/everything.h"
+#include "mutex/mutex.h"
 
 namespace pm
 {
@@ -15,6 +16,7 @@ namespace pm
         bool connected_ = false;
 
         private:
+            NamedMutex mutex_;
             #ifdef _WIN32
                 HANDLE handle_pipe_ = INVALID_HANDLE_VALUE;
             #elif __linux__

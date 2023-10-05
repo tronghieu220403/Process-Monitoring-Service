@@ -64,7 +64,8 @@ namespace pm
 	bool ProcessController::IsExists()
 	{
 		#ifdef _WIN32
-			if (int pid = GetPid(); GetProcessId(process_handle_) == pid && pid != 0)
+			int pid = GetPid();
+			if (process_handle_ != (HANDLE)-1 && process_handle_ != 0 && GetProcessId(process_handle_) == pid && pid != 0)
 			{
 				return true;
 			}

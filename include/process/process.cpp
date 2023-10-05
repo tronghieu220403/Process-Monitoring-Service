@@ -70,7 +70,7 @@ namespace pm
 				if (entry->d_type == DT_DIR && std::isdigit(entry->d_name[0])) {
 					// read the process name from the cmdline file
 					std::string cmdPath = std::string("/proc/") + entry->d_name + "/comm";
-					//std::cout << cmdPath.c_str() << std::endl;
+					// std::osyncstream(std::cout) << cmdPath.c_str() << std::endl;
 					
 					std::ifstream cmdFile(cmdPath.c_str());
 					std::string cmdLine;

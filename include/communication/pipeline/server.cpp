@@ -61,15 +61,15 @@ namespace pm
                 PIPE_ACCESS_DUPLEX          // read/write access 
                 | WRITE_DAC
                 ,         
-                PIPE_TYPE_MESSAGE |         // message type pipe 
-                PIPE_READMODE_MESSAGE |     // message-read mode // need to read this more clearly
+                PIPE_TYPE_BYTE |         // message type pipe 
+                PIPE_READMODE_BYTE |     // message-read mode // need to read this more clearly
                 //PIPE_NOWAIT                // blocking mode: NON-BLOCKING
                 PIPE_WAIT                     // blocking mode: BLOCKING
                 ,                  
                 max_connection_,            // max. instances  
                 buf_size_ + 100,                  // output buffer size 
                 buf_size_ + 100,                  // input buffer size 
-                0,                          // client time-out 
+                10000,                          // client time-out 
                 nullptr);                   // default security attribute 
             
             if (handle_pipe == INVALID_HANDLE_VALUE)
@@ -81,6 +81,7 @@ namespace pm
             if (status != ERROR_SUCCESS)
             {
                 Pipeline::Close();
+                return false;
             }
             return true;
 
