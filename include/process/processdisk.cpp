@@ -46,7 +46,7 @@ int ProcessDiskStats::GetPid() const
 
         if (io_deque_.size() == 0)
         {
-            io_data.data = data;
+            io_data.data = static_cast<double>(data);
             io_data.time = time;
             io_deque_.push_back(io_data);
             return;

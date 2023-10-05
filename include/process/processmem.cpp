@@ -5,10 +5,10 @@ namespace pm
 
     ProcessMemoryStats::ProcessMemoryStats() = default;
 
-    ProcessMemoryStats::ProcessMemoryStats(int pid)
+    ProcessMemoryStats::ProcessMemoryStats(int pid) :
+        pid_(pid)
     {
         #ifdef _WIN32
-            pid_ = pid;
         #elif __linux__
 
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
@@ -16,7 +16,6 @@ namespace pm
                 pid_ = 0;
                 return;
             }
-            pid_ = pid;
         #endif
     }
     
@@ -28,7 +27,7 @@ namespace pm
 
     {
         #ifdef _WIN32
-
+        counter_.AddCounter();
  
         #elif __linux__
 
@@ -69,7 +68,7 @@ namespace pm
     {
         UsageData usage_data;
         usage_data.time = GetLastRetrievedTime();
-        usage_data.data - GetMemoryUsage();
+        usage_data.data = GetMemoryUsage();
         return usage_data;
     }
 

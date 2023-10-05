@@ -82,12 +82,25 @@ namespace pm
 	int ProcessController::GetPid()
 	{
         #ifdef _WIN32
+		/*
 			auto pid = static_cast<int>(GetProcessId(process_handle_));
 			Process::SetPid(pid);
-
+			if (pid == 0)
+			{
+				Close();
+			}
+		*/
+			int pid = Process::GetPid();
         #elif __linux__
+		/*
 		    auto pid = FindProcessIdByName(GetName());
 			Process::SetPid(pid);
+			if (pid == 0)
+			{
+				Close();
+			}
+			int pid = Process::GetPid();
+		*/
         #endif
 			return pid;
 

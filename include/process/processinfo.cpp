@@ -10,7 +10,7 @@ namespace pm
         pid_ = pid;
         memory_usage_stats = std::make_shared<ProcessMemoryStats>(p_name, pid);
         cpu_usage_stats = std::make_shared<ProcessCpuStats>(p_name, pid);
-        disk_usage_stats = std::make_shared<ProcessDiskStats>(pid); // need update
+        disk_usage_stats = std::make_shared<ProcessDiskStats>(pid);
         network_usage_stats = std::make_shared<ProcessNetworkStats>(pid);
         #ifdef __linux__
         UpdateTime();

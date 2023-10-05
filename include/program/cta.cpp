@@ -89,20 +89,27 @@ namespace pm
         CTA::UpdateConfig();
 
         std::string log;
-
+        
+        std::vector<IoInfo> disk_data;
+        std::vector<IoInfo> net_data;
         while (true)
         {
             long long start_time =
                 std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count();
 
-            std::vector<IoInfo> disk_data = KernelConsumer::GetNetworkIoSharedVector();
+            disk_data = KernelConsumer::GetDiskIoSharedVector();
 
-            std::vector<IoInfo> net_data = KernelConsumer::GetNetworkIoSharedVector();
+            net_data = KernelConsumer::GetNetworkIoSharedVector();
             
             inner_mutex_.Lock();
 
             Counter::UpdateQuery();
+
+            for (auto& ps : process_)
+            {
+                ps.GetProcessController()->TryFindHandle();
+            }
 
             for (auto &data: disk_data)
             {
@@ -128,6 +135,7 @@ namespace pm
 
             for (auto& ps : process_)
             {
+                ps.UpdateProcessStats();
                 ps.CheckProcessStats();
                 if ((ps.GetProcessLogger()->GetMessage()).size() != 0)
                 {
@@ -152,6 +160,8 @@ namespace pm
                 Sleep(1000 - run_time);
             }
 
+            disk_data.clear();
+            net_data.clear();
         }
     }
 

@@ -16,7 +16,7 @@ namespace pm
         std::string process_name_;
         #ifdef _WIN32
         Counter counter_;
-        FILETIME last_retrieved_time_;
+        FILETIME last_retrieved_time_ = { 0 };
         #endif
     public:
         ProcessMemoryStats();

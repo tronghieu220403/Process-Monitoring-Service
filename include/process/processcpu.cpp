@@ -3,7 +3,8 @@
 
 namespace pm
 {
-    ProcessCpuStats::ProcessCpuStats()
+    ProcessCpuStats::ProcessCpuStats():
+        pid_(0)
     {
     };
 
@@ -14,7 +15,7 @@ namespace pm
         #endif
     {
         #ifdef _WIN32
-
+        counter_.AddCounter();
 
         #elif __linux__
         if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
@@ -210,7 +211,7 @@ namespace pm
     {
         UsageData usage_data;
         usage_data.time = GetLastRetrievedTime();
-        usage_data.data - GetLastUsagePercentage();
+        usage_data.data = GetLastUsagePercentage();
         return usage_data;
     }
 

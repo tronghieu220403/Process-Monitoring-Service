@@ -14,13 +14,13 @@ namespace pm
     private:
         inline static Query query_;
 
-        int pid_;
+        int pid_ = 0;
 
         std::string p_name_;
 
         std::string type_;
 
-        HCOUNTER h_counter_;
+        HCOUNTER h_counter_ = nullptr;
         
     public:
 

@@ -172,16 +172,19 @@ namespace pm
         {
             // push data to a shared pointer pointer vector
             thread_[thread_id] = pid;
+            /*
             WriteDebug(std::to_string(pid) + " " + std::to_string(thread_id) + " create.");
+            */
         }
         // Thread end
         else 
         {
             // remove data from a shared pointer vector
             thread_[thread_id] = 0;
+            /*
             WriteDebug(std::to_string(pid) + " " + std::to_string(thread_id) + " end.");
+            */
         }
-        //std::cout << thread_event.GetThreadId() << " " << thread_event.GetProcessId() << std::endl;
 
         return VOID();
     }
@@ -193,9 +196,6 @@ namespace pm
         struct IoInfo io;
         if (disk_io_event.GetThreadId() > thread_.size() || thread_[disk_io_event.GetThreadId()] == 0)
         {
-            std::ofstream outfile("thread_id.txt", std::ios_base::app);
-            outfile << disk_io_event.GetThreadId() << "\n";
-            outfile.close();
             return;
         }
         io.pid = thread_[disk_io_event.GetThreadId()];

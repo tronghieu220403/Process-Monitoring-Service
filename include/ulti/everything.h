@@ -21,6 +21,8 @@
 	#include <TlHelp32.h>
     #include <Psapi.h>
     #include <direct.h>
+    #include <stdio.h>
+    #include <conio.h>
     #include <strsafe.h>
     #include <tchar.h>
     #include <locale.h>

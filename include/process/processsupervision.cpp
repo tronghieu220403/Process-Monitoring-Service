@@ -78,7 +78,10 @@ namespace pm
         {
             process_controller_->TryFindHandle();
         }
-        process_controller_->GetProcessInfo()->UpdateAttributes();
+        if (process_controller_->IsExists() == true && process_controller_->GetProcessInfo() != nullptr)
+        {
+            process_controller_->GetProcessInfo()->UpdateAttributes();
+        }
     }
 
     void ProcessSupervision::CheckProcessStats()
@@ -102,8 +105,12 @@ namespace pm
             Alert(ProcessLoggerType::kProcessLoggerNet);
         }
         #elif _WIN32
-            std::shared_ptr<ProcessInfo> p_info = process_controller_->GetProcessInfo();
             
+            std::shared_ptr<ProcessInfo> p_info = process_controller_->GetProcessInfo();
+            if (p_info == nullptr)
+            {
+                return;
+            }
             UsageData mem_usage = p_info->GetMemoryUsageStats()->GetMemoryUsageData();
             if (mem_usage.data > max_usage_.mem_usage)
             {
