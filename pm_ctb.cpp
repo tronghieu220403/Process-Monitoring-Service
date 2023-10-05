@@ -14,6 +14,7 @@ int main()
 {
 	pm::CTB ctb;
 	ctb.AddToStartUp();
+	ctb.UpdateConfig("config.json");
 	ctb.CommunicateWithCta();
 	return 0;
 }
