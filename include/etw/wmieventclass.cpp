@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "wmieventclass.h"
 
 namespace pm
@@ -802,3 +804,4 @@ namespace pm
         return {offset, data_size};
     }
 }
+#endif

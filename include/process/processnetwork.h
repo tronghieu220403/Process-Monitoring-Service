@@ -15,6 +15,7 @@ namespace pm
         #ifdef _WIN32
         std::deque<UsageData> io_deque_;
         #elif __linux__
+        time_t last_retrieved_time_ = 0;
         long long last_data_recv_ = 0;
         long long last_data_sent_ = 0;
         double last_speed_ = 0;
@@ -36,9 +37,10 @@ namespace pm
 
         #elif __linux__
 
-            double GetCurrentSpeed();
             double GetLastSpeed();
-
+            void UpdateAttributes();
+            UsageData GetLastIoSpeedInKb();
+            
         #endif
     };
 

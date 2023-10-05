@@ -27,6 +27,7 @@ namespace pm
         last_process_cpu_unit_ = GetSystemClockCycle();
 
         last_system_cpu_unit_ = GetClockCycle();
+        
         #endif
     }
 
@@ -138,10 +139,11 @@ namespace pm
             SetLastRetrievedTime(Counter::GetLastQueryTime());
             SetLastUsagePercentage(counter_.GetValue() / num_processors_);
         #elif __linux__
-
+            SetLastRetrievedTime(time(0));
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
             {
-                return 0;
+                SetLastUsagePercentage(0);
+                return;
             }
 
             unsigned long now_process_cpu_unit = GetClockCycle();
@@ -149,17 +151,9 @@ namespace pm
 
             if (now_system_cpu_unit - last_system_cpu_unit_ != 0)
             {
-                #ifdef _WIN32
-                    percent = static_cast<double>((now_process_cpu_unit - last_process_cpu_unit_)/(now_system_cpu_unit - last_system_cpu_unit_));
-                    percent /= num_processors_;
-                    percent *= 100;
-                #elif __linux__
-
-                    percent = (double)(now_process_cpu_unit - last_process_cpu_unit_);
-                    percent /= (double)(now_system_cpu_unit - last_system_cpu_unit_);
-                    percent *= 100;
-
-                #endif
+                percent = (double)(now_process_cpu_unit - last_process_cpu_unit_);
+                percent /= (double)(now_system_cpu_unit - last_system_cpu_unit_);
+                percent *= 100;
             }
             else
             {
@@ -170,7 +164,7 @@ namespace pm
 
             last_system_cpu_unit_ = now_system_cpu_unit;
 
-            last_usage_percentage_ = percent;
+            SetLastUsagePercentage(percent);
 
         #endif
 
@@ -184,15 +178,6 @@ namespace pm
 
     double ProcessCpuStats::GetLastUsagePercentage() const
     {
-        #ifdef _WIN32
-
-        #elif __linux__
-            if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
-            {
-                return 0.0;
-            }
-        #endif
-
         return last_usage_percentage_;
     }
 
@@ -207,6 +192,20 @@ namespace pm
         last_retrieved_time_ = time;
     }
 
+#elif __linux__
+
+    time_t ProcessCpuStats::GetLastRetrievedTime() const
+    {
+        return last_retrieved_time_;
+    }
+
+    void ProcessCpuStats::SetLastRetrievedTime(time_t time)
+    {
+        last_retrieved_time_ = time;
+    }
+
+#endif
+
     UsageData ProcessCpuStats::GeCpuUsageData() const
     {
         UsageData usage_data;
@@ -215,6 +214,5 @@ namespace pm
         return usage_data;
     }
 
-#endif
 
 }

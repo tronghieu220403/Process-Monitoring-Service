@@ -61,6 +61,12 @@ struct MonitoringComponent
     double network_usage = 0;
 };
 
+struct UsageData
+{
+    time_t time;
+    double data;
+};
+
 #endif
 
 }

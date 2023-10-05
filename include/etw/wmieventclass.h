@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #pragma once
 
 #ifndef PROCESSMONITORING_ETW_WMIEVENTCLASS_H_
@@ -58,4 +60,6 @@ namespace pm
             ~WmiEventClass();
     };
 }
+#endif
+
 #endif

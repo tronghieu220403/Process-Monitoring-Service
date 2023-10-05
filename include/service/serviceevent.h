@@ -1,3 +1,4 @@
+#ifdef _WIN32
 
 #ifndef PROCESSMONITORING_SERVICE_SERVICEEVENT_H_
 #define PROCESSMONITORING_SERVICE_SERVICEEVENT_H_
@@ -19,4 +20,6 @@ namespace pm
             void Close();
     };
 }
+#endif
+
 #endif

@@ -1,7 +1,6 @@
+#ifdef _WIN32
+
 #include "consumer.h"
-#include <algorithm>
-#include <chrono>
-#include <fstream>
 namespace pm
 {
 	KernelConsumer::KernelConsumer()
@@ -243,3 +242,5 @@ namespace pm
         return;
     }
 }
+
+#endif

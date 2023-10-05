@@ -16,13 +16,11 @@ namespace pm
         #ifdef _WIN32
             std::deque<UsageData> io_deque_;
         #elif __linux__
+            time_t last_retrieved_time_ = 0;
             clock_t last_time_ = 0;
-            double last_io_ = 0;
-            double last_speed_ = 0;
+            unsigned long long last_io_ = 0;
+            unsigned long long last_speed_ = 0;
         #endif
-
-        static int num_processors_;
-
 
     public:
 
@@ -42,12 +40,11 @@ namespace pm
 
         #elif __linux__
 
-            double GetCurrentCounter();
-            double GetCurrentSpeed();
-            double GetSpeed();
+            unsigned long long GetCurrentCounter();
+            void UpdateAttributes();
+            UsageData GetLastIoSpeedInMb();
 
         #endif
-
 
     };
 }

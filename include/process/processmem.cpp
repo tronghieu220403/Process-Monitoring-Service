@@ -8,9 +8,7 @@ namespace pm
     ProcessMemoryStats::ProcessMemoryStats(int pid) :
         pid_(pid)
     {
-        #ifdef _WIN32
-        #elif __linux__
-
+        #ifdef __linux__
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
             {
                 pid_ = 0;
@@ -28,9 +26,6 @@ namespace pm
     {
         #ifdef _WIN32
         counter_.AddCounter();
- 
-        #elif __linux__
-
         #endif
     };
 
@@ -54,6 +49,8 @@ namespace pm
         mem_usage_ = mem_usage;
     }
 
+    #ifdef _WIN32
+
     FILETIME ProcessMemoryStats::GetLastRetrievedTime() const
     {
         return last_retrieved_time_;
@@ -63,6 +60,20 @@ namespace pm
     {
         last_retrieved_time_ = time;
     }
+
+    #elif __linux__
+
+    time_t ProcessMemoryStats::GetLastRetrievedTime() const
+    {
+        return last_retrieved_time_;
+    }
+
+    void ProcessMemoryStats::SetLastRetrievedTime(time_t time)
+    {
+        last_retrieved_time_ = time;
+    }
+
+    #endif
 
     UsageData ProcessMemoryStats::GetMemoryUsageData() const
     {
@@ -81,8 +92,8 @@ namespace pm
             
             if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
             {
-                mem_usage_ = 0;
-                return 0;
+                SetMemoryUsage(0);
+                return;
             }
 
             std::ifstream file("/proc/" + std::to_string(pid_) + "/status");
@@ -94,12 +105,13 @@ namespace pm
                 {
                     std::stringstream s(line);
                     std::string ss;
-                    s >> ss >> mem_usage_;
+                    s >> ss >> usage;
                     break;
                 }
             }
             file.close();
-            mem_usage_ /= 1024 * 1024;
+            SetLastRetrievedTime(time(0));
+            SetMemoryUsage(usage / (1024 * 1024) );
         #endif
     }
 

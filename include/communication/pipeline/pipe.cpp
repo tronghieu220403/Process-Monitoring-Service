@@ -1,4 +1,5 @@
 #include "server.h"
+#include "pipe.h"
 
 namespace pm
 {
@@ -25,6 +26,11 @@ namespace pm
     void Pipeline::SetPipelineName(const std::string& pipe_name)
     {
         name_ = pipe_name;
+    }
+
+    std::string Pipeline::GetPipelineName() const
+    {
+        return name_;
     }
 
     void Pipeline::SetConnectStatus(bool status)

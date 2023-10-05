@@ -19,8 +19,8 @@ namespace pm
     public:
         ProcessSupervision();
         
-        explicit ProcessSupervision(std::string& name);
-        explicit ProcessSupervision(std::string& name, const MonitoringComponent& max_usage);
+        explicit ProcessSupervision(const std::string& name);
+        explicit ProcessSupervision(const std::string& name, const MonitoringComponent& max_usage);
 
         void SetMaxUsage(const MonitoringComponent& max_usage);
         void SetMaxCpuUsage(float max_cpu_usage);
@@ -30,11 +30,8 @@ namespace pm
 
         void UpdateProcessStats();
         void CheckProcessStats();
-        #ifdef _WIN32
-            void Alert(ProcessLoggerType type, UsageData usage_data);
-        #elif __linux__
-            void Alert(ProcessLoggerType type);
-        #endif
+
+        void Alert(ProcessLoggerType type, UsageData usage_data);
     };
 }
 

@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 
 #ifndef PROCESSMONITORING_SERVICE_PROCESSMONITORSERVICE_H_
 #define PROCESSMONITORING_SERVICE_PROCESSMONITORSERVICE_H_
@@ -34,5 +36,7 @@ namespace pm
 
     };
 }
+
+#endif
 
 #endif

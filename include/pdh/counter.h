@@ -1,3 +1,4 @@
+#ifdef _WIN32
 
 #ifndef PROCESSMONITORING_PDH_COUNTER_H_
 #define PROCESSMONITORING_PDH_COUNTER_H_
@@ -39,5 +40,7 @@ namespace pm
         ~Counter();
     };
 }
+
+#endif
 
 #endif

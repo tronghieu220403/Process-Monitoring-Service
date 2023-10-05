@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "processmonitorservice.h"
 
 namespace pm
@@ -227,3 +229,5 @@ namespace pm
 
 
 }
+
+#endif

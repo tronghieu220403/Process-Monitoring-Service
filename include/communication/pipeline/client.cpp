@@ -59,13 +59,13 @@ namespace pm
             int fd_recv = -1;
             int fd_send = -1;
 
-            std::string client_recv = "/tmp/" + server_name_ + "serversend";
-            std::string client_send = "/tmp/" + server_name_ + "serverrecv";
+            std::string client_recv = "/tmp/" + Pipeline::GetPipelineName() + "serversend";
+            std::string client_send = "/tmp/" + Pipeline::GetPipelineName() + "serverrecv";
 
             fd_recv = open(client_recv.data(), O_RDONLY);
             fd_send = open(client_send.data(), O_WRONLY);
             
-            Pipeline::SetConnect(int fd_send, int fd_recv);
+            Pipeline::SetConnect(fd_send, fd_recv);
 
         #endif
 

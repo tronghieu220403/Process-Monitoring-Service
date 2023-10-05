@@ -21,11 +21,7 @@ namespace pm
 
         explicit ProcessLogger(std::string& process_name);
 
-        #ifdef _WIN32
-            std::string GetAlert(ProcessLoggerType type, UsageData usage_data);
-        #elif __linux__
-            std::string GetAlert(ProcessLoggerType type);
-        #endif
+        std::string GetAlert(ProcessLoggerType type, UsageData usage_data);
 
         ~ProcessLogger() = default;
     };

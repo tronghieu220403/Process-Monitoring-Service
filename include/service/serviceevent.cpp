@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "serviceevent.h"
 
 
@@ -25,3 +27,4 @@ namespace pm
     }   
 
 }
+#endif

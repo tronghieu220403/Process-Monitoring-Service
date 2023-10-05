@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "networkevent.h"
 
 namespace pm
@@ -129,3 +131,5 @@ namespace pm
     }
 
 };
+
+#endif

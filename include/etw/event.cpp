@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "event.h"
 
 namespace pm
@@ -96,3 +98,5 @@ namespace pm
     }
 
 }
+
+#endif

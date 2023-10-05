@@ -1,3 +1,4 @@
+#ifdef _WIN32
 
 #ifndef PROCESSMONITORING_PDH_QUERY_H_
 #define PROCESSMONITORING_PDH_QUERY_H_
@@ -32,4 +33,5 @@ namespace pm
     };
 }
 
+#endif
 #endif

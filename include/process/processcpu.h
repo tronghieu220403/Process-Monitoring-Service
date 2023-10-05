@@ -2,6 +2,7 @@
 #define PROCESSMONITORING_PROCESS_PROCESSCPU_H_
 
 #include "ulti/everything.h"
+#include "ulti/collections.h"
 #ifdef _WIN32
 #include "pdh/counter.h"
 #endif
@@ -21,13 +22,13 @@ namespace pm
         int pid_;
         std::string process_name_;
         double last_usage_percentage_ = 0;
-
-        Counter counter_;
-
+        
         #ifdef _WIN32
+            Counter counter_;
             FILETIME last_retrieved_time_;
             inline static int num_processors_ = ProcessCpuStats::GetNumberOfProcessors();
         #elif __linux__
+            time_t last_retrieved_time_;
             unsigned long long last_process_cpu_unit_;
             unsigned long long last_system_cpu_unit_;
 
@@ -49,14 +50,17 @@ namespace pm
             FILETIME GetLastRetrievedTime() const;
             void SetLastRetrievedTime(FILETIME time);
 
-            UsageData GeCpuUsageData() const;
         #elif __linux__
+
+            time_t GetLastRetrievedTime() const;
+            void SetLastRetrievedTime(time_t time);
 
             unsigned long long GetClockCycle();
             unsigned long long GetSystemClockCycle();
 
         #endif
 
+        UsageData GeCpuUsageData() const;
 
 
     };

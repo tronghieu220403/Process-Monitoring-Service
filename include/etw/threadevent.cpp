@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "threadevent.h"
 
 namespace pm
@@ -118,3 +120,5 @@ namespace pm
             thread_id_ = thread_id;
     }
 };
+
+#endif

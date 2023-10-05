@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "counter.h"
 
 namespace pm
@@ -109,3 +111,5 @@ namespace pm
         CloseCounter();
     }
 }
+
+#endif

@@ -6,13 +6,13 @@ namespace pm
 
     ProcessSupervision::ProcessSupervision() = default;
 
-    ProcessSupervision::ProcessSupervision(std::string& name)
+    ProcessSupervision::ProcessSupervision(const std::string& name)
     {
         this->ProcessController::ProcessController(name);
         this->ProcessLogger::ProcessLogger(name);
     }
 
-    ProcessSupervision::ProcessSupervision(std::string& name, const MonitoringComponent& max_usage):
+    ProcessSupervision::ProcessSupervision(const std::string& name, const MonitoringComponent& max_usage):
         max_usage_(max_usage)
     {
         this->ProcessController::ProcessController(name);
@@ -47,10 +47,6 @@ namespace pm
     
     void ProcessSupervision::UpdateProcessStats()
     {
-        if (IsExists() == false)
-        {
-            TryFindHandle();
-        }
         if (IsExists() == true && GetProcessInfo() != nullptr)
         {
             GetProcessInfo()->UpdateAttributes();
@@ -58,27 +54,7 @@ namespace pm
     }
 
     void ProcessSupervision::CheckProcessStats()
-    {
-        #ifdef __linux__
-            std::shared_ptr<ProcessInfo> p_info = process_controller_->GetProcessInfo();
-            if (p_info->GetCpuUsage() > max_usage_.cpu_usage)
-            {
-                Alert(ProcessLoggerType::kProcessLoggerCpu);
-            }
-            if (p_info->GetMemoryUsage() > max_usage_.mem_usage)
-            {
-                Alert(ProcessLoggerType::kProcessLoggerMem);
-            }
-            if (p_info->GetDiskUsage() > max_usage_.disk_usage)
-            {
-                Alert(ProcessLoggerType::kProcessLoggerDisk);
-            }
-            if (p_info->GetNetworkUsage() > max_usage_.network_usage)
-            {
-                Alert(ProcessLoggerType::kProcessLoggerNet);
-            }
-        #elif _WIN32
-        
+    {        
             UsageData usage = { 0 };
 
             std::shared_ptr<ProcessInfo> p_info = GetProcessInfo();
@@ -86,6 +62,7 @@ namespace pm
             {
                 return;
             }
+
             usage = p_info->GetMemoryUsageStats()->GetMemoryUsageData();
             if (usage.data > max_usage_.mem_usage)
             {
@@ -97,6 +74,7 @@ namespace pm
             {
                 Alert(ProcessLoggerType::kProcessLoggerCpu, usage);
             }
+            #ifdef _WIN32
 
             while(p_info->GetDiskUsageStats()->HasData())
             {
@@ -118,18 +96,25 @@ namespace pm
                 }
             }
 
-        #endif
+            #elif __linux__
+
+            usage = p_info->GetDiskUsageStats()->GetLastIoSpeedInMb();
+            if (usage.data > max_usage_.cpu_usage)
+            {
+                Alert(ProcessLoggerType::kProcessLoggerDisk, usage);
+            }
+
+            usage = p_info->GetNetworkUsageStats()->GetLastIoSpeedInKb();
+            if (usage.data > max_usage_.network_usage)
+            {
+                Alert(ProcessLoggerType::kProcessLoggerDisk, usage);
+            }
+
+            #endif
     }
 
-#ifdef __linux__
-    void ProcessSupervision::Alert(ProcessLoggerType type)
-    {
-        AddMessage(GetAlert(type));
-    }
-#elif _WIN32
     void ProcessSupervision::Alert(ProcessLoggerType type, UsageData usage_data)
     {
         AddMessage(GetAlert(type, usage_data));
     }
-#endif
 }

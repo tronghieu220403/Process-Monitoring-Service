@@ -137,7 +137,7 @@ namespace pm
 
             fd_recv = open(server_recv.data(), O_RDONLY);
 
-            Pipeline::SetConnect(int fd_send, int fd_recv);
+            Pipeline::SetConnect(fd_send, fd_recv);
 
         #endif
 

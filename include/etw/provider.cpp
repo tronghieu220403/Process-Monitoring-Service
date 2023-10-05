@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "provider.h"
 
 namespace pm
@@ -75,3 +77,5 @@ namespace pm
         }
     }
 }
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "query.h"
 
 namespace pm
@@ -45,3 +47,4 @@ namespace pm
     }
 
 }
+#endif

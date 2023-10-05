@@ -5,18 +5,15 @@ namespace pm
 
     ProcessNetworkStats::ProcessNetworkStats() = default;
 
-    ProcessNetworkStats::ProcessNetworkStats(int pid)
+    ProcessNetworkStats::ProcessNetworkStats(int pid):
+        pid_(pid)
     {
-        #ifdef _WIN32
-            pid_ = pid;
-        #elif __linux__
-
-        if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
-        {
-            pid_ = 0;
-            return;
-        }
-
+        #ifdef __linux__
+            if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
+            {
+                pid_ = 0;
+                return;
+            }
         #endif
     };
 
@@ -94,15 +91,24 @@ int ProcessNetworkStats::GetPid() const
 
 #elif __linux__
 
-    double ProcessNetworkStats::GetCurrentSpeed()
-    {
-        return last_speed_;
-    }
-
     double ProcessNetworkStats::GetLastSpeed()
     {
         return last_speed_;
     }
+
+    void ProcessNetworkStats::UpdateAttributes()
+    {
+        return;
+    }
+
+    UsageData ProcessNetworkStats::GetLastIoSpeedInKb()
+    {
+        UsageData usage_data;
+        usage_data.data = last_speed_;
+        usage_data.time = last_retrieved_time_;
+        return usage_data; 
+    }
+
 
 #endif
 }

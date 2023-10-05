@@ -1,3 +1,6 @@
+#ifdef _WIN32
+
+
 #include "diskioevent.h"
 
 namespace pm
@@ -130,3 +133,5 @@ namespace pm
     }
 
 };
+
+#endif

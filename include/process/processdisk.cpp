@@ -8,21 +8,17 @@ ProcessDiskStats::ProcessDiskStats()
 
 };
 
-ProcessDiskStats::ProcessDiskStats(int pid)
+ProcessDiskStats::ProcessDiskStats(int pid):
+    pid_(pid)
 {
-    #ifdef _WIN32
-    pid_ = pid;
-    #elif __linux__
-    if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
-    {
-        return;
-    }
-
-    pid_ = pid;
-    last_io_ = GetCurrentCounter();
-    
-    //Get time here
-    last_time_ = clock();
+    #ifdef __linux__
+        if (std::filesystem::is_directory("/proc/" + std::to_string(pid)) == false)
+        {
+            pid_ = 0;
+            return;
+        }
+        last_io_ = GetCurrentCounter();
+        last_time_ = clock();
     #endif
 }
 
@@ -136,15 +132,15 @@ unsigned long long ProcessDiskStats::GetCurrentCounter()
     return r + w;
 }
 
-unsigned long long ProcessDiskStats::GetCurrentSpeed()
+void ProcessDiskStats::UpdateAttributes()
 {
-
     clock_t now_time;
 
     if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
     {
         last_speed_ = 0;
-        return 0;
+        last_io_ = 0;
+        return;
     }
 
     now_time = clock();
@@ -152,27 +148,28 @@ unsigned long long ProcessDiskStats::GetCurrentSpeed()
     double time_range_in_sec = (double)(now_time - last_time_) / CLOCKS_PER_SEC;
 
     unsigned long long cur_io = GetCurrentCounter();
-
-    speed = static_cast<double>(cur_io - last_io_) / time_range_in_sec;
-
-    last_time_ = now_time;
-
-    last_io_ = cur_io;
-
-    last_speed_ = double(speed) / (1024 * 1024);
-
-    return last_speed_;
-};
-
-unsigned long long ProcessDiskStats::GetSpeed()
-{
-    if (std::filesystem::is_directory("/proc/" + std::to_string(pid_)) == false)
+    
+    if (cur_io == 0)
     {
         last_speed_ = 0;
+        last_io_ = 0;
+        return;
     }
 
-    return last_speed_;
+    last_retrieved_time_ = time(0);
+    last_speed_ = static_cast<double>(cur_io - last_io_) / time_range_in_sec;
+    last_time_ = now_time;
+    last_io_ = cur_io;
 };
+
+UsageData ProcessDiskStats::GetLastIoSpeedInMb()
+{
+    UsageData usage_data;
+    usage_data.time = last_retrieved_time_;
+    usage_data.data = static_cast<double>(last_speed_) / (1024 * 1024);
+    return usage_data;
+};
+
 #endif
 
 

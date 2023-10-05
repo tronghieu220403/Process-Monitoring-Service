@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "servicecontrol.h"
 
 namespace pm
@@ -82,3 +84,5 @@ namespace pm
     }
 
 }
+
+#endif

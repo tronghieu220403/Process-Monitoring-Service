@@ -8,24 +8,7 @@ namespace pm
         config_mutex_(NamedMutex("config_reg")),
         inner_mutex_(NamedMutex(""))
     {
-        /*
-        std::vector<char> log_path;
-        log_path.resize(1000);
-        GetCurrentDir(&log_path[0], 1000);
-        log_path.resize(strlen(&log_path[0]));
-        #ifdef _WIN32
-                log_path.push_back('\\');
-        #elif __linux__
-                log_path.push_back('/');
-        #endif
 
-        for (std::string log_name = "pm_logs.log"; char c : log_name)
-        {
-            log_path.push_back(c);
-        }
-
-        v_log_path_ = log_path;
-        */
     }
 
 #ifdef _WIN32
@@ -77,7 +60,7 @@ namespace pm
                 ss >> mc.mem_usage;
                 ss >> mc.disk_usage;
                 ss >> mc.network_usage;
-                process_.push_back(ProcessSupervision(name, mc));
+                process_.push_back(std::make_shared<ProcessSupervision>(name, mc));
             }
 
             config_mutex_.Unlock();
@@ -98,13 +81,23 @@ namespace pm
         long long run_time = 0;
         std::string log;
         
-        std::vector<IoInfo> disk_data;
-        std::vector<IoInfo> net_data;
+        #ifdef _WIN32
+            std::vector<IoInfo> disk_data;
+            std::vector<IoInfo> net_data;
+        #endif
+        
         while (true)
         {
             long long start_time =
                 std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count();
+            
+            for (auto& ps : process_)
+            {
+                ps->TryFindHandle();
+            }
+
+            #ifdef _WIN32
 
             disk_data = KernelConsumer::GetDiskIoSharedVector();
 
@@ -114,10 +107,6 @@ namespace pm
 
             Counter::UpdateQuery();
 
-            for (auto& ps : process_)
-            {
-                ps->TryFindHandle();
-            }
 
             for (auto &data: disk_data)
             {
@@ -142,6 +131,7 @@ namespace pm
                     }
                 }
             }
+            #endif
 
             for (auto& ps : process_)
             {
@@ -163,8 +153,11 @@ namespace pm
             }
 
             log.clear();
-            disk_data.clear();
-            net_data.clear();
+
+            #ifdef _WIN32
+                disk_data.clear();
+                net_data.clear();
+            #endif
 
             run_time =
                 std::chrono::duration_cast<std::chrono::milliseconds>(

@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "service.h"
 
 namespace pm
@@ -32,3 +34,5 @@ namespace pm
     }
 
 }
+
+#endif

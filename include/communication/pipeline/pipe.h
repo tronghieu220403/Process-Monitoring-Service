@@ -32,6 +32,8 @@ namespace pm
             #endif
 
             void SetPipelineName(const std::string& pipe_name);
+            std::string GetPipelineName() const;
+
             void SetConnectStatus(bool status);
             #ifdef _WIN32
                 void SetPipelineHandle(HANDLE handle_pipe);

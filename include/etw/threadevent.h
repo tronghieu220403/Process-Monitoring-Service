@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #pragma once
 
 #ifndef PROCESSMONITORING_ETW_THREADEVENT_H_
@@ -47,5 +49,7 @@ namespace pm
 	};
 
 };
+
+#endif
 
 #endif
