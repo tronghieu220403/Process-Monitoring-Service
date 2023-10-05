@@ -60,6 +60,7 @@ namespace pm
                 (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
                 PIPE_ACCESS_DUPLEX          // read/write access 
                 | WRITE_DAC
+                | FILE_FLAG_OVERLAPPED
                 ,         
                 PIPE_TYPE_BYTE |         // message type pipe 
                 PIPE_READMODE_BYTE |     // message-read mode // need to read this more clearly

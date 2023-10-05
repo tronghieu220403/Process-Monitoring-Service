@@ -122,7 +122,7 @@ namespace pm
             int cur_ptr = 0;
             while(cur_ptr < 4)
             {
-                std::osyncstream(std::cout) << "Start reading" << std::endl;
+                std::osyncstream(std::cout) << "Start receiving" << std::endl;
                 success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
                 if (!success && bytes_read == 0)
                 {   
