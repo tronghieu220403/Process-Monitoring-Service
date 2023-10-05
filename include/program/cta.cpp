@@ -153,10 +153,12 @@ namespace pm
             }
             
             inner_mutex_.Unlock();
-
-            cta_log_mutex_.Lock();
-            log_deque_.push_back(StringToVectorChar(log));
-            cta_log_mutex_.Unlock();
+            if (log.size() > 0)
+            {
+                cta_log_mutex_.Lock();
+                log_deque_.push_back(StringToVectorChar(log));
+                cta_log_mutex_.Unlock();
+            }
 
             log.clear();
             disk_data.clear();
@@ -211,7 +213,7 @@ namespace pm
 
             if (v.size() > 0)
             {
-                if (server.TrySendMessage(Command::CTA_SEND_LOGS, v_log_path_) == false)
+                if (server.TrySendMessage(Command::CTA_SEND_LOGS, v) == false)
                 {
                     return;
                 }
@@ -251,11 +253,14 @@ namespace pm
             while (server.ListenToClient() == false){
                 Sleep(100);
             }
+            std::cout << "Client connected!" << std::endl;
 
             std::jthread recv(std::bind_front(&pm::CTA::RecvCommunication, this));
             std::jthread send(std::bind_front(&pm::CTA::SendCommunication, this));
             recv.join();
             send.join();
+
+            std::cout << "Client disconnected!" << std::endl;
 
             Sleep(100);
 

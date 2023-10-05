@@ -35,6 +35,7 @@
     #include <evntcons.h>
     #include <comutil.h>
     #include <wbemidl.h>
+    #include <aclapi.h>    
 
     #include <winrt/windows.foundation.collections.h>
     #include <winrt/windows.data.json.h>
@@ -79,6 +80,7 @@
 #pragma comment(lib, "Shell32.lib")  // For IsUserAnAdmin function
 #pragma comment(lib, "comsupp.lib")  // For _bstr_t class
 #pragma comment(lib,"Pdh.lib")
+#pragma comment(lib,"Advapi32.lib")
 #endif
 
 

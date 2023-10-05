@@ -28,7 +28,6 @@ namespace pm
         #endif
 
         std::deque<std::vector<char>> log_deque_;
-        std::vector<char> v_log_path_;
 
         NamedMutex cta_log_mutex_;
         NamedMutex inner_mutex_;

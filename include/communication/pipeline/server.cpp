@@ -58,11 +58,14 @@ namespace pm
             std::string server_pipe = R"(\\.\pipe\)" + Pipeline::GetPipelineName();
             HANDLE handle_pipe = CreateNamedPipe(
                 (std::wstring(server_pipe.begin(), server_pipe.end())).data(),             // pipe name 
-                PIPE_ACCESS_DUPLEX,         // read/write access 
+                PIPE_ACCESS_DUPLEX          // read/write access 
+                | WRITE_DAC
+                ,         
                 PIPE_TYPE_MESSAGE |         // message type pipe 
-                PIPE_READMODE_MESSAGE |     // message-read mode 
-                //PIPE_NOWAIT,                // blocking mode: NON-BLOCKING
-                PIPE_WAIT,                  // blocking mode: BLOCKING
+                PIPE_READMODE_MESSAGE |     // message-read mode // need to read this more clearly
+                //PIPE_NOWAIT                // blocking mode: NON-BLOCKING
+                PIPE_WAIT                     // blocking mode: BLOCKING
+                ,                  
                 max_connection_,            // max. instances  
                 buf_size_ + 100,                  // output buffer size 
                 buf_size_ + 100,                  // input buffer size 
@@ -74,7 +77,11 @@ namespace pm
                 return false;
             }
             Pipeline::SetPipelineHandle(handle_pipe);
-
+            ULONG status = SetSecurityInfo(handle_pipe, SE_KERNEL_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, NULL, NULL);
+            if (status != ERROR_SUCCESS)
+            {
+                Pipeline::Close();
+            }
             return true;
 
         #elif __linux__

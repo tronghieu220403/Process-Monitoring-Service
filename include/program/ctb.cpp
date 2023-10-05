@@ -131,6 +131,7 @@ namespace pm
         client = PipelineClient("processmonitoringpipe");
         while(true)
         {
+            std::cout << "Connecting" << std::endl;
             while(true)
             {
                 if (client.ConnectToPipeServer() == true)
@@ -139,11 +140,13 @@ namespace pm
                 }
                 Sleep(1000);
             }
-
+            std::cout << "Server connected" << std::endl;
             std::jthread recv(std::bind_front(&pm::CTB::RecvCommunication, this));
             std::jthread send(std::bind_front(&pm::CTB::SendCommunication, this));
             recv.join();
             send.join();
+            std::cout << "Server disconnected" << std::endl;
+
 
         }
     }

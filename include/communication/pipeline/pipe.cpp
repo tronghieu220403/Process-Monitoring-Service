@@ -253,7 +253,10 @@ namespace pm
             send.resize(4 + 4 + sz);
             memcpy(&send[0], &sz, 4);
             memcpy(&send[4], &type, 4);
-            memcpy(&send[8], &data[0], sz);
+            if (sz != 0)
+            {
+                memcpy(&send[8], &data[0], sz);
+            }
         
         #ifdef _WIN32
 
