@@ -1,6 +1,6 @@
 #include "serviceevent.h"
 
-/*
+
 namespace pm
 {
     void ServiceEvent::Close()
@@ -25,4 +25,3 @@ namespace pm
     }   
 
 }
-*/

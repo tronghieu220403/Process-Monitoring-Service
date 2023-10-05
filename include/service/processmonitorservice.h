@@ -14,14 +14,16 @@ namespace pm
 
         inline static SERVICE_STATUS service_status_ = {0};
         inline static SERVICE_STATUS_HANDLE status_handle_ = nullptr;
-        //inline static ServiceEvent control_event_ = ServiceEvent();
+        inline static LPVOID main_worker_function_ = nullptr;
 
     public:
-        inline static const std::wstring kName = L"ProcessMonitoringService";
+        inline static const std::wstring kName = L"Process Monitoring Service";
+
+        static void SetMainWorkerFunction(LPVOID main_worker_function);
 
         static void ProcessMonitoringServiceCtrlHandler(DWORD ctrl_code);
         static void ProcessMonitoringWorkerFunction();
-        static void ProcessMonitoringServiceMain();
+        static VOID WINAPI ProcessMonitoringServiceMain();
 
         static void ProcessMonitoringServiceStop();
         static void ProcessMonitoringServicePause();

@@ -45,16 +45,6 @@ namespace pm
 		long long pid = 0;
 	};
 
-    struct ServiceEvent
-    {
-        public: 
-            HANDLE stop_event_ = nullptr;
-            HANDLE pause_event_ = nullptr;
-            HANDLE continue_event_ = nullptr;
-
-            void Close();
-    };
-
     enum IoType
     {
         DISK_IO = 1 ,

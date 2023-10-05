@@ -4,7 +4,7 @@
 
 #include "ulti/everything.h"
 #include "ulti/collections.h"
-/*
+
 namespace pm
 {
     class ServiceEvent
@@ -19,5 +19,4 @@ namespace pm
             void Close();
     };
 }
-*/
 #endif

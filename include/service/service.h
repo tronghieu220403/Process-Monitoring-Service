@@ -17,6 +17,7 @@ namespace pm
 
         LPSERVICE_MAIN_FUNCTION GetServiceMainFunc() const;
         void SetServiceMainFunc(LPSERVICE_MAIN_FUNCTION main_func);
+
         std::wstring GetName() const;
         void SetName(std::wstring name);
 

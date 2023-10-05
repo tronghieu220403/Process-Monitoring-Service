@@ -108,7 +108,7 @@ namespace pm
 
     inline void WriteDebug(std::string s)
     {
-        std::ofstream outfile("debug.txt", std::ios_base::app);
+        std::ofstream outfile("C:\\Users\\hieu\\source\\repos\\Providerdebug.txt", std::ios_base::app);
         outfile << s << "\n";
         outfile.close();
     }

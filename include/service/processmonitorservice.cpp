@@ -19,8 +19,6 @@ namespace pm
             exit(0);
         }
 
-        //SetEvent(control_event_.stop_event_);
-
         // Do something here while pending
 
         // End of pending
@@ -55,14 +53,6 @@ namespace pm
             WriteDebug("Failed to SetServiceStatus SERVICE_PAUSE_PENDING");
             exit(0);
         }
-
-        //SetEvent(control_event_.pause_event_);
-        /*
-        while(WaitForSingleObject(control_event_.pause_event_, 10) == WAIT_OBJECT_0)
-        {
-
-        }
-        */
        
         // Do something here while pending
 
@@ -100,7 +90,6 @@ namespace pm
             exit(0);
         }
 
-        //ResetEvent(control_event_.pause_event_);
         // Do something here while pending
 
         // End of pending
@@ -126,6 +115,11 @@ namespace pm
         exit(0);
     }
 
+
+    void ProcessMonitoringService::SetMainWorkerFunction(LPVOID main_worker_function)
+    {
+        main_worker_function_ = main_worker_function;
+    }
 
     void ProcessMonitoringService::ProcessMonitoringServiceCtrlHandler(DWORD ctrl_code)
     {
@@ -167,22 +161,11 @@ namespace pm
             return;
         }
 
-        /*
-        while (WaitForSingleObject(control_event_.stop_event_, 0) != WAIT_OBJECT_0)
-        {        
-            WriteDebug("OKE");
-            //  Simulate some work by sleeping
-            Sleep(10000);
-            while (WaitForSingleObject(control_event_.pause_event_, 10) == WAIT_OBJECT_0)
-            {
-
-            }
-        }
-        */
+        ((void(*)(void))main_worker_function_)();
     }
 
 
-    void ProcessMonitoringService::ProcessMonitoringServiceMain()
+    VOID WINAPI ProcessMonitoringService::ProcessMonitoringServiceMain()
     {
         WriteDebug("In main");
 
@@ -206,26 +189,6 @@ namespace pm
         if (SetServiceStatus (status_handle_ , &service_status_) == FALSE)
         {
             WriteDebug("Can not SetServiceStatus in line 218: " + GetLastError());
-            goto EXIT;
-        }
-
-        //control_event_.stop_event_ = CreateEvent (NULL, TRUE, FALSE, NULL);
-        //control_event_.stop_handled_ = CreateEvent (NULL, TRUE, FALSE, NULL);
-
-        //control_event_.pause_event_ = CreateEvent (NULL, TRUE, FALSE, NULL);
-        //control_event_.pause_handled_ = CreateEvent (NULL, TRUE, FALSE, NULL);
-
-        //if (control_event_.stop_event_ == nullptr || control_event_.pause_event_ == nullptr || control_event_.pause_handled_ == nullptr)
-        {
-            service_status_.dwControlsAccepted = 0;
-            service_status_.dwCurrentState = SERVICE_STOPPED;
-            service_status_.dwWin32ExitCode = GetLastError();
-            service_status_.dwCheckPoint = 1;
-
-            if (SetServiceStatus(status_handle_, &service_status_) == FALSE)
-            {
-                WriteDebug("Can not SetServiceStatus in line 235: " + GetLastError());
-            }
             goto EXIT;
         }
 

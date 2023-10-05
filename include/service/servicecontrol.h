@@ -10,16 +10,22 @@ namespace pm
     class ServiceControl
     {
     private:
-        std::string name_;
+        std::wstring w_name_;
+        std::wstring w_path_;
         SC_HANDLE h_services_control_manager_;
 
     public:
 
-        std::string GetName() const;
-        void SetName(std::string name);
-
         ServiceControl() = default;
-        ServiceControl(const std::string& name);
+
+        ServiceControl(const std::wstring& name);
+        ServiceControl(const std::wstring& name, const std::wstring& path);
+
+        std::wstring GetName() const;
+        void SetName(const std::wstring& name);
+
+        void SetPath(std::wstring w_path);
+
         bool Create();
         bool Run();
 
