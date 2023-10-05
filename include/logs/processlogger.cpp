@@ -76,7 +76,7 @@ namespace pm
         std::stringstream ss;
         ss << year << "-" << month << "-" << day << " " << hour << ":" << min << ":" << sec << ",";
 
-        ss << "," << process_name_ << ",";
+        ss << process_name_ << ",";
 
         if (type == ProcessLoggerType::kProcessLoggerCpu)
         {
