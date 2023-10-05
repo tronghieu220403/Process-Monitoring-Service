@@ -38,6 +38,7 @@ namespace pm
 			process_handle_ = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
 			if (process_handle_ == nullptr)
 			{
+				Process::SetPid(0);
 				success = false;
 			}
 			else 
@@ -77,33 +78,6 @@ namespace pm
 
 			return false;
 		#endif
-	}
-
-	int ProcessController::GetPid()
-	{
-        #ifdef _WIN32
-		/*
-			auto pid = static_cast<int>(GetProcessId(process_handle_));
-			Process::SetPid(pid);
-			if (pid == 0)
-			{
-				Close();
-			}
-		*/
-			int pid = Process::GetPid();
-        #elif __linux__
-		/*
-		    auto pid = FindProcessIdByName(GetName());
-			Process::SetPid(pid);
-			if (pid == 0)
-			{
-				Close();
-			}
-			int pid = Process::GetPid();
-		*/
-        #endif
-			return pid;
-
 	}
 
 	std::shared_ptr<ProcessInfo> ProcessController::GetProcessInfo() const

@@ -32,8 +32,6 @@ namespace pm
 
 		bool IsExists();
         
-        int GetPid() override;
-
 		std::shared_ptr<ProcessInfo> GetProcessInfo() const;
 
 		bool TryFindHandle();

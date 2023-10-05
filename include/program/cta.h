@@ -18,7 +18,7 @@ namespace pm
     class CTA
     {
     private:
-        std::vector<ProcessSupervision> process_;
+        std::vector<std::shared_ptr<ProcessSupervision>> process_;
         std::string log_info_;
         PipelineServer server;
         

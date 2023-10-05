@@ -27,7 +27,6 @@ namespace pm
 
 	int Process::GetPid()
 	{
-		pid_ = FindProcessIdByName(name_);
 		return pid_;
 	}
 

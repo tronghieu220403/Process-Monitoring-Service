@@ -51,23 +51,23 @@ int ProcessNetworkStats::GetPid() const
         unsigned long long last_ym = last_io_st.wYear * 12 + last_io_st.wMonth;
         unsigned long long data_ym = st.wYear * 12 + st.wMonth;
         unsigned long long last_dhms = last_io_st.wDay * 3600 * 12 + last_io_st.wHour * 3600 + last_io_st.wMinute * 60 + last_io_st.wSecond;
-        unsigned long long data_dhms = last_io_st.wDay * 3600 * 12 + last_io_st.wHour * 3600 + last_io_st.wMinute * 60 + last_io_st.wSecond;
+        unsigned long long data_dhms = st.wDay * 3600 * 12 + st.wHour * 3600 + st.wMinute * 60 + st.wSecond;
         if (last_ym == data_ym)
         {
             if (last_dhms == data_dhms)
             {
-                last_io_data.data += (double)data;
+                last_io_data.data += static_cast<double>(data);
             }
             else if (last_dhms < data_dhms)
             {
-                io_data.data = (double)data;
+                io_data.data = static_cast<double>(data);
                 io_data.time = time;
                 io_deque_.push_back(io_data);
             }
         }
         else if (last_ym < data_ym)
         {
-            io_data.data = (double)data;
+            io_data.data = static_cast<double>(data);
             io_data.time = time;
             io_deque_.push_back(io_data);
         }

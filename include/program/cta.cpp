@@ -57,7 +57,7 @@ namespace pm
                 memcpy(&mc.mem_usage, &(info[i].second[1 * sizeof(double)]), sizeof(double));
                 memcpy(&mc.disk_usage, &(info[i].second[2 * sizeof(double)]), sizeof(double));
                 memcpy(&mc.network_usage, &(info[i].second[3 * sizeof(double)]), sizeof(double));
-                process_.push_back(ProcessSupervision(info[i].first, mc));
+                process_.push_back(std::make_shared<ProcessSupervision>(info[i].first, mc));
             }
 
         #elif __linux__
@@ -84,10 +84,18 @@ namespace pm
         #endif
     }
 
+    long long GetTimeNow()
+    {
+        return
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count();
+    }
+
     void CTA::Monitoring()
     {
         CTA::UpdateConfig();
 
+        long long run_time = 0;
         std::string log;
         
         std::vector<IoInfo> disk_data;
@@ -108,39 +116,39 @@ namespace pm
 
             for (auto& ps : process_)
             {
-                ps.GetProcessController()->TryFindHandle();
+                ps->TryFindHandle();
             }
 
             for (auto &data: disk_data)
             {
                 for (auto& ps: process_)
                 {
-                    if (ps.GetProcessController()->GetPid() == data.pid)
+                    if (ps->GetPid() == data.pid)
                     {
-                        ps.GetProcessController()->GetProcessInfo()->GetNetworkUsageStats()->AddData(data.filetime, data.size);
+                        ps->GetProcessInfo()->GetNetworkUsageStats()->AddData(data.filetime, data.size);
                     }
                 }
             }
-
+            
             for (auto &data: net_data)
             {
                 for (auto& ps: process_)
                 {
-                    if (ps.GetProcessController()->GetPid() == data.pid)
+                    if (ps->GetPid() == data.pid)
                     {
-                        ps.GetProcessController()->GetProcessInfo()->GetNetworkUsageStats()->AddData(data.filetime, data.size);
+                        ps->GetProcessInfo()->GetNetworkUsageStats()->AddData(data.filetime, data.size);
                     }
                 }
             }
 
             for (auto& ps : process_)
             {
-                ps.UpdateProcessStats();
-                ps.CheckProcessStats();
-                if ((ps.GetProcessLogger()->GetMessage()).size() != 0)
+                ps->UpdateProcessStats();
+                ps->CheckProcessStats();
+                if ((ps->GetMessage()).size() != 0)
                 {
-                    log.append(ps.GetProcessLogger()->GetMessage());
-                    ps.GetProcessLogger()->SetMessage("");
+                    log.append(ps->GetMessage());
+                    ps->SetMessage("");
                 }
             }
             
@@ -148,20 +156,21 @@ namespace pm
 
             cta_log_mutex_.Lock();
             log_deque_.push_back(StringToVectorChar(log));
-            log.clear();
             cta_log_mutex_.Unlock();
-            
-            long long run_time =
+
+            log.clear();
+            disk_data.clear();
+            net_data.clear();
+
+            run_time =
                 std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::system_clock::now().time_since_epoch()).count() - start_time;
+                    std::chrono::system_clock::now().time_since_epoch()).count() - start_time;
 
             if (run_time < 1000)
             {
                 Sleep(1000 - run_time);
             }
 
-            disk_data.clear();
-            net_data.clear();
         }
     }
 

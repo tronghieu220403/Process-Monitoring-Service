@@ -12,17 +12,14 @@ namespace pm
     class ProcessLogger: public Logger
     {
     private:
-        std::shared_ptr<ProcessController> process_controller_;
+        std::string process_name_;
     public:
+
+        ProcessLogger() = default;
 
         using Logger::SetMessage;
 
-        ProcessLogger();
-        explicit ProcessLogger(const std::shared_ptr<ProcessController>& pc);
-
-        ProcessLogger& operator=(const ProcessLogger& pl);
-
-        void SetProcessController(const std::shared_ptr<ProcessController>& pc);
+        explicit ProcessLogger(std::string& process_name);
 
         #ifdef _WIN32
             std::string GetAlert(ProcessLoggerType type, UsageData usage_data);
@@ -30,8 +27,7 @@ namespace pm
             std::string GetAlert(ProcessLoggerType type);
         #endif
 
-        bool operator==(const ProcessLogger& other) = delete;
-        ~ProcessLogger() final = default;
+        ~ProcessLogger() = default;
     };
 }
 

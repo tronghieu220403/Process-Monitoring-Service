@@ -4,29 +4,10 @@
 
 namespace pm
 {
-
-    ProcessLogger::ProcessLogger()
-        :process_controller_(std::make_shared<ProcessController>())
+    ProcessLogger::ProcessLogger(std::string& process_name):
+        process_name_(process_name)
     {
-    };
-
-    ProcessLogger::ProcessLogger(const std::shared_ptr<ProcessController>& pc)
-        : process_controller_(pc)
-    {
-    }
-
-    ProcessLogger& ProcessLogger::operator=(const ProcessLogger& pl)
-    {
-        this->process_controller_ = pl.process_controller_;
-        this->SetFolderPath(pl.GetFolderPath());
-        this->SetMessage(pl.GetMessage());
-        return *this;
-    }
-
-
-    void ProcessLogger::SetProcessController(const std::shared_ptr<ProcessController>& pc)
-    {
-        process_controller_ = pc;
+        
     }
 
 
@@ -95,7 +76,7 @@ namespace pm
         std::stringstream ss;
         ss << year << "-" << month << "-" << day << " " << hour << ":" << min << ":" << sec << ",";
 
-        ss << process_controller_->GetPid() << "," << process_controller_->GetName() << ",";
+        ss << "," << process_name_ << ",";
 
         if (type == ProcessLoggerType::kProcessLoggerCpu)
         {

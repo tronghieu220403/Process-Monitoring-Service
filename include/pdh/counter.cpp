@@ -19,14 +19,46 @@ namespace pm
 
     bool Counter::AddCounter()
     {
-        std::string cmd = "\\Process V2(" + p_name_ + ":" + std::to_string(pid_) + ")" + "\\" + type_;
+        std::string cmd = "\\Process V2(" + p_name_ + ":" + std::to_string(pid_) + ")\\" + type_;
         std::wstring w_cmd(cmd.begin(), cmd.end());
 
-        PDH_STATUS status = PdhAddCounter(query_.GetHQuery(), w_cmd.data(), NULL, &h_counter_);
+        PDH_STATUS status = PdhAddCounter(query_.GetHQuery(), &w_cmd[0], NULL, &h_counter_);
 
         if (ERROR_SUCCESS != status)
         {
-            return false;
+            if (status == PDH_INVALID_ARGUMENT)
+            {
+                return false;
+            }
+            else if (status == PDH_INVALID_DATA)
+            {
+                return false;
+            }
+            else if (status == PDH_INVALID_HANDLE)
+            {
+                return false;
+            }
+            else if (status == PDH_CSTATUS_BAD_COUNTERNAME)
+            {
+                return false;
+            }
+            else if (status == PDH_CSTATUS_NO_MACHINE)
+            {
+                return false;
+            }
+            else if (status == PDH_CSTATUS_NO_OBJECT)
+            {
+                return false;
+            }
+            else if (status == PDH_FUNCTION_NOT_FOUND)
+            {
+                return false;
+            }
+            else if (status == PDH_MEMORY_ALLOCATION_FAILURE)
+            {
+                return false;
+            }
+
         }
         return true;
     }
@@ -35,6 +67,11 @@ namespace pm
     {
         PDH_FMT_COUNTERVALUE pdh_value;
         DWORD dw_value;
+
+        if (h_counter_ == nullptr)
+        {
+            return 0.0;
+        }
 
         PDH_STATUS status = PdhGetFormattedCounterValue(h_counter_, PDH_FMT_DOUBLE | PDH_FMT_NOCAP100, &dw_value, &pdh_value);
         if (status == PDH_INVALID_ARGUMENT)
