@@ -28,16 +28,21 @@ Folder structure
 │   └── configuration                                     
 │   │   └── processjsonconfiguration.h                   # JSON config reader
 │   │   └── startupprogram.h                             # add a program to startup
-│   │                
+│   └── etw
+│   │   └── consumer.h
+│   │   └── provider.h
+│   │   └── wmieventclass.h
+│   │   └── event.h
+│   │   └── diskioevent.h
+│   │   └── networkevent.h
+│   │   └── threadevent.h
+│   │
 │   └── file                                             
 │   │   └── file.h
-│   │   └── file.cpp
 │   │                
 │   └── logs                                             
 │   │   └── logger.h
-│   │   └── logger.cpp
 │   │   └── processlogger.h
-│   │   └── processlogger.cpp
 │   │                
 │   └── mutex                                            
 │   │   └── mutex.h
@@ -46,7 +51,11 @@ Folder structure
 │   └── nlohmann                                         # dependencies for JSON reader in Linux
 │   │   └── process.h
 │   │   └── process.cpp
-│   │                
+│   │
+│   └── pdh                                            
+│   │   └── query.h
+│   │   └── counter.h
+│   │
 │   └── process                                          # dependencies for process
 │   │   └── process.h                                            # base classes for processes
 │   │   └── process.cpp                                          
@@ -75,10 +84,10 @@ Folder structure
 │   │   └── registry.h
 │   │
 │   └── service                                         # dependencies for Windows Service
-│   │   └── registry.h
-│   │   └── registry.h
-│   │   └── registry.h
-│   │   └── registry.h
+│   │   └── processmonitorservice.h
+│   │   └── service.h
+│   │   └── servicecontrol.h
+│   │   └── serviceevent.h    
 
 │   └── ulti                                             # dependencies for platform 
 │   │   └── collections.h                                # some structures/enum classes using between classes
