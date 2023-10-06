@@ -23,26 +23,30 @@ Folder structure
 │   │   └── pipeline                                     # dependencies for pipeline (IPC)
 │   │   │   └── client.h
 │   │   │   └── server.h
-│   │   │   └── pipe.cpp
+│   │   │   └── pipe.h
+│   │                
 │   └── configuration                                     
 │   │   └── processjsonconfiguration.h                   # JSON config reader
-│   │   └── processjsonconfiguration.cpp
 │   │   └── startupprogram.h                             # add a program to startup
-│   │   └── startupprogram.cpp
+│   │                
 │   └── file                                             
 │   │   └── file.h
 │   │   └── file.cpp
+│   │                
 │   └── logs                                             
 │   │   └── logger.h
 │   │   └── logger.cpp
 │   │   └── processlogger.h
 │   │   └── processlogger.cpp
+│   │                
 │   └── mutex                                            
 │   │   └── mutex.h
 │   │   └── mutex.cpp
+│   │                
 │   └── nlohmann                                         # dependencies for JSON reader in Linux
 │   │   └── process.h
 │   │   └── process.cpp
+│   │                
 │   └── process                                          # dependencies for process
 │   │   └── process.h                                            # base classes for processes
 │   │   └── process.cpp                                          
@@ -60,14 +64,22 @@ Folder structure
 │   │   └── processcontroller.cpp
 │   │   └── processsupervision.h                                 # monitoring resources stats of a process
 │   │   └── processsupervision.cpp
+│   │                
 │   └── program                                          # dependencies for the main program
 │   │   └── cta.h
 │   │   └── cta.cpp
 │   │   └── ctb.h
 │   │   └── ctb.cpp
+│   │                
 │   └── registry                                         # dependencies for Windows Registry
-│   │   └── process.h
-│   │   └── process.cpp
+│   │   └── registry.h
+│   │
+│   └── service                                         # dependencies for Windows Service
+│   │   └── registry.h
+│   │   └── registry.h
+│   │   └── registry.h
+│   │   └── registry.h
+
 │   └── ulti                                             # dependencies for platform 
 │   │   └── collections.h                                # some structures/enum classes using between classes
 │   │   └── everything.h                                 # everything needed (libraries, syntaxs) for the code
