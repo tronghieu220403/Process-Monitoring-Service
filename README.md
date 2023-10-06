@@ -22,9 +22,8 @@ Folder structure
 │   └── communication                                            
 │   │   └── pipeline                                     # dependencies for pipeline (IPC)
 │   │   │   └── client.h
-│   │   │   └── client.cpp
-│   │   │   └── client.h
-│   │   │   └── client.cpp
+│   │   │   └── server.h
+│   │   │   └── pipe.cpp
 │   └── configuration                                     
 │   │   └── processjsonconfiguration.h                   # JSON config reader
 │   │   └── processjsonconfiguration.cpp
