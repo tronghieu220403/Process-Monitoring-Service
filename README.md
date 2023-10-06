@@ -12,8 +12,6 @@ Folder structure
 .
 ├── Process-Monitoring-Report.pdf                        # Report in Vietnamese
 │   │
-├── Class diagram.png
-├── Class diagram.cd
 │   │                
 │   pm_ctb.cpp                                           # code for client
 │   pm_cta.cpp                                           # code for server
@@ -96,11 +94,11 @@ Folder structure
 ├── release binary
 │   └── x64
 │   │   └── Linux                               # executable file for server and client on Linux
-│   │   │   └── client_main		
-│   │   │   └── server_main			
+│   │   │   └── pm_cta		
+│   │   │   └── pm_ctb			
 │   │   └── Windows                             # executable file for server and client on Windows
-│   │   │   └── client_main.exe			
-│   │   │   └── server_main.exe
+│   │   │   └── pm_cta.exe			
+│   │   │   └── pm_ctb.exe
 │   │
 ────────────	
 ```
