@@ -12,39 +12,39 @@ Folder structure
 .
 ├── Process-Monitoring-Report.pdf                        # Report in Vietnamese
 │   │
-│   │                
+│   │
 │   pm_ctb.cpp                                           # code for client
 │   pm_cta.cpp                                           # code for server
-│   │                
+│   │
 ├── inlucde
 │   └── communication                                            
 │   │   └── pipeline                                     # dependencies for pipeline (IPC)
 │   │   │   └── client.h
 │   │   │   └── server.h
 │   │   │   └── pipe.h
-│   │                
+│   │
 │   └── configuration                                     
-│   │   └── processjsonconfiguration.h                   # JSON config reader
-│   │   └── startupprogram.h                             # add a program to startup
-│   └── etw
+│   │   └── processjsonconfiguration.h                           # JSON config reader
+│   │   └── startupprogram.h                                     # add a program to startup
+│   │
+│   └── etw                                              # Event Tracing Windows
 │   │   └── consumer.h
 │   │   └── provider.h
-│   │   └── wmieventclass.h
+│   │   └── wmieventclass.h                                      # Retrieve event infomation
 │   │   └── event.h
-│   │   └── diskioevent.h
-│   │   └── networkevent.h
-│   │   └── threadevent.h
+│   │   └── diskioevent.h                                        # Handle disk IO event (read/write)
+│   │   └── networkevent.h                                       # Handle network IO event (receive/send)
+│   │   └── threadevent.h                                        # Handle thread event (start/end)
 │   │
-│   └── file                                             
+│   └── file
 │   │   └── file.h
 │   │                
-│   └── logs                                             
+│   └── logs
 │   │   └── logger.h
 │   │   └── processlogger.h
 │   │                
 │   └── mutex                                            
 │   │   └── mutex.h
-│   │   └── mutex.cpp
 │   │                
 │   └── nlohmann                                         # dependencies for JSON reader in Linux
 │   │   └── process.h
@@ -56,40 +56,30 @@ Folder structure
 │   │
 │   └── process                                          # dependencies for process
 │   │   └── process.h                                            # base classes for processes
-│   │   └── process.cpp                                          
 │   │   └── processcpu.h
-│   │   └── processcpu.cpp
 │   │   └── processdisk.h
-│   │   └── processdisk.cpp
 │   │   └── processmem.h
-│   │   └── processmem.cpp
 │   │   └── processnetwork.h
-│   │   └── processnetwork.cpp
 │   │   └── processinfo.h                                        # contain resources stats of a process.
-│   │   └── processinfo.cpp
 │   │   └── processcontroller.h                                  # full control of a process 
-│   │   └── processcontroller.cpp
 │   │   └── processsupervision.h                                 # monitoring resources stats of a process
-│   │   └── processsupervision.cpp
-│   │                
+│   │
 │   └── program                                          # dependencies for the main program
 │   │   └── cta.h
-│   │   └── cta.cpp
 │   │   └── ctb.h
-│   │   └── ctb.cpp
-│   │                
+│   │
 │   └── registry                                         # dependencies for Windows Registry
 │   │   └── registry.h
 │   │
-│   └── service                                         # dependencies for Windows Service
-│   │   └── processmonitorservice.h
+│   └── service                                          # dependencies for Windows Service
+│   │   └── processmonitorservice.h                              # Functions for the service
 │   │   └── service.h
-│   │   └── servicecontrol.h
-│   │   └── serviceevent.h    
-
+│   │   └── servicecontrol.h                                     # Add .exe to Service Database
+│   │   └── serviceevent.h                                       # Handle service events (start/stop/continue/pause)
+│   │
 │   └── ulti                                             # dependencies for platform 
-│   │   └── collections.h                                # some structures/enum classes using between classes
-│   │   └── everything.h                                 # everything needed (libraries, syntaxs) for the code
+│   │   └── collections.h                                        # some structures/enum classes using between classes
+│   │   └── everything.h                                         # everything needed (libraries, syntaxs) for the code
 │   │                
 ├── release binary
 │   └── x64
