@@ -1,6 +1,6 @@
-# Process Monitoring - a simple daemon and an user application
+# Process Monitoring - a simple service and an user application
 
-This is a simple process monitoring tool, include a daemon and an user application, works on both 64-bit Windows and Linux OS. Pipelines is used as a IPC communication between the daemon and our user application.
+This is a simple process monitoring tool, include a service and an user application, works on both 64-bit Windows and Linux OS. Pipelines is used as a IPC communication between the service and our user application.
 
 - [Folder structure](#folder-structure)
 - [Requirements](#requirements)
