@@ -25,7 +25,6 @@ namespace pm
         exe_full_path_ = exe_full_path;
     }
 
-    // Need to be re-write using Registry class.
     bool StartUpProgram::Register()
     {
         bool success = false;
@@ -77,7 +76,6 @@ namespace pm
         return success;
     }
 
-    // Need to be re-write using Registry class.
     bool StartUpProgram::IsRegistered()
     {
         bool success = true;

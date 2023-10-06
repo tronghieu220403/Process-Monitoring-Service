@@ -71,7 +71,7 @@ namespace pm
             exit(0);
         }
 
-        // This will signal the worker thread to start pausing
+        // This will signal the worker thread to be paused
 
     }
 

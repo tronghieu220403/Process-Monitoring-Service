@@ -76,7 +76,6 @@ namespace pm
                 {
                     for (json::iterator it = json_data.begin(); it != json_data.end(); ++it) 
                     {
-                        //cout << it->type_name() << endl;
                         if (!it->is_object())
                         {
                             continue;

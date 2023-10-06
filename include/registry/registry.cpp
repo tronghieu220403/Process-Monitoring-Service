@@ -80,8 +80,6 @@ namespace pm
 
         ret_code = RegQueryInfoKeyW(h_key_, NULL, NULL, NULL, NULL, NULL, NULL, &c_values, &cch_max_value, &cb_max_valuedata, NULL, NULL);
 
-        // // std::osyncstream(std::cout) << cch_max_value << std::endl;
-
         if (c_values)
         {
             //printf( "\nNumber of values: %d\n", c_values);
@@ -92,7 +90,6 @@ namespace pm
                 name.clear();
                 name.resize(cch_max_value);
                 ret_code = RegEnumValueA(h_key_, i, name.data(), &cch_value, NULL, NULL, NULL, NULL);
-                // name.resize(cch_value + 1);
                 name.resize(strlen(&name[0]));
                 if (ret_code == ERROR_SUCCESS) 
                 {

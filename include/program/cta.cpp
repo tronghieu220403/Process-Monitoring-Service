@@ -107,7 +107,6 @@ namespace pm
 
             Counter::UpdateQuery();
 
-
             for (auto &data: disk_data)
             {
                 for (auto& ps: process_)
@@ -167,7 +166,6 @@ namespace pm
             {
                 Sleep(1000 - run_time);
             }
-
         }
     }
 

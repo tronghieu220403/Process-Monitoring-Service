@@ -124,16 +124,15 @@ namespace pm
             }
             DWORD bytes_read = 0;
 
+            // Get number of bytes need to be received in the content.
             int n_bytes = 0;
             int cur_ptr = 0;
             while(cur_ptr < 4)
             {
-                // std::osyncstream(std::cout) << "Start receiving" << std::endl;
                 success = ReadFile(handle_pipe_, &n_bytes + cur_ptr, 4 - cur_ptr, &bytes_read, nullptr);
                 if (!success && bytes_read == 0)
                 {   
                     DWORD error = GetLastError();
-                     // std::osyncstream(std::cout) << error << std::endl;
                     if (error == ERROR_BROKEN_PIPE)
                     {
                         Close();
@@ -143,19 +142,16 @@ namespace pm
                 cur_ptr += bytes_read;
             }
             
-             // std::osyncstream(std::cout) << "Must receive: " << " " << n_bytes << std::endl;
-
             cur_ptr = 0;
             bytes_read = 0;
+
+            // Get command type of the packet
             while(cur_ptr < 4)
             {
-                // std::osyncstream(std::cout) << "Start receiving" << std::endl;
-
                 success = ReadFile(handle_pipe_, &type + cur_ptr, 4 - cur_ptr, &bytes_read, NULL);
                 if (!success && bytes_read == 0)
                 {
                     DWORD error = GetLastError();
-                     // std::osyncstream(std::cout) << error << std::endl;
                     if (error == ERROR_BROKEN_PIPE)
                     {
                         Close();
@@ -165,21 +161,17 @@ namespace pm
                 cur_ptr += bytes_read;
             }
 
-             // std::osyncstream(std::cout) << "Protocol: " << " " << type << std::endl;
-
+            // Get packet content
             cur_receive_.resize(n_bytes);
             cur_ptr = 0;
 
             while (cur_ptr < n_bytes)
             {
-                // std::osyncstream(std::cout) << "Start receiving" << std::endl;
-
                 success = ReadFile(handle_pipe_, &cur_receive_[cur_ptr], n_bytes - cur_ptr, &bytes_read, nullptr);
 
                 if (!success && bytes_read == 0)
                 {
                     DWORD error = GetLastError();
-                     // std::osyncstream(std::cout) << error << std::endl;
                     if (GetLastError() == ERROR_BROKEN_PIPE)
                     {
                         Close();
@@ -188,8 +180,6 @@ namespace pm
                 }
                 cur_ptr += bytes_read;
             }
-
-             // std::osyncstream(std::cout) << "Start receiving: " << std::endl;
 
         #elif __linux__
 
@@ -202,6 +192,7 @@ namespace pm
             int n_bytes = 0;
             int cur_ptr = 0;
 
+            // Get number of bytes need to be received in the content.
             while(cur_ptr < 4)
             {
                 success = read(fd_recv_, &n_bytes + cur_ptr, sizeof(int) - cur_ptr);
@@ -214,7 +205,8 @@ namespace pm
             }
 
             cur_ptr = 0;
-            
+
+            // Get command type of the packet
             while(cur_ptr < 4)
             {
                 success = read(fd_recv_, &type + cur_ptr, sizeof(int) - cur_ptr);
@@ -228,7 +220,8 @@ namespace pm
 
             cur_receive_.resize(n_bytes);
             cur_ptr = 0;
-
+            
+            // Get packet content
             while(cur_ptr < n_bytes)
             {
                 success = read(fd_recv_, &cur_receive_[cur_ptr], n_bytes - cur_ptr);

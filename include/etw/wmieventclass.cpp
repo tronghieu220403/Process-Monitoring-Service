@@ -480,17 +480,14 @@ namespace pm
         return name;
     }
 
-    //PropertyValue 
-    void 
-    WmiEventClass::GetEventPropertyValue(PropertyList* p_property, 
-    //PBYTE p_event_property_data, 
+    // Get datasize of a property, can not get datasize of a string or an array
+    void WmiEventClass::GetEventPropertyValue(PropertyList* p_property, 
     int &data_size)
     {
         HRESULT hr;
         VARIANT var_qualifier;
         ULONG array_size = 1;
         int element_size = 0;
-        //PropertyValue property_value;
 
         data_size = 0;
         // If the property contains the Pointer or PointerType qualifier,
@@ -501,25 +498,11 @@ namespace pm
         if (SUCCEEDED(hr = p_property->p_qualifiers->Get(L"Pointer", 0, NULL, NULL)) ||
             SUCCEEDED(hr = p_property->p_qualifiers->Get(L"PointerType", 0, NULL, NULL)))
         {
-            /*
-            if (pointer_size_ == 4)
-            {
-                property_value.data_type = CIM_UINT32;
-                property_value.AddValue(p_event_property_data, sizeof(ULONG));
-            }
-            else
-            {
-                property_value.data_type = CIM_UINT64;
-                property_value.AddValue(p_event_property_data, sizeof(ULONGLONG));
-            }
-            */
-
             data_size = pointer_size_;
-            return ; //property_value;
+            return ;
         }
         else
         {
-
             if (p_property->data_type & CIM_FLAG_ARRAY)
             {
                 hr = p_property->p_qualifiers->Get(L"MAX", 0, &var_qualifier, NULL);
@@ -527,69 +510,41 @@ namespace pm
                 {
                     array_size = var_qualifier.intVal;
                     VariantClear(&var_qualifier);
+                    if (array_size != 1)
+                    {
+                        return;
+                    }
                 }
                 else
                 {
-                    //wprintf(L"Failed to retrieve the MAX qualifier. Terminating.\n");
-                    return; //property_value;
+                    return;
                 }
             }
-
-            // The data_type is the data type of the property.
 
             switch (p_property->data_type & (~CIM_FLAG_ARRAY))
             {
             case CIM_SINT32:
             {
-                /*
-                property_value.data_type = CIM_SINT32;
-                for (ULONG i = 0; i < array_size; i++)
-                {
-                    property_value.AddValue(p_event_property_data, sizeof(LONG));
-                }
-                */
                 data_size = sizeof(LONG) * array_size;
-                return; //property_value;
+                return;
             }
 
             case CIM_UINT32:
             {
-                /*
-                property_value.data_type = CIM_UINT32;
-                for (ULONG i = 0; i < array_size; i++)
-                {
-                    property_value.AddValue(p_event_property_data, sizeof(ULONG));
-                }
-                */
                 data_size = sizeof(ULONG) * array_size;
-                return; //property_value;
+                return;
             }
 
             case CIM_SINT64:
             {
-                /*
-                property_value.data_type = CIM_SINT64;
-
-                for (ULONG i = 0; i < array_size; i++)
-                {
-                    property_value.AddValue(p_event_property_data, sizeof(LONGLONG));
-                }
-                */
                 data_size = sizeof(LONGLONG) * array_size;
-                return; //property_value;
+                return;
             }
 
             case CIM_UINT64:
             {
-                /*
-                property_value.data_type = CIM_UINT64;
-                for (ULONG i = 0; i < array_size; i++)
-                {
-                    property_value.AddValue(p_event_property_data, sizeof(ULONGLONG));
-                }
-                */
                 data_size = sizeof(ULONGLONG) * array_size;
-                return; //property_value;
+                return;
             }
 
             case CIM_OBJECT:
@@ -606,10 +561,9 @@ namespace pm
 
                     for (ULONG i = 0; i < array_size; i++)
                     {
-                        //property_value.AddValue(p_event_property_data, pointer_size_);
                         data_size += pointer_size_;
                     }
-                    return; //property_value;
+                    return;
                 }
                 if (_wcsicmp(L"Port", var_qualifier.bstrVal) == 0)
                 {
@@ -626,7 +580,7 @@ namespace pm
                         GetModuleHandle(L"ntdll"), "RtlIpv6AddressToStringW")
                         == NULL)
                         {
-                            return; //property_value;
+                            return;
                         }
 
                     element_size = sizeof(IN6_ADDR);
@@ -639,11 +593,11 @@ namespace pm
             else if (_wcsicmp(L"Sid", var_qualifier.bstrVal) == 0)
             {
                 // Handle sid here, in fact that our events does not contain any "SID" field;
-                return; //property_value;
+                return;
             }
             else
             {
-                return; //property_value;
+                return;
             }
 
             VariantClear(&var_qualifier);
@@ -652,7 +606,7 @@ namespace pm
                 data_size += element_size;
             }
 
-            return; //property_value;
+            return;
 
 
             case CIM_SINT8:
@@ -671,7 +625,7 @@ namespace pm
                         data_size += sizeof(UINT8);
                     }
                 }
-                return; //property_value;
+                return;
             }
 
             case CIM_CHAR16:
@@ -680,7 +634,7 @@ namespace pm
                 {
                     data_size += sizeof(WCHAR);
                 }
-                return; //property_value;
+                return;
             }
 
             case CIM_SINT16:
@@ -689,7 +643,7 @@ namespace pm
                 {
                     data_size += sizeof(SHORT);
                 }
-                return; //property_value;
+                return;
             }
 
             case CIM_UINT16:
@@ -698,18 +652,16 @@ namespace pm
                 {
                     data_size += sizeof(USHORT);
                 }
-                return; //property_value;
+                return;
             }
 
             case CIM_STRING:
             
-            // Handle string here, in fact that we do not need to care string;
-            return; //property_value;
+            return;
 
             default:
             {
-                //wprintf(L"Unknown CIM type\n");
-                return; //property_value;
+                return;
             }
 
             } // switch
@@ -735,10 +687,6 @@ namespace pm
         IWbemClassObject *p_event_class = NULL;
         DWORD property_count = NULL;
         LONG *p_property_index = NULL;
-        /*
-        PBYTE data_size;
-        PBYTE pEndOfEventData;
-        */
         int data_size = 0;
 
         p_event_category_class = GetEventCategoryClass(&class_guid_[0], version_);
@@ -755,21 +703,13 @@ namespace pm
 
                 if (TRUE == GetPropertyList(p_event_class, &p_properties, &property_count, &p_property_index))
                 {
-                    /*
-                    data_size = (PBYTE)(pEvent->MofData);
-                    pEndOfEventData = ((PBYTE)(pEvent->MofData) + pEvent->MofLength);
-                    */
-
                     for (LONG i = 0; (DWORD)i < property_count; i++)
                     {
-                        //fout << L"Position:  " << (long long)p_property_index[i] << std::endl;
                         std::wstring name = GetPropertyName(p_properties + p_property_index[i]);
 
                         GetEventPropertyValue(p_properties + p_property_index[i], data_size);
-                        // // std::osyncstream(std::cout) << data_size << std::endl;
                         if (data_size == 0)
                         {
-                             // std::osyncstream(std::cout) << "Something is wrong" << std::endl;
                             exit(0);
                         }
                         if (name == property_name)
@@ -779,19 +719,6 @@ namespace pm
                         }
 
                         temp_offset += data_size;
-                        /*
-                        data_size = PrintEventPropertyValue(p_properties + p_property_index[i],
-                            data_size,
-                            (USHORT)(pEndOfEventData - data_size));
-                        std::wcout << std::endl;
-
-                        if (NULL == data_size)
-                        {
-                            //Error reading the data. Handle as appropriate for your application.
-                            break;
-                        }
-                        */
-
                     }
 
                     FreePropertyList(p_properties, property_count, p_property_index);
