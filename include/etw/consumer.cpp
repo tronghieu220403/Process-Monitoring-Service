@@ -117,6 +117,7 @@ namespace pm
         }
         else
         {
+            WriteDebug("Catch one event...");
             Event event(p_event);
             
             int type = event.GetType();

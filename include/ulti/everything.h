@@ -68,6 +68,7 @@
 #include <chrono>
 #include <deque>
 #include <syncstream>
+#include <mutex>
 
 #ifdef __linux__
 
@@ -105,13 +106,15 @@
 
 namespace pm
 {
-
+    inline std::mutex mt;
     inline void WriteDebug(std::string s)
     {
     #ifdef _DEBUG
+        mt.lock();
         std::ofstream outfile("C:\\debug.txt", std::ios_base::app);
         outfile << s << "\n";
         outfile.close();
+        mt.unlock();
     #endif // DEBUG
     }
 

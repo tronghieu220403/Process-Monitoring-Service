@@ -252,7 +252,7 @@ namespace pm
 
     bool Pipeline::TrySendMessage(int type, std::vector<char> data)
     {
-        WriteDebug("TryGetMessage() sending message...");
+        WriteDebug("TrySendMessage() sending message...");
 
         // Write the reply to the pipe.
         #ifdef _WIN32
@@ -297,7 +297,7 @@ namespace pm
                 }
                 cur_ptr += bytes_written;
             }
-            WriteDebug("TryGetMessage() sent...");
+            WriteDebug("TrySendMessage() sent oke");
     
         #elif __linux__
 

@@ -173,6 +173,7 @@ namespace pm
     {
         while (true)
         {
+            WriteDebug("Getting...");
             if (server.TryGetMessage() == false)
             {
                 Sleep(500);
