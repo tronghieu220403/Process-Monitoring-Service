@@ -81,7 +81,7 @@ Folder structure
 │   │   └── collections.h                                        # some structures/enum classes using between classes
 │   │   └── everything.h                                         # everything needed (libraries, syntaxs) for the code
 │   │                
-├── release binary
+├── release
 │   └── x64
 │   │   └── Linux                               # executable file for server and client on Linux
 │   │   │   └── pm_cta		
