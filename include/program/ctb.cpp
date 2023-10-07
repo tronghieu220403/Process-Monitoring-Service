@@ -33,7 +33,7 @@ namespace pm
             
             // named mutex lock for registry
             config_mutex_.Lock();
-            Registry reg("SOFTWARE\\CtaProcessMonitoring\\ProcsesConf");
+            Registry reg(HKEY_LOCAL_MACHINE, "SYSTEM\\CurrentControlSet\\Services\\CtaProcessMonitoring\\ProcsesConf");
             reg.DeleteContent();
             for (int i = 0; i < data.size(); i++)
             {

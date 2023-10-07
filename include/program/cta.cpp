@@ -26,7 +26,7 @@ namespace pm
 
             // named mutex lock for registry
             config_mutex_.Lock();
-            Registry reg("SOFTWARE\\CtaProcessMonitoring\\ProcsesConf");
+            Registry reg(HKEY_LOCAL_MACHINE, "SYSTEM\\CurrentControlSet\\Services\\CtaProcessMonitoring\\ProcsesConf");
             std::vector< std::pair< std::string, std::vector<char> > > info = reg.GetAllBinaryValues();
             config_mutex_.Unlock();
             // named mutex unlock for registry
@@ -76,6 +76,7 @@ namespace pm
 
     void CTA::Monitoring()
     {
+        WriteDebug("Monitoring");
         CTA::UpdateConfig();
 
         long long run_time = 0;
@@ -88,6 +89,9 @@ namespace pm
         
         while (true)
         {
+            inner_mutex_.Lock();
+
+            WriteDebug("Update query");
             long long start_time =
                 std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count();
@@ -95,6 +99,7 @@ namespace pm
             for (auto& ps : process_)
             {
                 ps->TryFindHandle();
+                WriteDebug(ps->GetName() + " " + std::to_string(ps->GetPid()));
             }
 
             #ifdef _WIN32
@@ -102,8 +107,6 @@ namespace pm
             disk_data = KernelConsumer::GetDiskIoSharedVector();
 
             net_data = KernelConsumer::GetNetworkIoSharedVector();
-            
-            inner_mutex_.Lock();
 
             Counter::UpdateQuery();
 
@@ -114,6 +117,12 @@ namespace pm
                     if (ps->GetPid() == data.pid)
                     {
                         ps->GetProcessInfo()->GetDiskUsageStats()->AddData(data.filetime, data.size);
+                        #ifdef _DEBUG
+                            SYSTEMTIME st;
+                            FileTimeToSystemTime(&data.filetime, &st);
+                            WriteDebug(std::to_string(st.wHour) + " " + std::to_string(st.wMinute) + " " + std::to_string(st.wSecond) + " " + "add disk data for PID " + std::to_string(net_data.size()));
+                        #endif // _DEBUG
+
                         break;
                     }
                 }
@@ -126,6 +135,9 @@ namespace pm
                     if (ps->GetPid() == data.pid)
                     {
                         ps->GetProcessInfo()->GetNetworkUsageStats()->AddData(data.filetime, data.size);
+                        SYSTEMTIME st;
+                        FileTimeToSystemTime(&data.filetime, &st);
+                        WriteDebug(std::to_string(st.wHour) + " " + std::to_string(st.wMinute) + " " + std::to_string(st.wSecond) + " " + "add net data for PID " + std::to_string(net_data.size()));
                         break;
                     }
                 }
@@ -146,6 +158,7 @@ namespace pm
             inner_mutex_.Unlock();
             if (log.size() > 0)
             {
+                WriteDebug("Write event to queue");
                 cta_log_mutex_.Lock();
                 log_deque_.push_back(StringToVectorChar(log));
                 cta_log_mutex_.Unlock();
@@ -161,11 +174,17 @@ namespace pm
             run_time =
                 std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now().time_since_epoch()).count() - start_time;
-
-            if (run_time < 1000)
-            {
-                Sleep(1000 - run_time);
-            }
+            #ifdef _DEBUG
+                if (run_time < 10000)
+                {
+                    Sleep(1000 - run_time);
+                }
+            #else
+                if (run_time < 1000)
+                {
+                    Sleep(1000 - run_time);
+                }
+            #endif // _DEBUG
         }
     }
 

@@ -11,12 +11,15 @@ namespace pm
     {
     private:
         std::string registry_path_;
-        const HKEY h_key_root_ = HKEY_CURRENT_USER;
+        HKEY h_key_root_ = nullptr;
         HKEY h_key_ = nullptr;
     public:
         Registry();
-        Registry(const std::string& registry_path);
+        Registry(HKEY h_key_root, const std::string& registry_path);
+
         bool SetRegistryPath(const std::string& registry_path);
+        void SetHkeyRoot(const HKEY h_key_root);
+
         bool CreateBinaryValue(const std::string& name, const std::vector<char> value);
         bool DeleteContent();
         std::vector<char> GetValueArray(const std::string& key_name);

@@ -7,8 +7,9 @@ namespace pm
 
     Registry::Registry() = default;
 
-    Registry::Registry(const std::string& registry_path)
+    Registry::Registry(HKEY h_key_root, const std::string& registry_path)
     {
+        SetHkeyRoot(h_key_root);
         SetRegistryPath(registry_path);
     }
 
@@ -23,6 +24,11 @@ namespace pm
         }
         h_key_ = nullptr;
         return false;
+    }
+
+    void Registry::SetHkeyRoot(const HKEY h_key_root)
+    {
+        h_key_root_ = h_key_root;
     }
 
     bool Registry::CreateBinaryValue(const std::string& value_name, const std::vector<char> data)
