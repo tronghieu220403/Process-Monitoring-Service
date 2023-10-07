@@ -64,11 +64,11 @@ namespace pm
 
             for (int i = 0; i < data.size(); i++)
             {
-                outfile << data[i].first << std::endl;
-                outfile << data[i].second.cpu_usage << std::endl;
-                outfile << data[i].second.mem_usage << std::endl;
-                outfile << data[i].second.disk_usage << std::endl;
-                outfile << data[i].second.network_usage << std::endl;
+                outfile << data[i].first);
+                outfile << data[i].second.cpu_usage);
+                outfile << data[i].second.mem_usage);
+                outfile << data[i].second.disk_usage);
+                outfile << data[i].second.network_usage);
             }
 
             outfile.close();

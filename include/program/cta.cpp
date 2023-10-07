@@ -176,6 +176,7 @@ namespace pm
             if (server.TryGetMessage() == false)
             {
                 Sleep(500);
+                WriteDebug("RecvCommunication() server disconnected");
                 return;
             }
             else
@@ -206,12 +207,13 @@ namespace pm
 
             if (v.size() > 0)
             {
-                 // std::osyncstream(std::cout) << "Sending " << v.size() << std::endl;
+                WriteDebug("Sending " + v.size());
                 if (server.TrySendMessage(Command::CTA_SEND_LOGS, v) == false)
                 {
+                    WriteDebug("SendCommunication() server disconnected");
                     return;
                 }
-                 // std::osyncstream(std::cout) << "Sent oke"  << std::endl;
+                WriteDebug("Sent oke");
 
                 cta_log_mutex_.Lock();
                 log_deque_.pop_front();
@@ -220,6 +222,7 @@ namespace pm
 
             if (!server.IsActive())
             {
+                WriteDebug("SendCommunication() server disconnected");
                 return;
             }
             if (log_deque_.size() == 0)
@@ -238,7 +241,7 @@ namespace pm
         #endif
         while(true)
         {
-             // std::osyncstream(std::cout) << "Creating server" << std::endl;
+            WriteDebug("Creating server");
             while(true)
             {
                 if (server.CreateServer() == true)
@@ -247,18 +250,18 @@ namespace pm
                 }
                 Sleep(1000);
             }
-             // std::osyncstream(std::cout) << "Listening to client" << std::endl;
+            WriteDebug("Listening to client");
             while (server.ListenToClient() == false){
                 Sleep(100);
             }
-             // std::osyncstream(std::cout) << "Client connected!" << std::endl;
+            WriteDebug("Client connected!");
 
             std::jthread recv(std::bind_front(&pm::CTA::RecvCommunication, this));
             std::jthread send(std::bind_front(&pm::CTA::SendCommunication, this));
             recv.join();
             send.join();
 
-             // std::osyncstream(std::cout) << "Client disconnected!" << std::endl;
+            WriteDebug("Client disconnected!");
 
             server.Close();
             Sleep(100);

@@ -63,13 +63,13 @@ namespace pm
             }
 
             std::ofstream outfile(user_autostart_path + "/pm.desktop");
-            outfile << "[Desktop Entry]" << std::endl;
-            outfile << "Type=Application" << std::endl;
-            outfile << "Exec=" << exe_full_path_ << std::endl;
-            outfile << "Hidden=false\nNoDisplay=false\nX-GNOME-Autostart-enabled=true" << std::endl;
-            outfile << "Name[en_US]=" << exe_full_path_ << std::endl;
-            outfile << "Name=" << exe_full_path_ << std::endl;
-            outfile << "Comment[en_US]=\nComment=" << std::endl;
+            outfile << "[Desktop Entry]");
+            outfile << "Type=Application");
+            outfile << "Exec=" << exe_full_path_);
+            outfile << "Hidden=false\nNoDisplay=false\nX-GNOME-Autostart-enabled=true");
+            outfile << "Name[en_US]=" << exe_full_path_);
+            outfile << "Name=" << exe_full_path_);
+            outfile << "Comment[en_US]=\nComment=");
             outfile.close();
             success = true;
         #endif

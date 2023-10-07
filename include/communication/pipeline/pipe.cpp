@@ -112,6 +112,7 @@ namespace pm
 
     bool Pipeline::TryGetMessage()
     {
+        WriteDebug("TryGetMessage() getting message...");
         int success = 0;
         std::vector<char> cur_receive_;
         cur_receive_.clear();
@@ -142,6 +143,8 @@ namespace pm
                 cur_ptr += bytes_read;
             }
             
+            WriteDebug("TryGetMessage() need to get " + std::to_string(n_bytes));
+
             cur_ptr = 0;
             bytes_read = 0;
 
@@ -160,6 +163,8 @@ namespace pm
                 }
                 cur_ptr += bytes_read;
             }
+
+            WriteDebug("TryGetMessage() protocol: " + std::to_string(type));
 
             // Get packet content
             cur_receive_.resize(n_bytes);
@@ -180,6 +185,8 @@ namespace pm
                 }
                 cur_ptr += bytes_read;
             }
+
+            WriteDebug("TryGetMessage() got full message!");
 
         #elif __linux__
 
@@ -245,7 +252,9 @@ namespace pm
 
     bool Pipeline::TrySendMessage(int type, std::vector<char> data)
     {
-        // Write the reply to the pipe. 
+        WriteDebug("TryGetMessage() sending message...");
+
+        // Write the reply to the pipe.
         #ifdef _WIN32
             if (handle_pipe_ == nullptr || connected_ == false)
             {
@@ -288,7 +297,7 @@ namespace pm
                 }
                 cur_ptr += bytes_written;
             }
-
+            WriteDebug("TryGetMessage() sent...");
     
         #elif __linux__
 
