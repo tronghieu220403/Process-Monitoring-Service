@@ -548,66 +548,66 @@ namespace pm
             }
 
             case CIM_OBJECT:
-            
-            hr = p_property->p_qualifiers->Get(L"Extension", 0, &var_qualifier, NULL);
-            if (SUCCEEDED(hr))
             {
-                if (_wcsicmp(L"SizeT", var_qualifier.bstrVal) == 0)
+                hr = p_property->p_qualifiers->Get(L"Extension", 0, &var_qualifier, NULL);
+                if (SUCCEEDED(hr))
                 {
-                    VariantClear(&var_qualifier);
-
-                    // You do not need to know the data type of the property, you just 
-                    // retrieve either 4 bytes or 8 bytes depending on the pointer's size.
-
-                    for (ULONG i = 0; i < array_size; i++)
+                    if (_wcsicmp(L"SizeT", var_qualifier.bstrVal) == 0)
                     {
-                        data_size += pointer_size_;
+                        VariantClear(&var_qualifier);
+
+                        // You do not need to know the data type of the property, you just 
+                        // retrieve either 4 bytes or 8 bytes depending on the pointer's size.
+
+                        for (ULONG i = 0; i < array_size; i++)
+                        {
+                            data_size += pointer_size_;
+                        }
+                        return;
                     }
+                    if (_wcsicmp(L"Port", var_qualifier.bstrVal) == 0)
+                    {
+                        element_size = sizeof(USHORT);
+                    }
+                    else if (_wcsicmp(L"IPAddr", var_qualifier.bstrVal) == 0 ||
+                        _wcsicmp(L"IPAddrV4", var_qualifier.bstrVal) == 0)
+                    {
+                        element_size = sizeof(ULONG);
+                    }
+                    else if (_wcsicmp(L"IPAddrV6", var_qualifier.bstrVal) == 0)
+                    {
+                        if (GetProcAddress(
+                            GetModuleHandle(L"ntdll"), "RtlIpv6AddressToStringW")
+                            == NULL)
+                            {
+                                return;
+                            }
+
+                        element_size = sizeof(IN6_ADDR);
+                    }
+                    else if (_wcsicmp(L"Guid", var_qualifier.bstrVal) == 0)
+                    {
+                        element_size = sizeof(GUID);
+                    }
+                }
+                else if (_wcsicmp(L"Sid", var_qualifier.bstrVal) == 0)
+                {
+                    // Handle sid here, in fact that our events does not contain any "SID" field;
                     return;
                 }
-                if (_wcsicmp(L"Port", var_qualifier.bstrVal) == 0)
+                else
                 {
-                    element_size = sizeof(USHORT);
+                    return;
                 }
-                else if (_wcsicmp(L"IPAddr", var_qualifier.bstrVal) == 0 ||
-                    _wcsicmp(L"IPAddrV4", var_qualifier.bstrVal) == 0)
-                {
-                    element_size = sizeof(ULONG);
-                }
-                else if (_wcsicmp(L"IPAddrV6", var_qualifier.bstrVal) == 0)
-                {
-                    if (GetProcAddress(
-                        GetModuleHandle(L"ntdll"), "RtlIpv6AddressToStringW")
-                        == NULL)
-                        {
-                            return;
-                        }
 
-                    element_size = sizeof(IN6_ADDR);
-                }
-                else if (_wcsicmp(L"Guid", var_qualifier.bstrVal) == 0)
+                VariantClear(&var_qualifier);
+                for (ULONG i = 0; i < array_size; i++)
                 {
-                    element_size = sizeof(GUID);
+                    data_size += element_size;
                 }
-            }
-            else if (_wcsicmp(L"Sid", var_qualifier.bstrVal) == 0)
-            {
-                // Handle sid here, in fact that our events does not contain any "SID" field;
+
                 return;
             }
-            else
-            {
-                return;
-            }
-
-            VariantClear(&var_qualifier);
-            for (ULONG i = 0; i < array_size; i++)
-            {
-                data_size += element_size;
-            }
-
-            return;
-
 
             case CIM_SINT8:
             case CIM_UINT8:
@@ -656,8 +656,9 @@ namespace pm
             }
 
             case CIM_STRING:
-            
-            return;
+            {
+                return;
+            }
 
             default:
             {
